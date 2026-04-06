@@ -10,27 +10,39 @@
 		006B70909C5EBA5F49FF92C8 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB894266D811AB2C068CD6D7 /* DeviceManager.swift */; };
 		10200181D71770777AA450EC /* MirrorKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36061000D151D1427BFC /* MirrorKitApp.swift */; };
 		1E151C03017B4D864B476751 /* CaptureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */; };
+		20B192FFF33EF90A5C87E7D9 /* DeviceFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B71001D6000191E697A93 /* DeviceFrameView.swift */; };
 		443EEAC587794A31683C5CDA /* FrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */; };
 		55916EA552CBC0941A09F38E /* MirrorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5871FA238546EDABACFCB72 /* MirrorContentView.swift */; };
 		587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349A35B6F092B22B3689915A /* MirrorWindowController.swift */; };
 		6BD20128F8D17C44F07AA298 /* DevicePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69F98E197254789E3E896F9 /* DevicePickerView.swift */; };
+		704763820F565B390BE6E34D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAE861DD636017AFED82363A /* Assets.xcassets */; };
+		93588D2A69443AE766DE1DC2 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */; };
 		A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A4C33BE1899343C3148C7 /* CaptureEngine.swift */; };
 		ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */; };
 		C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */; };
+		DCE1D2F8522D18C38983AE9C /* DeviceFrameProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */; };
+		E65448B81FEEEBA7C7B32098 /* FloatingToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */; };
+		EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3C7614AFAF1A51912ECFCE /* AboutView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		216A4C33BE1899343C3148C7 /* CaptureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
+		2F1B71001D6000191E697A93 /* DeviceFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameView.swift; sourceTree = "<group>"; };
 		31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		349A35B6F092B22B3689915A /* MirrorWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorWindowController.swift; sourceTree = "<group>"; };
+		4B3C7614AFAF1A51912ECFCE /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
+		64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingToolbar.swift; sourceTree = "<group>"; };
 		93F79E3544AD9E9C10EF0889 /* MirrorKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MirrorKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDevice.swift; sourceTree = "<group>"; };
 		B69F98E197254789E3E896F9 /* DevicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePickerView.swift; sourceTree = "<group>"; };
+		BAE861DD636017AFED82363A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BC6D36061000D151D1427BFC /* MirrorKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorKitApp.swift; sourceTree = "<group>"; };
 		BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureState.swift; sourceTree = "<group>"; };
 		CB894266D811AB2C068CD6D7 /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		D5871FA238546EDABACFCB72 /* MirrorContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorContentView.swift; sourceTree = "<group>"; };
 		F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRenderer.swift; sourceTree = "<group>"; };
+		FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -43,12 +55,24 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		3C601A76FA42F163E0BF45B5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BAE861DD636017AFED82363A /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		400088E13DE6296153778DA8 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				4B3C7614AFAF1A51912ECFCE /* AboutView.swift */,
+				2F1B71001D6000191E697A93 /* DeviceFrameView.swift */,
 				B69F98E197254789E3E896F9 /* DevicePickerView.swift */,
+				64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */,
 				D5871FA238546EDABACFCB72 /* MirrorContentView.swift */,
 				349A35B6F092B22B3689915A /* MirrorWindowController.swift */,
+				FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -76,7 +100,9 @@
 				BC6D36061000D151D1427BFC /* MirrorKitApp.swift */,
 				B5A363000FE9187C75CC9EFF /* Core */,
 				24E1662AA7D37983A919F578 /* Models */,
+				3C601A76FA42F163E0BF45B5 /* Resources */,
 				400088E13DE6296153778DA8 /* UI */,
+				C5F09490E2B9CFC15A0816A2 /* Utils */,
 			);
 			path = MirrorKit;
 			sourceTree = "<group>";
@@ -91,6 +117,14 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
+		C5F09490E2B9CFC15A0816A2 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -99,6 +133,7 @@
 			buildConfigurationList = 34716F543C8E0E7CE3370C62 /* Build configuration list for PBXNativeTarget "MirrorKit" */;
 			buildPhases = (
 				286E7FCDB7929C3E5874DD9E /* Sources */,
+				43C316D18B83FF0D65A4741E /* Resources */,
 			);
 			buildRules = (
 			);
@@ -141,21 +176,37 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		43C316D18B83FF0D65A4741E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				704763820F565B390BE6E34D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		286E7FCDB7929C3E5874DD9E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */,
 				ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */,
 				A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */,
 				1E151C03017B4D864B476751 /* CaptureState.swift in Sources */,
 				C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */,
+				DCE1D2F8522D18C38983AE9C /* DeviceFrameProvider.swift in Sources */,
+				20B192FFF33EF90A5C87E7D9 /* DeviceFrameView.swift in Sources */,
 				006B70909C5EBA5F49FF92C8 /* DeviceManager.swift in Sources */,
 				6BD20128F8D17C44F07AA298 /* DevicePickerView.swift in Sources */,
+				E65448B81FEEEBA7C7B32098 /* FloatingToolbar.swift in Sources */,
 				443EEAC587794A31683C5CDA /* FrameRenderer.swift in Sources */,
 				55916EA552CBC0941A09F38E /* MirrorContentView.swift in Sources */,
 				10200181D71770777AA450EC /* MirrorKitApp.swift in Sources */,
 				587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */,
+				93588D2A69443AE766DE1DC2 /* OnboardingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

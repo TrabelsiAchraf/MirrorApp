@@ -1,29 +1,43 @@
 import AppKit
 import SwiftUI
 
-/// Contrôleur de la fenêtre miroir — traffic lights, always-on-top, ombre
-final class MirrorWindowController: NSWindowController, NSWindowDelegate {
+/// Contrôleur de la fenêtre miroir
+final class MirrorWindowController: NSWindowController {
     private let deviceManager: DeviceManager
 
-    /// Résolution native du flux vidéo
-    private var nativeResolution: NSSize?
-
-    /// État always-on-top
     private(set) var isAlwaysOnTop = false {
-        didSet { applyWindowLevel() }
+        didSet { window?.level = isAlwaysOnTop ? .floating : .normal }
     }
 
     init(deviceManager: DeviceManager) {
         self.deviceManager = deviceManager
 
-        // Taille par défaut : ratio iPhone (390×844 en points logiques)
         let defaultSize = NSSize(width: 390, height: 844)
-        let mirrorWindow = MirrorWindow(defaultSize: defaultSize)
+        let screenFrame = NSScreen.main?.visibleFrame ?? .zero
+        let origin = NSPoint(
+            x: screenFrame.midX - defaultSize.width / 2,
+            y: screenFrame.midY - defaultSize.height / 2
+        )
 
-        super.init(window: mirrorWindow)
-        mirrorWindow.delegate = self
+        // Fenêtre 100% borderless — le contenu EST le device
+        let window = BorderlessWindow(
+            contentRect: NSRect(origin: origin, size: defaultSize),
+            styleMask: [.borderless, .resizable],
+            backing: .buffered,
+            defer: false
+        )
 
-        // Héberger la vue SwiftUI
+        window.isMovableByWindowBackground = true
+        window.backgroundColor = .clear
+        window.isOpaque = false
+        window.hasShadow = true
+        window.minSize = NSSize(width: 200, height: 400)
+        window.aspectRatio = defaultSize
+        window.styleMask.insert(.miniaturizable)
+        window.collectionBehavior = [.fullScreenPrimary]
+
+        super.init(window: window)
+
         let captureEngine = CaptureEngine()
         let contentView = MirrorContentView(
             deviceManager: deviceManager,
@@ -33,7 +47,8 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
             }
         )
         let hostingView = NSHostingView(rootView: contentView)
-        mirrorWindow.contentView = hostingView
+        hostingView.layer?.backgroundColor = .clear
+        window.contentView = hostingView
     }
 
     @available(*, unavailable)
@@ -41,24 +56,19 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
         fatalError("init(coder:) non supporté")
     }
 
-    // MARK: - Always-on-top
-
-    /// Bascule le mode always-on-top
     func toggleAlwaysOnTop() {
         isAlwaysOnTop.toggle()
     }
 
-    private func applyWindowLevel() {
-        window?.level = isAlwaysOnTop ? .floating : .normal
+    // Rendre la fenêtre borderless capable de recevoir les événements
+    override func showWindow(_ sender: Any?) {
+        super.showWindow(sender)
+        window?.makeKeyAndOrderFront(nil)
     }
 
-    // MARK: - Interne
-
     private func handleResolutionDetected(_ resolution: NSSize) {
-        nativeResolution = resolution
         window?.aspectRatio = resolution
 
-        // Adapter la taille initiale : 50% de la résolution native, max 80% de l'écran
         guard let window, let screen = window.screen ?? NSScreen.main else { return }
         let maxWidth = screen.visibleFrame.width * 0.8
         let maxHeight = screen.visibleFrame.height * 0.8
@@ -72,21 +82,12 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
             targetHeight *= ratio
         }
 
-        let targetSize = NSSize(width: targetWidth, height: targetHeight)
-        animateResize(to: targetSize, window: window)
-    }
-
-    private func animateResize(to size: NSSize, window: NSWindow) {
-        guard let screen = window.screen ?? NSScreen.main else { return }
-
         let currentFrame = window.frame
         let newOrigin = NSPoint(
-            x: currentFrame.midX - size.width / 2,
-            y: currentFrame.midY - size.height / 2
+            x: currentFrame.midX - targetWidth / 2,
+            y: currentFrame.midY - targetHeight / 2
         )
-        var newFrame = NSRect(origin: newOrigin, size: size)
-
-        // Contraindre dans l'écran visible
+        var newFrame = NSRect(origin: newOrigin, size: NSSize(width: targetWidth, height: targetHeight))
         let visibleFrame = screen.visibleFrame
         newFrame.origin.x = max(visibleFrame.minX, min(newFrame.origin.x, visibleFrame.maxX - newFrame.width))
         newFrame.origin.y = max(visibleFrame.minY, min(newFrame.origin.y, visibleFrame.maxY - newFrame.height))
@@ -99,43 +100,10 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
     }
 }
 
-// MARK: - MirrorWindow
+// MARK: - BorderlessWindow
 
-/// NSWindow avec boutons traffic light (rouge/jaune/vert), titlebar transparente, ombre
-final class MirrorWindow: NSWindow {
-
-    init(defaultSize: NSSize) {
-        let screenFrame = NSScreen.main?.visibleFrame ?? .zero
-        let origin = NSPoint(
-            x: screenFrame.midX - defaultSize.width / 2,
-            y: screenFrame.midY - defaultSize.height / 2
-        )
-        let frame = NSRect(origin: origin, size: defaultSize)
-
-        super.init(
-            contentRect: frame,
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered,
-            defer: false
-        )
-
-        // Titlebar transparente — les traffic lights restent visibles
-        titlebarAppearsTransparent = true
-        titleVisibility = .hidden
-        isMovableByWindowBackground = true
-
-        // Fond noir pour le contenu vidéo
-        backgroundColor = .black
-
-        // Contraintes de taille
-        minSize = NSSize(width: 180, height: 320)
-        aspectRatio = defaultSize
-
-        // Ombre
-        hasShadow = true
-        invalidateShadow()
-    }
-
+/// NSWindow borderless qui accepte les événements clavier et souris
+final class BorderlessWindow: NSWindow {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }
 }

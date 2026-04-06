@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 import CoreMediaIO
 
 /// Delegate de l'application — CoreMediaIO, fenêtre miroir, menu bar icon, Cmd+T
@@ -79,6 +80,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         alwaysOnTopItem.state = (mirrorWindowController?.isAlwaysOnTop ?? false) ? .on : .off
         menu.addItem(alwaysOnTopItem)
 
+        // Device frame toggle
+        let frameItem = NSMenuItem(
+            title: "Afficher le cadre iPhone",
+            action: #selector(toggleDeviceFrame),
+            keyEquivalent: ""
+        )
+        frameItem.target = self
+        frameItem.state = UserDefaults.standard.object(forKey: "showDeviceFrame") == nil
+            ? .on  // Par défaut activé
+            : UserDefaults.standard.bool(forKey: "showDeviceFrame") ? .on : .off
+        menu.addItem(frameItem)
+
         menu.addItem(.separator())
 
         // Quitter
@@ -116,7 +129,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let appMenu = NSMenu()
         let appMenuItem = NSMenuItem()
         appMenuItem.submenu = appMenu
-        appMenu.addItem(NSMenuItem(title: "À propos de MirrorKit", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: ""))
+        let aboutItem = NSMenuItem(title: "À propos de MirrorKit", action: #selector(showAboutWindow), keyEquivalent: "")
+        aboutItem.target = self
+        appMenu.addItem(aboutItem)
         appMenu.addItem(.separator())
         appMenu.addItem(NSMenuItem(title: "Quitter MirrorKit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         mainMenu.addItem(appMenuItem)
@@ -152,6 +167,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func toggleAlwaysOnTopFromMenu() {
         mirrorWindowController?.toggleAlwaysOnTop()
         updateStatusMenu()
+    }
+
+    @objc private func toggleDeviceFrame() {
+        let current = UserDefaults.standard.object(forKey: "showDeviceFrame") == nil
+            ? true
+            : UserDefaults.standard.bool(forKey: "showDeviceFrame")
+        UserDefaults.standard.set(!current, forKey: "showDeviceFrame")
+        updateStatusMenu()
+    }
+
+    @objc private func showAboutWindow() {
+        let aboutView = AboutView()
+        let hostingController = NSHostingController(rootView: aboutView)
+        let aboutWindow = NSWindow(contentViewController: hostingController)
+        aboutWindow.title = "À propos de MirrorKit"
+        aboutWindow.styleMask = [.titled, .closable]
+        aboutWindow.center()
+        aboutWindow.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     // MARK: - CoreMediaIO
