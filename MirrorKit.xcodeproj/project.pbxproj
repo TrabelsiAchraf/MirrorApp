@@ -1,0 +1,352 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		006B70909C5EBA5F49FF92C8 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB894266D811AB2C068CD6D7 /* DeviceManager.swift */; };
+		10200181D71770777AA450EC /* MirrorKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36061000D151D1427BFC /* MirrorKitApp.swift */; };
+		1E151C03017B4D864B476751 /* CaptureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */; };
+		443EEAC587794A31683C5CDA /* FrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */; };
+		55916EA552CBC0941A09F38E /* MirrorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5871FA238546EDABACFCB72 /* MirrorContentView.swift */; };
+		587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349A35B6F092B22B3689915A /* MirrorWindowController.swift */; };
+		6BD20128F8D17C44F07AA298 /* DevicePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69F98E197254789E3E896F9 /* DevicePickerView.swift */; };
+		A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A4C33BE1899343C3148C7 /* CaptureEngine.swift */; };
+		ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */; };
+		C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		216A4C33BE1899343C3148C7 /* CaptureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
+		31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		349A35B6F092B22B3689915A /* MirrorWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorWindowController.swift; sourceTree = "<group>"; };
+		93F79E3544AD9E9C10EF0889 /* MirrorKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MirrorKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDevice.swift; sourceTree = "<group>"; };
+		B69F98E197254789E3E896F9 /* DevicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePickerView.swift; sourceTree = "<group>"; };
+		BC6D36061000D151D1427BFC /* MirrorKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorKitApp.swift; sourceTree = "<group>"; };
+		BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureState.swift; sourceTree = "<group>"; };
+		CB894266D811AB2C068CD6D7 /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
+		D5871FA238546EDABACFCB72 /* MirrorContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorContentView.swift; sourceTree = "<group>"; };
+		F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRenderer.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		24E1662AA7D37983A919F578 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */,
+				B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		400088E13DE6296153778DA8 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				B69F98E197254789E3E896F9 /* DevicePickerView.swift */,
+				D5871FA238546EDABACFCB72 /* MirrorContentView.swift */,
+				349A35B6F092B22B3689915A /* MirrorWindowController.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		5B877CD2567D584247D8D68C = {
+			isa = PBXGroup;
+			children = (
+				A118BD7E08E168A86BBC0A26 /* MirrorKit */,
+				9AD53840479FFBCA4B4BD466 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9AD53840479FFBCA4B4BD466 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93F79E3544AD9E9C10EF0889 /* MirrorKit.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A118BD7E08E168A86BBC0A26 /* MirrorKit */ = {
+			isa = PBXGroup;
+			children = (
+				31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */,
+				BC6D36061000D151D1427BFC /* MirrorKitApp.swift */,
+				B5A363000FE9187C75CC9EFF /* Core */,
+				24E1662AA7D37983A919F578 /* Models */,
+				400088E13DE6296153778DA8 /* UI */,
+			);
+			path = MirrorKit;
+			sourceTree = "<group>";
+		};
+		B5A363000FE9187C75CC9EFF /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				216A4C33BE1899343C3148C7 /* CaptureEngine.swift */,
+				CB894266D811AB2C068CD6D7 /* DeviceManager.swift */,
+				F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C1A6F190995D227DF276C5E9 /* MirrorKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 34716F543C8E0E7CE3370C62 /* Build configuration list for PBXNativeTarget "MirrorKit" */;
+			buildPhases = (
+				286E7FCDB7929C3E5874DD9E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MirrorKit;
+			packageProductDependencies = (
+			);
+			productName = MirrorKit;
+			productReference = 93F79E3544AD9E9C10EF0889 /* MirrorKit.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		27F439D173C78FCD62F0ADCE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 3AB98BA1B307768F5C5D7F09 /* Build configuration list for PBXProject "MirrorKit" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 5B877CD2567D584247D8D68C;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9AD53840479FFBCA4B4BD466 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C1A6F190995D227DF276C5E9 /* MirrorKit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		286E7FCDB7929C3E5874DD9E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */,
+				A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */,
+				1E151C03017B4D864B476751 /* CaptureState.swift in Sources */,
+				C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */,
+				006B70909C5EBA5F49FF92C8 /* DeviceManager.swift in Sources */,
+				6BD20128F8D17C44F07AA298 /* DevicePickerView.swift in Sources */,
+				443EEAC587794A31683C5CDA /* FrameRenderer.swift in Sources */,
+				55916EA552CBC0941A09F38E /* MirrorContentView.swift in Sources */,
+				10200181D71770777AA450EC /* MirrorKitApp.swift in Sources */,
+				587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1B8B84DB97893FB25A3B9B85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MirrorKit/MirrorKit.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = MirrorKit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.achraftrabelsi.MirrorKit;
+				PRODUCT_NAME = MirrorKit;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		7414E4F37426EC9F338F7584 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		DDD8497959699579781A42DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MirrorKit/MirrorKit.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = MirrorKit/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.achraftrabelsi.MirrorKit;
+				PRODUCT_NAME = MirrorKit;
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		E04DD91BDE1F4556DC23222D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		34716F543C8E0E7CE3370C62 /* Build configuration list for PBXNativeTarget "MirrorKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDD8497959699579781A42DC /* Debug */,
+				1B8B84DB97893FB25A3B9B85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3AB98BA1B307768F5C5D7F09 /* Build configuration list for PBXProject "MirrorKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E04DD91BDE1F4556DC23222D /* Debug */,
+				7414E4F37426EC9F338F7584 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 27F439D173C78FCD62F0ADCE /* Project object */;
+}

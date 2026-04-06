@@ -1,0 +1,38 @@
+name: MirrorKit
+options:
+  bundleIdPrefix: com.achraftrabelsi
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.2"
+  createIntermediateGroups: true
+  generateEmptyDirectories: false
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    GENERATE_INFOPLIST_FILE: YES
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+targets:
+  MirrorKit:
+    type: application
+    platform: macOS
+    sources:
+      - path: MirrorKit
+        excludes:
+          - "*.entitlements"
+          - "Info.plist"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.achraftrabelsi.MirrorKit
+        PRODUCT_NAME: MirrorKit
+        INFOPLIST_FILE: MirrorKit/Info.plist
+        CODE_SIGN_ENTITLEMENTS: MirrorKit/MirrorKit.entitlements
+        COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_HARDENED_RUNTIME: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+    entitlements:
+      path: MirrorKit/MirrorKit.entitlements
