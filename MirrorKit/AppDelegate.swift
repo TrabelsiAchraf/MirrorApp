@@ -3,6 +3,7 @@ import SwiftUI
 import CoreMediaIO
 
 /// App delegate — CoreMediaIO, mirror window, menu bar icon, Cmd+T
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var mirrorWindowController: MirrorWindowController?
     private let deviceManager = DeviceManager()

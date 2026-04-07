@@ -1,7 +1,11 @@
 import AVFoundation
 import CoreMediaIO
 
-/// Handles discovery of iPhones connected via USB through CoreMediaIO + AVFoundation
+/// Handles discovery of iPhones connected via USB through CoreMediaIO + AVFoundation.
+///
+/// Marked `@MainActor` because all mutable state is observed by SwiftUI views and
+/// the AVFoundation device-connection notifications are delivered on `.main`.
+@MainActor
 @Observable
 final class DeviceManager {
     /// List of detected devices
@@ -11,11 +15,23 @@ final class DeviceManager {
     /// Current discovery/capture state
     var state: CaptureState = .idle
 
-    private var connectObserver: NSObjectProtocol?
-    private var disconnectObserver: NSObjectProtocol?
+    // Observer tokens are mutated only from MainActor methods (start/stopDiscovery)
+    // and read from `deinit`, which is single-threaded by definition. The unsafe
+    // marker lets `deinit` clean them up without an isolation hop.
+    @ObservationIgnored
+    nonisolated(unsafe) private var connectObserver: NSObjectProtocol?
+    @ObservationIgnored
+    nonisolated(unsafe) private var disconnectObserver: NSObjectProtocol?
 
     deinit {
-        stopDiscovery()
+        // `removeObserver(_:)` is documented as thread-safe by Apple, so it can
+        // be invoked from the nonisolated `deinit` of a MainActor class.
+        if let observer = connectObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = disconnectObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     // MARK: - Device discovery
@@ -27,14 +43,21 @@ final class DeviceManager {
         // Scan devices that are already connected
         scanExistingDevices()
 
-        // Observe connections / disconnections
+        // Observe connections / disconnections.
+        // The notifications are delivered on `.main` so we can assume MainActor
+        // isolation inside the closure even though its type is nonisolated.
         connectObserver = NotificationCenter.default.addObserver(
             forName: .AVCaptureDeviceWasConnected,
             object: nil,
             queue: .main
         ) { [weak self] notification in
             guard let device = notification.object as? AVCaptureDevice else { return }
-            self?.handleDeviceConnected(device)
+            // Notification is delivered on `.main`; AVCaptureDevice is a stable
+            // system object referenced from the main thread only.
+            nonisolated(unsafe) let captured = device
+            MainActor.assumeIsolated {
+                self?.handleDeviceConnected(captured)
+            }
         }
 
         disconnectObserver = NotificationCenter.default.addObserver(
@@ -43,7 +66,10 @@ final class DeviceManager {
             queue: .main
         ) { [weak self] notification in
             guard let device = notification.object as? AVCaptureDevice else { return }
-            self?.handleDeviceDisconnected(device)
+            nonisolated(unsafe) let captured = device
+            MainActor.assumeIsolated {
+                self?.handleDeviceDisconnected(captured)
+            }
         }
     }
 

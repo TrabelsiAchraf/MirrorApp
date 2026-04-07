@@ -52,6 +52,14 @@ struct MirrorContentView: View {
                 isHovering = hovering
             }
         }
+        .onChange(of: deviceManager.state) { _, newState in
+            // Reset capture flag and tear down the engine when leaving the
+            // capturing state (e.g. iPhone unplugged), so reconnecting can
+            // start a fresh capture session.
+            if case .capturing = newState { return }
+            isCapturing = false
+            Task { await captureEngine.stopCapture() }
+        }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView {
                 showOnboarding = false
@@ -240,8 +248,12 @@ struct MirrorContentView: View {
         Task {
             do {
                 try await captureEngine.startCapture(device: avDevice) { [displayLayer] sampleBuffer in
+                    // CMSampleBuffer is not Sendable on the macOS 14 SDK (it becomes
+                    // Sendable on macOS 15). The buffer is consumed once on the main
+                    // thread and never retained, so the unsafe transfer is sound.
+                    nonisolated(unsafe) let buffer = sampleBuffer
                     DispatchQueue.main.async {
-                        displayLayer.displaySampleBuffer(sampleBuffer)
+                        displayLayer.displaySampleBuffer(buffer)
                     }
                 }
 

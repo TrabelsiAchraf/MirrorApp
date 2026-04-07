@@ -22,9 +22,13 @@ struct FrameRenderer: NSViewRepresentable {
     }
 }
 
-/// Specialized CALayer for displaying video frames
-/// Updated directly from the capture callback (on the main thread)
-final class VideoDisplayLayer: CALayer {
+/// Specialized CALayer for displaying video frames.
+///
+/// Thread safety: marked `@unchecked Sendable` because the only mutable
+/// property (`contents`) is exclusively written from the main thread via
+/// `displaySampleBuffer(_:)`. All call sites must dispatch to the main
+/// thread before invoking display methods.
+final class VideoDisplayLayer: CALayer, @unchecked Sendable {
 
     override init() {
         super.init()
