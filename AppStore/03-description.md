@@ -44,4 +44,4 @@ PAY ONCE, OWN FOREVER
 
 No subscriptions. No in-app purchases. No ads. One simple price for the full app and every future update.
 
-Have a question or feedback? Reach out at support@mirrorkit.app — I read every message.
+Have a question or feedback? Reach out at trabelsiachraf.devapps@gmail.com — I read every message.
