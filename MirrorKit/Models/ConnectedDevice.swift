@@ -1,14 +1,14 @@
 import Foundation
 import CoreGraphics
 
-/// Représente un iPhone connecté en USB détecté par CoreMediaIO
+/// Represents an iPhone connected via USB and detected through CoreMediaIO
 struct ConnectedDevice: Identifiable, Hashable {
-    /// Identifiant unique de l'appareil (AVCaptureDevice.uniqueID)
+    /// Unique device identifier (AVCaptureDevice.uniqueID)
     let id: String
-    /// Nom localisé de l'appareil (ex: "iPhone de Achraf")
+    /// Localized device name (e.g. "Achraf's iPhone")
     let name: String
-    /// Identifiant du modèle (ex: "iPhone15,2")
+    /// Model identifier (e.g. "iPhone15,2")
     let modelID: String
-    /// Résolution native du flux vidéo (renseignée après le début de la capture)
+    /// Native video stream resolution (set after capture starts)
     var resolution: CGSize?
 }

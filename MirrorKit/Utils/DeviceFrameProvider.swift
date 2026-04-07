@@ -1,17 +1,17 @@
 import Foundation
 import CoreGraphics
 
-/// Décrit la forme du cadre iPhone à dessiner
+/// Describes the iPhone frame to draw
 struct DeviceFrameSpec {
-    /// Nom du modèle pour l'affichage
+    /// Display name of the model
     let displayName: String
-    /// Rayon des coins extérieurs du cadre (en points, à l'échelle native)
+    /// Outer corner radius of the frame (in points, at native scale)
     let cornerRadius: CGFloat
-    /// Épaisseur du cadre autour de l'écran (en points)
+    /// Bezel thickness around the screen (in points)
     let bezelWidth: CGFloat
-    /// Couleur du cadre
+    /// Frame color
     let frameColor: FrameColor
-    /// Type d'encoche / Dynamic Island
+    /// Notch / Dynamic Island style
     let notchStyle: NotchStyle
 
     enum FrameColor {
@@ -31,19 +31,19 @@ struct DeviceFrameSpec {
     enum NotchStyle {
         /// Dynamic Island (iPhone 14 Pro+, 15, 16)
         case dynamicIsland
-        /// Encoche classique (iPhone X à 14)
+        /// Classic notch (iPhone X to 14)
         case notch
-        /// Pas d'encoche (iPhone SE, anciens modèles)
+        /// No notch (iPhone SE, older models)
         case none
     }
 }
 
-/// Fournit les spécifications de cadre pour chaque modèle d'iPhone
+/// Provides frame specifications for each iPhone model
 enum DeviceFrameProvider {
 
-    /// Retourne la spécification du cadre pour un modelID donné
+    /// Returns the frame specification for a given modelID
     static func frameSpec(for modelID: String) -> DeviceFrameSpec {
-        // Extraire le numéro de modèle (ex: "iPhone17,3" → 17)
+        // Extract the model number (e.g. "iPhone17,3" → 17)
         let majorVersion = extractMajorVersion(from: modelID)
 
         switch majorVersion {
@@ -87,7 +87,7 @@ enum DeviceFrameProvider {
                 notchStyle: .notch
             )
 
-        // Modèles plus anciens ou SE
+        // Older models or SE
         default:
             return DeviceFrameSpec(
                 displayName: "iPhone",
@@ -99,7 +99,7 @@ enum DeviceFrameProvider {
         }
     }
 
-    /// Extrait le numéro de version majeur du modelID (ex: "iPhone17,3" → 17)
+    /// Extracts the major version number from the modelID (e.g. "iPhone17,3" → 17)
     private static func extractMajorVersion(from modelID: String) -> Int {
         let cleaned = modelID.replacingOccurrences(of: "iPhone", with: "")
         let parts = cleaned.split(separator: ",")

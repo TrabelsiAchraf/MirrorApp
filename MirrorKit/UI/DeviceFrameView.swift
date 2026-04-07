@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Conteneur device frame — dessine un cadre iPhone autour du contenu passé en paramètre
+/// Device frame container — draws an iPhone frame around the content passed as parameter
 struct DeviceFrameView<Content: View>: View {
     let spec: DeviceFrameSpec
     let content: Content
@@ -18,17 +18,17 @@ struct DeviceFrameView<Content: View>: View {
             let outerRadius = spec.cornerRadius * scale
             let innerRadius = max(outerRadius - bezel, 8)
 
-            // Dimensions exactes de l'écran intérieur
+            // Exact dimensions of the inner screen
             let screenWidth = geometry.size.width - bezel * 2
             let screenHeight = geometry.size.height - verticalBezel * 2
 
-            // Le cadre iPhone complet
+            // The full iPhone frame
             ZStack {
-                // Corps du device (rectangle arrondi noir)
+                // Device body (black rounded rectangle)
                 RoundedRectangle(cornerRadius: outerRadius, style: .continuous)
                     .fill(frameColor)
 
-                // Écran (contenu vidéo) — taille fixe, centré
+                // Screen (video content) — fixed size, centered
                 content
                     .frame(width: screenWidth, height: screenHeight)
                     .clipShape(RoundedRectangle(cornerRadius: innerRadius, style: .continuous))

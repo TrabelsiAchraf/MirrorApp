@@ -2,7 +2,7 @@ import SwiftUI
 import AVFoundation
 import CoreMedia
 
-/// Vue principale — device frame avec vidéo + toolbar flottante au hover
+/// Main view — device frame with video + floating toolbar on hover
 struct MirrorContentView: View {
     let deviceManager: DeviceManager
     let captureEngine: CaptureEngine
@@ -19,7 +19,7 @@ struct MirrorContentView: View {
 
     var body: some View {
         ZStack {
-            // Gradient arrière-plan en mode étendu
+            // Background gradient in expanded mode
             if isExpanded {
                 LinearGradient(
                     colors: [
@@ -33,12 +33,12 @@ struct MirrorContentView: View {
             }
 
             VStack(spacing: 4) {
-                // Toolbar flottante AU-DESSUS du frame
+                // Floating toolbar ABOVE the frame
                 toolbarArea
 
-                // Contenu principal (device frame ou états)
+                // Main content (device frame or status views)
                 if isExpanded {
-                    // Mode étendu : device frame centré, pas étiré
+                    // Expanded mode: device frame centered, not stretched
                     mainContent
                         .aspectRatio(9.0 / 19.5, contentMode: .fit)
                         .padding(40)
@@ -60,7 +60,7 @@ struct MirrorContentView: View {
         }
     }
 
-    /// Zone de la toolbar — prend toujours la même hauteur, contenu visible au hover
+    /// Toolbar area — always takes the same height, content visible on hover
     private var toolbarArea: some View {
         Group {
             if let device = deviceManager.selectedDevice {
@@ -73,14 +73,14 @@ struct MirrorContentView: View {
                 .padding(.horizontal, 8)
                 .opacity(isHovering ? 1 : 0)
             } else {
-                // Placeholder quand pas de device — même hauteur
+                // Placeholder when no device — same height
                 Color.clear.frame(height: 44)
                     .opacity(0)
             }
         }
     }
 
-    /// Contenu principal selon l'état
+    /// Main content depending on the current state
     private var mainContent: some View {
         Group {
             switch deviceManager.state {
@@ -110,25 +110,25 @@ struct MirrorContentView: View {
 
     // MARK: - Capture view
 
-    /// Device frame contenant le flux vidéo
+    /// Device frame containing the video stream
     private var captureView: some View {
         Group {
             if showDeviceFrame, let device = deviceManager.selectedDevice {
                 let spec = DeviceFrameProvider.frameSpec(for: device.modelID)
 
-                // Le device frame contient la vidéo à l'intérieur
+                // The device frame contains the video inside
                 DeviceFrameView(spec: spec) {
                     FrameRenderer(displayLayer: displayLayer)
                 }
             } else {
-                // Sans frame : vidéo brute avec coins arrondis
+                // Without frame: raw video with rounded corners
                 FrameRenderer(displayLayer: displayLayer)
                     .clipShape(RoundedRectangle(cornerRadius: 44, style: .continuous))
             }
         }
     }
 
-    // MARK: - Autres vues
+    // MARK: - Other views
 
     private var detectingView: some View {
         VStack(spacing: 16) {
@@ -136,11 +136,11 @@ struct MirrorContentView: View {
                 .scaleEffect(1.5)
                 .tint(.white)
 
-            Text("Connectez un iPhone en USB")
+            Text("Connect an iPhone via USB")
                 .font(.title3)
                 .foregroundColor(.white)
 
-            Text("En attente d'un appareil...")
+            Text("Waiting for a device…")
                 .font(.caption)
                 .foregroundColor(.gray)
         }
@@ -159,7 +159,7 @@ struct MirrorContentView: View {
             Button(action: {
                 startCapture(deviceID: device.id)
             }) {
-                Label("Démarrer le mirroring", systemImage: "play.fill")
+                Label("Start Mirroring", systemImage: "play.fill")
                     .font(.headline)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
@@ -178,7 +178,7 @@ struct MirrorContentView: View {
                 .font(.system(size: 48))
                 .foregroundColor(.orange)
 
-            Text("Erreur")
+            Text("Error")
                 .font(.title2)
                 .foregroundColor(.white)
 
@@ -188,7 +188,7 @@ struct MirrorContentView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
-            Button("Réessayer") {
+            Button("Retry") {
                 deviceManager.state = .detecting
                 deviceManager.startDiscovery()
             }
@@ -198,24 +198,24 @@ struct MirrorContentView: View {
 
     // MARK: - Expand / Collapse
 
-    /// Bascule entre mode normal et mode étendu (plein écran avec gradient)
+    /// Toggles between normal and expanded mode (full screen with gradient)
     private func toggleExpanded() {
         guard let window = NSApp.keyWindow else { return }
 
         withAnimation(.easeInOut(duration: 0.3)) {
             if isExpanded {
-                // Revenir à la taille normale
+                // Restore the previous size
                 isExpanded = false
                 if let saved = savedFrame {
                     window.setFrame(saved, display: true, animate: true)
                     window.aspectRatio = saved.size
                 }
             } else {
-                // Sauvegarder la taille actuelle et agrandir à l'écran
+                // Save the current size and expand to fill the screen
                 savedFrame = window.frame
                 isExpanded = true
                 if let screen = window.screen ?? NSScreen.main {
-                    window.aspectRatio = NSSize(width: 0, height: 0) // Débloquer le ratio
+                    window.aspectRatio = NSSize(width: 0, height: 0) // Unlock the aspect ratio
                     window.setFrame(screen.visibleFrame, display: true, animate: true)
                 }
             }
@@ -233,7 +233,7 @@ struct MirrorContentView: View {
             position: .unspecified
         )
         guard let avDevice = discovery.devices.first(where: { $0.uniqueID == deviceID }) else {
-            deviceManager.state = .error("Appareil introuvable")
+            deviceManager.state = .error("Device not found")
             return
         }
 

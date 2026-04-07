@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Barre d'outils flottante — traffic lights + nom du device
+/// Floating toolbar — traffic lights + device name
 struct FloatingToolbar: View {
     let deviceName: String
     let modelName: String
@@ -26,7 +26,7 @@ struct FloatingToolbar: View {
                 .buttonStyle(.plain)
             }
 
-            // Nom de l'appareil
+            // Device name
             VStack(alignment: .leading, spacing: 1) {
                 Text(deviceName)
                     .font(.system(size: 12, weight: .semibold))

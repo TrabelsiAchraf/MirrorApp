@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 import CoreMediaIO
 
-/// Delegate de l'application — CoreMediaIO, fenêtre miroir, menu bar icon, Cmd+T
+/// App delegate — CoreMediaIO, mirror window, menu bar icon, Cmd+T
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var mirrorWindowController: MirrorWindowController?
     private let deviceManager = DeviceManager()
@@ -10,25 +10,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var keyMonitor: Any?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Activer la découverte des appareils iOS (écrans iPhone via USB)
+        // Enable iOS device discovery (iPhone screens via USB)
         enableScreenCaptureDevices()
 
-        // Créer et afficher la fenêtre miroir
+        // Create and show the mirror window
         mirrorWindowController = MirrorWindowController(deviceManager: deviceManager)
         mirrorWindowController?.showWindow(nil)
 
-        // Configurer le menu bar icon
+        // Configure the menu bar icon
         setupStatusItem()
 
-        // Moniteur clavier pour Cmd+T (always-on-top)
+        // Keyboard monitor for Cmd+T (always-on-top)
         setupKeyboardMonitor()
 
-        // Configurer le menu principal après SwiftUI
+        // Configure the main menu after SwiftUI
         DispatchQueue.main.async { [weak self] in
             self?.setupMainMenu()
         }
 
-        // Lancer la détection des appareils
+        // Start device discovery
         deviceManager.startDiscovery()
     }
 
@@ -39,7 +39,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        false // L'app reste active via le status item même si la fenêtre est fermée
+        false // The app stays alive via the status item even after the window is closed
     }
 
     // MARK: - Status Item (Menu Bar Icon)
@@ -55,13 +55,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         updateStatusMenu()
     }
 
-    /// Met à jour le menu du status item
+    /// Updates the status item menu
     private func updateStatusMenu() {
         let menu = NSMenu()
 
-        // Afficher la fenêtre
+        // Show window
         let showItem = NSMenuItem(
-            title: "Afficher la fenêtre",
+            title: "Show Window",
             action: #selector(showMirrorWindow),
             keyEquivalent: ""
         )
@@ -72,7 +72,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Always-on-top toggle
         let alwaysOnTopItem = NSMenuItem(
-            title: "Toujours au premier plan",
+            title: "Always on Top",
             action: #selector(toggleAlwaysOnTopFromMenu),
             keyEquivalent: ""
         )
@@ -82,21 +82,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Device frame toggle
         let frameItem = NSMenuItem(
-            title: "Afficher le cadre iPhone",
+            title: "Show iPhone Frame",
             action: #selector(toggleDeviceFrame),
             keyEquivalent: ""
         )
         frameItem.target = self
         frameItem.state = UserDefaults.standard.object(forKey: "showDeviceFrame") == nil
-            ? .on  // Par défaut activé
+            ? .on  // Enabled by default
             : UserDefaults.standard.bool(forKey: "showDeviceFrame") ? .on : .off
         menu.addItem(frameItem)
 
         menu.addItem(.separator())
 
-        // Quitter
+        // Quit
         let quitItem = NSMenuItem(
-            title: "Quitter MirrorKit",
+            title: "Quit MirrorKit",
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )
@@ -105,9 +105,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem?.menu = menu
     }
 
-    // MARK: - Moniteur clavier
+    // MARK: - Keyboard Monitor
 
-    /// Intercepte Cmd+T pour basculer always-on-top
+    /// Intercepts Cmd+T to toggle always-on-top
     private func setupKeyboardMonitor() {
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self, event.modifierFlags.contains(.command) else { return event }
@@ -120,29 +120,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    // MARK: - Menu Principal
+    // MARK: - Main Menu
 
     private func setupMainMenu() {
         let mainMenu = NSMenu()
 
-        // Menu "MirrorKit"
+        // "MirrorKit" menu
         let appMenu = NSMenu()
         let appMenuItem = NSMenuItem()
         appMenuItem.submenu = appMenu
-        let aboutItem = NSMenuItem(title: "À propos de MirrorKit", action: #selector(showAboutWindow), keyEquivalent: "")
+        let aboutItem = NSMenuItem(title: "About MirrorKit", action: #selector(showAboutWindow), keyEquivalent: "")
         aboutItem.target = self
         appMenu.addItem(aboutItem)
         appMenu.addItem(.separator())
-        appMenu.addItem(NSMenuItem(title: "Quitter MirrorKit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        appMenu.addItem(NSMenuItem(title: "Quit MirrorKit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         mainMenu.addItem(appMenuItem)
 
-        // Menu "Fenêtre"
-        let windowMenu = NSMenu(title: "Fenêtre")
+        // "Window" menu
+        let windowMenu = NSMenu(title: "Window")
         let windowMenuItem = NSMenuItem()
         windowMenuItem.submenu = windowMenu
 
         let alwaysOnTopItem = NSMenuItem(
-            title: "Toujours au premier plan",
+            title: "Always on Top",
             action: #selector(toggleAlwaysOnTopFromMenu),
             keyEquivalent: "t"
         )
@@ -181,7 +181,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let aboutView = AboutView()
         let hostingController = NSHostingController(rootView: aboutView)
         let aboutWindow = NSWindow(contentViewController: hostingController)
-        aboutWindow.title = "À propos de MirrorKit"
+        aboutWindow.title = "About MirrorKit"
         aboutWindow.styleMask = [.titled, .closable]
         aboutWindow.center()
         aboutWindow.makeKeyAndOrderFront(nil)
@@ -190,8 +190,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - CoreMediaIO
 
-    /// Active kCMIOHardwarePropertyAllowScreenCaptureDevices pour que macOS expose
-    /// les écrans iPhone connectés en USB comme des AVCaptureDevice
+    /// Enables kCMIOHardwarePropertyAllowScreenCaptureDevices so macOS exposes
+    /// iPhone screens connected via USB as AVCaptureDevice instances
     private func enableScreenCaptureDevices() {
         var property = CMIOObjectPropertyAddress(
             mSelector: CMIOObjectPropertySelector(kCMIOHardwarePropertyAllowScreenCaptureDevices),
@@ -208,9 +208,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             &allow
         )
         if status != noErr {
-            print("[MirrorKit] Erreur activation CoreMediaIO: \(status)")
+            print("[MirrorKit] CoreMediaIO activation error: \(status)")
         } else {
-            print("[MirrorKit] CoreMediaIO activé — découverte des appareils iOS possible")
+            print("[MirrorKit] CoreMediaIO enabled — iOS device discovery is now possible")
         }
     }
 }

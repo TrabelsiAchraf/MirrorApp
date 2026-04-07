@@ -1,16 +1,16 @@
 import Foundation
 
-/// États possibles du pipeline de capture
+/// Possible states of the capture pipeline
 enum CaptureState: Equatable {
-    /// Aucune activité — en attente d'un appareil
+    /// No activity — waiting for a device
     case idle
-    /// Recherche d'appareils en cours
+    /// Searching for devices
     case detecting
-    /// Appareil connecté, prêt à capturer
+    /// Device connected, ready to capture
     case connected(ConnectedDevice)
-    /// Capture en cours — flux vidéo actif
+    /// Capture in progress — video stream active
     case capturing
-    /// Erreur rencontrée
+    /// Error encountered
     case error(String)
 
     static func == (lhs: CaptureState, rhs: CaptureState) -> Bool {

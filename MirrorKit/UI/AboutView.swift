@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Fenêtre À propos de MirrorKit
+/// MirrorKit About window
 struct AboutView: View {
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -12,12 +12,12 @@ struct AboutView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            // Icône app
+            // App icon
             Image(systemName: "iphone.radiowaves.left.and.right")
                 .font(.system(size: 64))
                 .foregroundStyle(.blue)
 
-            // Nom
+            // Name
             Text("MirrorKit")
                 .font(.title.bold())
 
@@ -27,7 +27,7 @@ struct AboutView: View {
                 .foregroundColor(.secondary)
 
             // Description
-            Text("Affichez l'écran de votre iPhone\nsur votre Mac via USB.")
+            Text("Display your iPhone screen\non your Mac via USB.")
                 .font(.body)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

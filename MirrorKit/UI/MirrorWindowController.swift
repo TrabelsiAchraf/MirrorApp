@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// Contrôleur de la fenêtre miroir
+/// Mirror window controller
 final class MirrorWindowController: NSWindowController {
     private let deviceManager: DeviceManager
 
@@ -19,7 +19,7 @@ final class MirrorWindowController: NSWindowController {
             y: screenFrame.midY - defaultSize.height / 2
         )
 
-        // Fenêtre 100% borderless — le contenu EST le device
+        // Fully borderless window — the content IS the device
         let window = BorderlessWindow(
             contentRect: NSRect(origin: origin, size: defaultSize),
             styleMask: [.borderless, .resizable],
@@ -53,14 +53,14 @@ final class MirrorWindowController: NSWindowController {
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) non supporté")
+        fatalError("init(coder:) is not supported")
     }
 
     func toggleAlwaysOnTop() {
         isAlwaysOnTop.toggle()
     }
 
-    // Rendre la fenêtre borderless capable de recevoir les événements
+    // Make the borderless window able to receive events
     override func showWindow(_ sender: Any?) {
         super.showWindow(sender)
         window?.makeKeyAndOrderFront(nil)
@@ -102,7 +102,7 @@ final class MirrorWindowController: NSWindowController {
 
 // MARK: - BorderlessWindow
 
-/// NSWindow borderless qui accepte les événements clavier et souris
+/// Borderless NSWindow that accepts keyboard and mouse events
 final class BorderlessWindow: NSWindow {
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { true }

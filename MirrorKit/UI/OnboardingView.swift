@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Écran d'onboarding affiché au premier lancement
+/// Onboarding screen shown on first launch
 struct OnboardingView: View {
     let onComplete: () -> Void
 
@@ -9,18 +9,18 @@ struct OnboardingView: View {
     private let steps: [(icon: String, title: String, description: String)] = [
         (
             "iphone.and.arrow.forward",
-            "Bienvenue dans MirrorKit",
-            "Affichez l'écran de votre iPhone directement sur votre Mac. Idéal pour les présentations, le développement ou simplement garder un œil sur votre téléphone."
+            "Welcome to MirrorKit",
+            "Display your iPhone screen directly on your Mac. Perfect for presentations, development, or just keeping an eye on your phone."
         ),
         (
             "cable.connector",
-            "Branchez votre iPhone en USB",
-            "Connectez votre iPhone à votre Mac avec un câble USB ou USB-C. MirrorKit utilise la connexion filaire pour un affichage en temps réel sans latence."
+            "Plug in your iPhone via USB",
+            "Connect your iPhone to your Mac with a USB or USB-C cable. MirrorKit uses a wired connection for real-time, low-latency display."
         ),
         (
             "camera.fill",
-            "Autorisez l'accès caméra",
-            "macOS va vous demander une permission d'accès caméra. C'est normal : votre iPhone est vu comme un périphérique de capture vidéo. Aucune donnée n'est enregistrée ni transmise."
+            "Grant camera access",
+            "macOS will ask for camera permission. This is normal — your iPhone is seen as a video capture device. No data is recorded or transmitted."
         )
     ]
 
@@ -28,14 +28,14 @@ struct OnboardingView: View {
         VStack(spacing: 0) {
             Spacer()
 
-            // Icône
+            // Icon
             Image(systemName: steps[currentStep].icon)
                 .font(.system(size: 64))
                 .foregroundStyle(.blue)
                 .frame(height: 80)
                 .padding(.bottom, 24)
 
-            // Titre
+            // Title
             Text(steps[currentStep].title)
                 .font(.title2.bold())
                 .multilineTextAlignment(.center)
@@ -51,7 +51,7 @@ struct OnboardingView: View {
 
             Spacer()
 
-            // Indicateurs de progression
+            // Progress indicators
             HStack(spacing: 8) {
                 ForEach(0..<steps.count, id: \.self) { index in
                     Circle()
@@ -61,10 +61,10 @@ struct OnboardingView: View {
             }
             .padding(.bottom, 24)
 
-            // Boutons
+            // Buttons
             HStack {
                 if currentStep > 0 {
-                    Button("Précédent") {
+                    Button("Back") {
                         withAnimation {
                             currentStep -= 1
                         }
@@ -76,14 +76,14 @@ struct OnboardingView: View {
                 Spacer()
 
                 if currentStep < steps.count - 1 {
-                    Button("Suivant") {
+                    Button("Next") {
                         withAnimation {
                             currentStep += 1
                         }
                     }
                     .buttonStyle(.borderedProminent)
                 } else {
-                    Button("Commencer") {
+                    Button("Get Started") {
                         onComplete()
                     }
                     .buttonStyle(.borderedProminent)

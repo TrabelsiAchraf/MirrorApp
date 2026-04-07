@@ -1,12 +1,12 @@
 import SwiftUI
 
-/// Vue de sélection d'appareil — affichée quand plusieurs iPhones sont connectés
+/// Device picker view — shown when multiple iPhones are connected
 struct DevicePickerView: View {
     let deviceManager: DeviceManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Appareils détectés")
+            Text("Detected Devices")
                 .font(.headline)
                 .foregroundColor(.white)
 

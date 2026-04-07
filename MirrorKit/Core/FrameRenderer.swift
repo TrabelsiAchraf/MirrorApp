@@ -3,9 +3,9 @@ import AppKit
 import CoreMedia
 import CoreVideo
 
-/// Vue NSViewRepresentable qui affiche les frames vidéo via un CALayer
+/// NSViewRepresentable view that displays video frames via a CALayer
 struct FrameRenderer: NSViewRepresentable {
-    /// Référence vers le layer d'affichage pour mise à jour externe
+    /// Reference to the display layer for external updates
     let displayLayer: VideoDisplayLayer
 
     func makeNSView(context: Context) -> NSView {
@@ -18,17 +18,17 @@ struct FrameRenderer: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: NSView, context: Context) {
-        // Pas de mise à jour SwiftUI nécessaire — le layer est mis à jour directement
+        // No SwiftUI update needed — the layer is updated directly
     }
 }
 
-/// CALayer spécialisé pour l'affichage des frames vidéo
-/// Mis à jour directement depuis le callback de capture (sur le main thread)
+/// Specialized CALayer for displaying video frames
+/// Updated directly from the capture callback (on the main thread)
 final class VideoDisplayLayer: CALayer {
 
     override init() {
         super.init()
-        // Désactiver les animations implicites pour éviter le lag
+        // Disable implicit animations to avoid lag
         self.actions = [
             "contents": NSNull(),
             "bounds": NSNull(),
@@ -44,15 +44,15 @@ final class VideoDisplayLayer: CALayer {
         super.init(coder: coder)
     }
 
-    /// Affiche un CMSampleBuffer — doit être appelé sur le main thread
+    /// Displays a CMSampleBuffer — must be called on the main thread
     func displaySampleBuffer(_ sampleBuffer: CMSampleBuffer) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         displayPixelBuffer(pixelBuffer)
     }
 
-    /// Affiche un CVPixelBuffer directement
+    /// Displays a CVPixelBuffer directly
     func displayPixelBuffer(_ pixelBuffer: CVPixelBuffer) {
-        // Créer une CIImage puis CGImage pour l'affichage via CALayer
+        // Build a CIImage then a CGImage for display via CALayer
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let context = CIContext()
         guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return }

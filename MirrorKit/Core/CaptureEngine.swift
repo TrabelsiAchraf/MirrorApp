@@ -1,7 +1,7 @@
 import AVFoundation
 import CoreMedia
 
-/// Erreurs possibles du moteur de capture
+/// Possible errors raised by the capture engine
 enum CaptureError: LocalizedError {
     case inputCreationFailed(Error)
     case inputNotSupported
@@ -11,19 +11,19 @@ enum CaptureError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .inputCreationFailed(let error):
-            return "Impossible de créer l'entrée de capture : \(error.localizedDescription)"
+            return "Failed to create capture input: \(error.localizedDescription)"
         case .inputNotSupported:
-            return "L'entrée de capture n'est pas supportée par la session"
+            return "Capture input is not supported by the session"
         case .outputNotSupported:
-            return "La sortie vidéo n'est pas supportée par la session"
+            return "Video output is not supported by the session"
         case .sessionConfigurationFailed(let reason):
-            return "Échec de la configuration de la session : \(reason)"
+            return "Failed to configure capture session: \(reason)"
         }
     }
 }
 
-/// Moteur de capture vidéo — gère le pipeline AVCaptureSession
-/// Utilise un Actor pour garantir la thread-safety
+/// Video capture engine — manages the AVCaptureSession pipeline
+/// Uses an Actor to guarantee thread safety
 actor CaptureEngine {
     private var session: AVCaptureSession?
     private let captureQueue = DispatchQueue(
@@ -32,31 +32,31 @@ actor CaptureEngine {
     )
     private var sampleBufferDelegate: SampleBufferDelegate?
 
-    /// Résolution du flux vidéo détectée
+    /// Detected video stream resolution
     private(set) var detectedResolution: CGSize?
 
-    /// Indique si la capture est en cours
+    /// Whether capture is currently running
     var isRunning: Bool {
         session?.isRunning ?? false
     }
 
-    // MARK: - Contrôle de la capture
+    // MARK: - Capture control
 
-    /// Démarre la capture depuis un AVCaptureDevice (iPhone)
+    /// Starts capture from an AVCaptureDevice (iPhone)
     /// - Parameters:
-    ///   - device: L'AVCaptureDevice représentant l'iPhone
-    ///   - frameHandler: Callback appelé à chaque frame reçue (appelé sur la capture queue)
+    ///   - device: The AVCaptureDevice representing the iPhone
+    ///   - frameHandler: Callback called for every received frame (called on the capture queue)
     func startCapture(
         device: AVCaptureDevice,
         frameHandler: @escaping @Sendable (CMSampleBuffer) -> Void
     ) throws {
-        // Arrêter toute session existante
+        // Stop any existing session
         stopCapture()
 
         let session = AVCaptureSession()
         session.sessionPreset = .high
 
-        // Configurer l'input
+        // Configure the input
         session.beginConfiguration()
 
         let input: AVCaptureDeviceInput
@@ -73,18 +73,18 @@ actor CaptureEngine {
         }
         session.addInput(input)
 
-        // Configurer l'output vidéo
+        // Configure the video output
         let output = AVCaptureVideoDataOutput()
         output.videoSettings = [
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
         ]
         output.alwaysDiscardsLateVideoFrames = true
 
-        // Delegate pour recevoir les frames
-        // Détection de la résolution + forwarding vers le handler
+        // Delegate that receives the frames
+        // Resolution detection + forwarding to the handler
         let resolutionFlag = AtomicFlag()
         let delegate = SampleBufferDelegate { [weak self] sampleBuffer in
-            // Détecter la résolution à partir de la première frame
+            // Detect the resolution from the first frame
             if !resolutionFlag.value,
                let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
                 resolutionFlag.value = true
@@ -109,31 +109,31 @@ actor CaptureEngine {
         session.startRunning()
         self.session = session
 
-        print("[MirrorKit] Capture démarrée pour \(device.localizedName)")
+        print("[MirrorKit] Capture started for \(device.localizedName)")
     }
 
-    /// Arrête la capture en cours
+    /// Stops the running capture
     func stopCapture() {
         session?.stopRunning()
         session = nil
         sampleBufferDelegate = nil
         detectedResolution = nil
-        print("[MirrorKit] Capture arrêtée")
+        print("[MirrorKit] Capture stopped")
     }
 
-    // MARK: - Interne
+    // MARK: - Internal
 
     private func updateResolution(_ resolution: CGSize) {
         if detectedResolution == nil {
             detectedResolution = resolution
-            print("[MirrorKit] Résolution détectée : \(Int(resolution.width))×\(Int(resolution.height))")
+            print("[MirrorKit] Detected resolution: \(Int(resolution.width))×\(Int(resolution.height))")
         }
     }
 }
 
 // MARK: - AtomicFlag
 
-/// Flag thread-safe pour la détection unique de résolution
+/// Thread-safe flag used for one-shot resolution detection
 private final class AtomicFlag: @unchecked Sendable {
     private let lock = NSLock()
     private var _value = false
@@ -146,7 +146,7 @@ private final class AtomicFlag: @unchecked Sendable {
 
 // MARK: - SampleBufferDelegate
 
-/// Classe helper pour recevoir les CMSampleBuffer (un Actor ne peut pas être delegate directement)
+/// Helper class that receives CMSampleBuffers (an Actor cannot be a delegate directly)
 private final class SampleBufferDelegate: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     private let handler: @Sendable (CMSampleBuffer) -> Void
 
@@ -167,6 +167,6 @@ private final class SampleBufferDelegate: NSObject, AVCaptureVideoDataOutputSamp
         didDrop sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
-        // Frame ignorée — comportement normal avec alwaysDiscardsLateVideoFrames
+        // Frame dropped — normal behavior with alwaysDiscardsLateVideoFrames
     }
 }

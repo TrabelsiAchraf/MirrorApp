@@ -1,14 +1,14 @@
 import AVFoundation
 import CoreMediaIO
 
-/// Gère la détection des iPhones connectés en USB via CoreMediaIO + AVFoundation
+/// Handles discovery of iPhones connected via USB through CoreMediaIO + AVFoundation
 @Observable
 final class DeviceManager {
-    /// Liste des appareils détectés
+    /// List of detected devices
     var devices: [ConnectedDevice] = []
-    /// Appareil actuellement sélectionné
+    /// Currently selected device
     var selectedDevice: ConnectedDevice?
-    /// État actuel de la détection/capture
+    /// Current discovery/capture state
     var state: CaptureState = .idle
 
     private var connectObserver: NSObjectProtocol?
@@ -18,16 +18,16 @@ final class DeviceManager {
         stopDiscovery()
     }
 
-    // MARK: - Découverte des appareils
+    // MARK: - Device discovery
 
-    /// Lance la détection des iPhones connectés en USB
+    /// Starts iPhone USB discovery
     func startDiscovery() {
         state = .detecting
 
-        // Scanner les appareils déjà connectés
+        // Scan devices that are already connected
         scanExistingDevices()
 
-        // Observer les connexions/déconnexions
+        // Observe connections / disconnections
         connectObserver = NotificationCenter.default.addObserver(
             forName: .AVCaptureDeviceWasConnected,
             object: nil,
@@ -47,7 +47,7 @@ final class DeviceManager {
         }
     }
 
-    /// Arrête la détection
+    /// Stops discovery
     func stopDiscovery() {
         if let observer = connectObserver {
             NotificationCenter.default.removeObserver(observer)
@@ -59,15 +59,15 @@ final class DeviceManager {
         }
     }
 
-    /// Sélectionne un appareil pour la capture
+    /// Selects a device for capture
     func selectDevice(_ device: ConnectedDevice) {
         selectedDevice = device
         state = .connected(device)
     }
 
-    // MARK: - Gestion interne
+    // MARK: - Internal handling
 
-    /// Scanne les appareils déjà connectés au lancement
+    /// Scans devices that are already connected at launch
     private func scanExistingDevices() {
         let discovery = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.external],
@@ -79,18 +79,18 @@ final class DeviceManager {
             addDevice(from: avDevice)
         }
 
-        // Auto-sélection si un seul appareil
+        // Auto-select if there is only one device
         autoSelectIfNeeded()
 
-        // Si aucun appareil trouvé, rester en mode detecting
-        // Les appareils peuvent mettre quelques secondes à apparaître après l'activation CoreMediaIO
+        // If no device was found, stay in detecting mode
+        // Devices may take a few seconds to appear after CoreMediaIO activation
         if devices.isEmpty {
             state = .detecting
         }
     }
 
     private func handleDeviceConnected(_ avDevice: AVCaptureDevice) {
-        // Ne traiter que les appareils de type muxed (écrans iOS)
+        // Only handle muxed devices (iOS screens)
         guard avDevice.hasMediaType(.muxed) else { return }
         addDevice(from: avDevice)
         autoSelectIfNeeded()
@@ -102,7 +102,7 @@ final class DeviceManager {
 
         if selectedDevice?.id == deviceID {
             selectedDevice = nil
-            // Sélectionner le prochain appareil disponible ou revenir en idle
+            // Select the next available device or fall back to detecting
             if let next = devices.first {
                 selectDevice(next)
             } else {
@@ -112,7 +112,7 @@ final class DeviceManager {
     }
 
     private func addDevice(from avDevice: AVCaptureDevice) {
-        // Éviter les doublons
+        // Avoid duplicates
         guard !devices.contains(where: { $0.id == avDevice.uniqueID }) else { return }
 
         let device = ConnectedDevice(
@@ -121,7 +121,7 @@ final class DeviceManager {
             modelID: avDevice.modelID
         )
         devices.append(device)
-        print("[MirrorKit] Appareil détecté : \(device.name) (\(device.modelID))")
+        print("[MirrorKit] Device detected: \(device.name) (\(device.modelID))")
     }
 
     private func autoSelectIfNeeded() {
