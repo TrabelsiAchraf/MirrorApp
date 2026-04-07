@@ -1,9 +1,11 @@
 import SwiftUI
 
-/// Floating toolbar — traffic lights + device name
+/// Floating toolbar — traffic lights + device picker menu
 struct FloatingToolbar: View {
-    let deviceName: String
+    let devices: [ConnectedDevice]
+    let selectedDevice: ConnectedDevice?
     let modelName: String
+    var onSelect: ((ConnectedDevice) -> Void)?
     var onExpand: (() -> Void)?
 
     var body: some View {
@@ -26,17 +28,45 @@ struct FloatingToolbar: View {
                 .buttonStyle(.plain)
             }
 
-            // Device name
-            VStack(alignment: .leading, spacing: 1) {
-                Text(deviceName)
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(.white)
-                    .lineLimit(1)
-                Text(modelName)
-                    .font(.system(size: 10))
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
+            // Device picker menu
+            Menu {
+                if devices.isEmpty {
+                    Text("No device connected")
+                } else {
+                    ForEach(devices) { device in
+                        Button {
+                            onSelect?(device)
+                        } label: {
+                            if device.id == selectedDevice?.id {
+                                Label(device.name, systemImage: "checkmark")
+                            } else {
+                                Text(device.name)
+                            }
+                        }
+                    }
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(selectedDevice?.name ?? "No device")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                        Text(modelName)
+                            .font(.system(size: 10))
+                            .foregroundColor(.gray)
+                            .lineLimit(1)
+                    }
+                    if devices.count > 1 {
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 9, weight: .bold))
+                            .foregroundColor(.gray)
+                    }
+                }
             }
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
+            .fixedSize()
 
             Spacer()
         }

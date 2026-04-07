@@ -74,8 +74,10 @@ struct MirrorContentView: View {
             if let device = deviceManager.selectedDevice {
                 let spec = DeviceFrameProvider.frameSpec(for: device.modelID)
                 FloatingToolbar(
-                    deviceName: device.name,
+                    devices: deviceManager.devices,
+                    selectedDevice: device,
                     modelName: spec.displayName,
+                    onSelect: { deviceManager.selectDevice($0) },
                     onExpand: { toggleExpanded() }
                 )
                 .padding(.horizontal, 8)
