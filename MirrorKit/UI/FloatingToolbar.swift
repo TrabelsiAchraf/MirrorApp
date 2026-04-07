@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 /// Floating toolbar — traffic lights + device picker menu
 struct FloatingToolbar: View {
@@ -28,54 +29,74 @@ struct FloatingToolbar: View {
                 .buttonStyle(.plain)
             }
 
-            // Device picker menu
-            Menu {
-                if devices.isEmpty {
-                    Text("No device connected")
-                } else {
-                    ForEach(devices) { device in
-                        Button {
-                            onSelect?(device)
-                        } label: {
-                            if device.id == selectedDevice?.id {
-                                Label(device.name, systemImage: "checkmark")
-                            } else {
-                                Text(device.name)
-                            }
-                        }
-                    }
-                }
-            } label: {
-                HStack(spacing: 6) {
-                    VStack(alignment: .leading, spacing: 1) {
+            // Device picker — custom label, native NSMenu on click
+            Button(action: showDevicePopup) {
+                HStack(spacing: 10) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text(selectedDevice?.name ?? "No device")
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.system(size: 13, weight: .semibold))
                             .foregroundColor(.white)
                             .lineLimit(1)
                         Text(modelName)
-                            .font(.system(size: 10))
+                            .font(.system(size: 11))
                             .foregroundColor(.gray)
                             .lineLimit(1)
                     }
-                    if devices.count > 1 {
-                        Image(systemName: "chevron.down")
-                            .font(.system(size: 9, weight: .bold))
-                            .foregroundColor(.gray)
-                    }
-                }
-            }
-            .menuStyle(.borderlessButton)
-            .menuIndicator(.hidden)
-            .fixedSize()
 
-            Spacer()
+                    Spacer(minLength: 12)
+
+                    HStack(spacing: 5) {
+                        Image(systemName: "iphone.gen3")
+                            .font(.system(size: 17, weight: .medium))
+                            .foregroundColor(.white)
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(.white.opacity(0.75))
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 7)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(Color.white.opacity(0.14))
+                    )
+                }
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
         .background(
             Capsule()
                 .fill(.ultraThinMaterial)
                 .environment(\.colorScheme, .dark)
         )
     }
+
+    /// Pop up a native NSMenu listing all detected devices.
+    private func showDevicePopup() {
+        guard !devices.isEmpty, let event = NSApp.currentEvent else { return }
+        let menu = NSMenu()
+        for device in devices {
+            let item = NSMenuItem(
+                title: device.name,
+                action: #selector(MenuActionTarget.handle(_:)),
+                keyEquivalent: ""
+            )
+            item.state = (device.id == selectedDevice?.id) ? .on : .off
+            let target = MenuActionTarget { onSelect?(device) }
+            item.target = target
+            item.representedObject = target
+            menu.addItem(item)
+        }
+        NSMenu.popUpContextMenu(menu, with: event, for: NSApp.keyWindow?.contentView ?? NSView())
+    }
+}
+
+/// Lightweight target so each NSMenuItem can carry its own SwiftUI closure.
+private final class MenuActionTarget: NSObject {
+    let action: () -> Void
+    init(_ action: @escaping () -> Void) { self.action = action }
+    @objc func handle(_ sender: Any?) { action() }
 }

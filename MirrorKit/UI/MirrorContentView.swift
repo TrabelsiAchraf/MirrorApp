@@ -84,7 +84,7 @@ struct MirrorContentView: View {
                 .opacity(isHovering ? 1 : 0)
             } else {
                 // Placeholder when no device — same height
-                Color.clear.frame(height: 44)
+                Color.clear.frame(height: 56)
                     .opacity(0)
             }
         }
