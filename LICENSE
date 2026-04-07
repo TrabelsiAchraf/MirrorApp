@@ -1,0 +1,37 @@
+MirrorKit — Proprietary License
+Copyright (c) 2026 Achraf Trabelsi. All rights reserved.
+
+The source code in this repository is published for transparency, learning,
+and review purposes only. By accessing this repository you agree to the
+following terms:
+
+1. PERMITTED
+   - You may read, study, and reference the source code for personal,
+     educational, and non-commercial learning purposes.
+   - You may submit pull requests and bug reports to this repository.
+   - You may build the app from source for your own personal use.
+
+2. NOT PERMITTED
+   Without prior written permission from the copyright holder, you may NOT:
+   - Redistribute the source code or compiled binaries, in whole or in part,
+     in any form (including forks published under a different name).
+   - Sell, sublicense, or commercially exploit the code or any derivative.
+   - Submit this app, or any derivative of it, to any app store or
+     distribution platform.
+   - Use the "MirrorKit" name, logo, or branding in any product, service,
+     or marketing material.
+   - Remove or alter any copyright, trademark, or attribution notices.
+
+3. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+   LIABILITY ARISING FROM THE USE OF THIS SOFTWARE.
+
+4. CONTACT
+   For licensing inquiries, partnership requests, or written permission,
+   contact: trabelsiachraf.devapps@gmail.com
+
+The official, supported version of MirrorKit is distributed exclusively
+through the Mac App Store.
