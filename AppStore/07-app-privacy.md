@@ -15,7 +15,7 @@ MirrorKit does not collect any data. All data types in the App Privacy questionn
 https://trabelsiachraf.github.io/mirrorkit-site/privacy.html
 
 ## Support URL
-https://trabelsiachraf.github.io/mirrorkit-site/
+https://trabelsiachraf.github.io/mirrorkit-site/support.html
 
 ## Marketing URL (optional)
 https://trabelsiachraf.github.io/mirrorkit-site/
