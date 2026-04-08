@@ -53,7 +53,8 @@ actor CaptureEngine {
     ///   - frameHandler: Callback called for every received frame (called on the capture queue)
     func startCapture(
         device: AVCaptureDevice,
-        frameHandler: @escaping @Sendable (CMSampleBuffer) -> Void
+        frameHandler: @escaping @Sendable (CMSampleBuffer) -> Void,
+        onFirstFrame: (@Sendable (CGSize) -> Void)? = nil
     ) throws {
         // Stop any existing session
         stopCapture()
@@ -98,6 +99,7 @@ actor CaptureEngine {
                 let height = CVPixelBufferGetHeight(pixelBuffer)
                 let resolution = CGSize(width: width, height: height)
                 Task { await self?.updateResolution(resolution) }
+                onFirstFrame?(resolution)
             }
 
             // Forward to recorder (no-op if not recording)

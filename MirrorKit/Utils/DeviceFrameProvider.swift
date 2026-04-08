@@ -1,10 +1,12 @@
 import Foundation
 import CoreGraphics
 
-/// Describes the iPhone frame to draw
+/// Describes the iPhone / iPad frame to draw
 struct DeviceFrameSpec {
     /// Display name of the model
     let displayName: String
+    /// Device family — drives the bezel geometry in `DeviceFrameView`.
+    let kind: Kind
     /// Outer corner radius of the frame (in points, at native scale)
     let cornerRadius: CGFloat
     /// Bezel thickness around the screen (in points)
@@ -13,6 +15,11 @@ struct DeviceFrameSpec {
     let frameColor: FrameColor
     /// Notch / Dynamic Island style
     let notchStyle: NotchStyle
+
+    enum Kind {
+        case iPhone
+        case iPad
+    }
 
     enum FrameColor {
         case black
@@ -41,56 +48,69 @@ struct DeviceFrameSpec {
 /// Provides frame specifications for each iPhone model
 enum DeviceFrameProvider {
 
-    /// Returns the frame specification for a given modelID
-    static func frameSpec(for modelID: String) -> DeviceFrameSpec {
-        // Extract the model number (e.g. "iPhone17,3" → 17)
-        let majorVersion = extractMajorVersion(from: modelID)
+    /// Returns the frame specification for a given modelID. If the modelID
+    /// identifies an iPad, an iPad-shaped spec is returned. When `resolution`
+    /// is provided, the aspect ratio is used as a secondary heuristic — AVFoundation
+    /// often reports generic modelIDs for USB-connected devices, so the 4:3-ish
+    /// ratio of iPads is the most reliable signal.
+    static func frameSpec(for modelID: String, resolution: CGSize? = nil) -> DeviceFrameSpec {
+        let iPad = modelID.hasPrefix("iPad") || isIPadResolution(resolution)
+        print("[MirrorKit] frameSpec modelID=\(modelID) resolution=\(resolution.map { "\(Int($0.width))x\(Int($0.height))" } ?? "nil") → \(iPad ? "iPad" : "iPhone")")
+        return iPad ? iPadSpec(for: modelID) : iPhoneSpec(for: modelID)
+    }
 
+    /// iPads are ~4:3 (1.33) or ~3:4 (0.75). iPhones are ~19.5:9 (2.17) or ~9:19.5 (0.46).
+    /// A threshold of 1.5 / 0.67 cleanly separates the two families.
+    private static func isIPadResolution(_ size: CGSize?) -> Bool {
+        guard let size, size.width > 0, size.height > 0 else { return false }
+        let ratio = max(size.width, size.height) / min(size.width, size.height)
+        return ratio < 1.7  // iPads: ~1.33, iPhones: ~2.17
+    }
+
+    /// Returns an iPhone spec (previous behavior).
+    private static func iPhoneSpec(for modelID: String) -> DeviceFrameSpec {
+        let majorVersion = extractMajorVersion(from: modelID, prefix: "iPhone")
         switch majorVersion {
-        // iPhone 16 / 16 Plus / 16 Pro / 16 Pro Max
         case 17:
             return DeviceFrameSpec(
                 displayName: "iPhone 16",
+                kind: .iPhone,
                 cornerRadius: 55,
                 bezelWidth: 6,
                 frameColor: .black,
                 notchStyle: .dynamicIsland
             )
-
-        // iPhone 15 Pro / 15 Pro Max
         case 16:
             return DeviceFrameSpec(
                 displayName: "iPhone 15 Pro",
+                kind: .iPhone,
                 cornerRadius: 55,
                 bezelWidth: 5,
                 frameColor: .black,
                 notchStyle: .dynamicIsland
             )
-
-        // iPhone 15 / 15 Plus / iPhone 14 Pro / 14 Pro Max
         case 15:
             return DeviceFrameSpec(
                 displayName: "iPhone 15",
+                kind: .iPhone,
                 cornerRadius: 55,
                 bezelWidth: 6,
                 frameColor: .black,
                 notchStyle: .dynamicIsland
             )
-
-        // iPhone 14 / 14 Plus / iPhone 13 / 13 mini
         case 14:
             return DeviceFrameSpec(
                 displayName: "iPhone 14",
+                kind: .iPhone,
                 cornerRadius: 47,
                 bezelWidth: 6,
                 frameColor: .black,
                 notchStyle: .notch
             )
-
-        // Older models or SE
         default:
             return DeviceFrameSpec(
                 displayName: "iPhone",
+                kind: .iPhone,
                 cornerRadius: 40,
                 bezelWidth: 8,
                 frameColor: .black,
@@ -99,9 +119,36 @@ enum DeviceFrameProvider {
         }
     }
 
-    /// Extracts the major version number from the modelID (e.g. "iPhone17,3" → 17)
-    private static func extractMajorVersion(from modelID: String) -> Int {
-        let cleaned = modelID.replacingOccurrences(of: "iPhone", with: "")
+    /// Returns an iPad spec — uniform thin bezels, modest corner radius, no notch.
+    private static func iPadSpec(for modelID: String) -> DeviceFrameSpec {
+        // iPad families: iPadPro (>=13"), iPad Air / iPad Pro 11", iPad mini, base iPad.
+        // We only reliably know "iPad" vs "iPadPro" from the prefix; for the rest
+        // we fall back on a single "iPad" name. A later refinement can use the
+        // detected resolution to pick between Mini / Air / Pro 13.
+        let displayName: String
+        if modelID.hasPrefix("iPadPro") {
+            displayName = "iPad Pro"
+        } else if modelID.hasPrefix("iPadMini") {
+            displayName = "iPad mini"
+        } else if modelID.hasPrefix("iPadAir") {
+            displayName = "iPad Air"
+        } else {
+            displayName = "iPad"
+        }
+
+        return DeviceFrameSpec(
+            displayName: displayName,
+            kind: .iPad,
+            cornerRadius: 28,
+            bezelWidth: 10,
+            frameColor: .black,
+            notchStyle: .none
+        )
+    }
+
+    /// Extracts the major version number from a modelID (e.g. "iPhone17,3" → 17)
+    private static func extractMajorVersion(from modelID: String, prefix: String) -> Int {
+        let cleaned = modelID.replacingOccurrences(of: prefix, with: "")
         let parts = cleaned.split(separator: ",")
         return Int(parts.first ?? "") ?? 0
     }

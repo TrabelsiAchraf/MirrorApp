@@ -23,6 +23,7 @@ struct MirrorContentView: View {
     @State private var basePanOffset: CGSize = .zero
     @State private var rotationQuarterTurns: Int = 0  // 0 = portrait, 1 = landscape
     @State private var cachedPortraitSize: NSSize?
+    @State private var detectedResolution: NSSize?
     @State private var toastMessage: String?
     @State private var toastTask: Task<Void, Never>?
 
@@ -85,10 +86,51 @@ struct MirrorContentView: View {
         }
         .onChange(of: deviceManager.state) { _, newState in
             // Reset capture flag and tear down the engine when leaving the
-            // capturing state (e.g. iPhone unplugged), so reconnecting can
-            // start a fresh capture session.
+            // capturing state (e.g. iPhone unplugged or device switch), so
+            // reconnecting can start a fresh capture session.
             if case .capturing = newState { return }
             isCapturing = false
+            detectedResolution = nil
+            cachedPortraitSize = nil
+            Task { await captureEngine.stopCapture() }
+        }
+        .onChange(of: detectedResolution) { _, newResolution in
+            guard let newResolution, let window = NSApp.keyWindow else { return }
+            print("[MirrorKit] Applying new resolution to window: \(Int(newResolution.width))x\(Int(newResolution.height))")
+
+            window.aspectRatio = newResolution
+
+            // Target ~50% of the native resolution, clamped to 80% of screen.
+            let screen = window.screen ?? NSScreen.main
+            let visible = screen?.visibleFrame ?? .zero
+            var targetW = newResolution.width * 0.5
+            var targetH = newResolution.height * 0.5
+            let maxW = visible.width * 0.8
+            let maxH = visible.height * 0.8
+            if targetW > maxW || targetH > maxH {
+                let ratio = min(maxW / targetW, maxH / targetH)
+                targetW *= ratio
+                targetH *= ratio
+            }
+            let current = window.frame
+            let newFrame = NSRect(
+                x: current.midX - targetW / 2,
+                y: current.midY - targetH / 2,
+                width: targetW,
+                height: targetH
+            )
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.25
+                context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                window.animator().setFrame(newFrame, display: true)
+            }
+        }
+        .onChange(of: deviceManager.selectedDevice?.id) { _, _ in
+            // On device switch, stop the current capture so the new device
+            // goes through a fresh startCapture → resolution detection → window resize.
+            isCapturing = false
+            detectedResolution = nil
+            cachedPortraitSize = nil
             Task { await captureEngine.stopCapture() }
         }
         .onAppear {
@@ -111,7 +153,7 @@ struct MirrorContentView: View {
     private var toolbarArea: some View {
         Group {
             if let device = deviceManager.selectedDevice {
-                let spec = DeviceFrameProvider.frameSpec(for: device.modelID)
+                let spec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: detectedResolution)
                 FloatingToolbar(
                     devices: deviceManager.devices,
                     selectedDevice: device,
@@ -148,6 +190,7 @@ struct MirrorContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.black)
                     .clipShape(RoundedRectangle(cornerRadius: 44, style: .continuous))
+                    .id(device.id)  // force a fresh onAppear on device switch
 
             case .capturing:
                 captureView
@@ -174,7 +217,7 @@ struct MirrorContentView: View {
 
             Group {
                 if showDeviceFrame, let device = deviceManager.selectedDevice {
-                    let spec = DeviceFrameProvider.frameSpec(for: device.modelID)
+                    let spec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: detectedResolution)
                     DeviceFrameView(spec: spec) {
                         FrameRenderer(displayLayer: displayLayer)
                     }
@@ -452,21 +495,26 @@ struct MirrorContentView: View {
 
         Task {
             do {
-                try await captureEngine.startCapture(device: avDevice) { [displayLayer] sampleBuffer in
-                    // CMSampleBuffer is not Sendable on the macOS 14 SDK (it becomes
-                    // Sendable on macOS 15). The buffer is consumed once on the main
-                    // thread and never retained, so the unsafe transfer is sound.
-                    nonisolated(unsafe) let buffer = sampleBuffer
-                    DispatchQueue.main.async {
-                        displayLayer.displaySampleBuffer(buffer)
+                try await captureEngine.startCapture(
+                    device: avDevice,
+                    frameHandler: { [displayLayer] sampleBuffer in
+                        // CMSampleBuffer is not Sendable on the macOS 14 SDK (it becomes
+                        // Sendable on macOS 15). The buffer is consumed once on the main
+                        // thread and never retained, so the unsafe transfer is sound.
+                        nonisolated(unsafe) let buffer = sampleBuffer
+                        DispatchQueue.main.async {
+                            displayLayer.displaySampleBuffer(buffer)
+                        }
+                    },
+                    onFirstFrame: { resolution in
+                        // Delivered from the capture queue when the very first frame arrives.
+                        DispatchQueue.main.async {
+                            let nsSize = NSSize(width: resolution.width, height: resolution.height)
+                            detectedResolution = nsSize
+                            onResolutionDetected?(nsSize)
+                        }
                     }
-                }
-
-                if let resolution = await captureEngine.detectedResolution {
-                    await MainActor.run {
-                        onResolutionDetected?(NSSize(width: resolution.width, height: resolution.height))
-                    }
-                }
+                )
 
                 await MainActor.run {
                     isCapturing = true

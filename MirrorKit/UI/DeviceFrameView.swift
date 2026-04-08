@@ -12,10 +12,15 @@ struct DeviceFrameView<Content: View>: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let scale = geometry.size.width / 390.0
-            let bezel = spec.bezelWidth * scale
-            let verticalBezel = bezel * 1.8
-            let outerRadius = spec.cornerRadius * scale
+            // Scale reference: use the shortest side so bezels stay consistent
+            // in both portrait and landscape orientations.
+            // iPhone native width ~ 390pt, iPad native short side ~ 820pt.
+            let reference: CGFloat = spec.kind == .iPad ? 820 : 390
+            let baseline = min(geometry.size.width, geometry.size.height) / reference
+            let bezel = spec.bezelWidth * baseline
+            // iPhones have taller top/bottom bezels than left/right; iPad is uniform.
+            let verticalBezel = spec.kind == .iPad ? bezel : bezel * 1.8
+            let outerRadius = spec.cornerRadius * baseline
             let innerRadius = max(outerRadius - bezel, 8)
 
             // Exact dimensions of the inner screen
@@ -33,8 +38,8 @@ struct DeviceFrameView<Content: View>: View {
                     .frame(width: screenWidth, height: screenHeight)
                     .clipShape(RoundedRectangle(cornerRadius: innerRadius, style: .continuous))
 
-                // Dynamic Island
-                if spec.notchStyle == .dynamicIsland {
+                // Dynamic Island (iPhone only)
+                if spec.kind == .iPhone, spec.notchStyle == .dynamicIsland {
                     VStack {
                         Capsule()
                             .fill(frameColor)
