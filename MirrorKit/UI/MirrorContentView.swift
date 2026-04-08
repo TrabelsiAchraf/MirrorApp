@@ -506,8 +506,9 @@ struct MirrorContentView: View {
                             displayLayer.displaySampleBuffer(buffer)
                         }
                     },
-                    onFirstFrame: { resolution in
-                        // Delivered from the capture queue when the very first frame arrives.
+                    onResolutionChange: { resolution in
+                        // Delivered from the capture queue whenever the stream
+                        // dimensions change (first frame + device rotations).
                         DispatchQueue.main.async {
                             let nsSize = NSSize(width: resolution.width, height: resolution.height)
                             detectedResolution = nsSize

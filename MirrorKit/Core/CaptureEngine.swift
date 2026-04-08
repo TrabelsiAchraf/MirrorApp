@@ -54,7 +54,7 @@ actor CaptureEngine {
     func startCapture(
         device: AVCaptureDevice,
         frameHandler: @escaping @Sendable (CMSampleBuffer) -> Void,
-        onFirstFrame: (@Sendable (CGSize) -> Void)? = nil
+        onResolutionChange: (@Sendable (CGSize) -> Void)? = nil
     ) throws {
         // Stop any existing session
         stopCapture()
@@ -88,18 +88,19 @@ actor CaptureEngine {
 
         // Delegate that receives the frames
         // Resolution detection + forwarding to the handler
-        let resolutionFlag = AtomicFlag()
+        let lastResolution = AtomicSize()
         let capturedRecorder = recorder
         let delegate = SampleBufferDelegate { [weak self] sampleBuffer in
-            // Detect the resolution from the first frame
-            if !resolutionFlag.value,
-               let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
-                resolutionFlag.value = true
+            // Track resolution changes (first frame AND device rotations)
+            if let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
                 let width = CVPixelBufferGetWidth(pixelBuffer)
                 let height = CVPixelBufferGetHeight(pixelBuffer)
                 let resolution = CGSize(width: width, height: height)
-                Task { await self?.updateResolution(resolution) }
-                onFirstFrame?(resolution)
+                if lastResolution.value != resolution {
+                    lastResolution.value = resolution
+                    Task { await self?.updateResolution(resolution) }
+                    onResolutionChange?(resolution)
+                }
             }
 
             // Forward to recorder (no-op if not recording)
@@ -136,9 +137,9 @@ actor CaptureEngine {
     // MARK: - Internal
 
     private func updateResolution(_ resolution: CGSize) {
-        if detectedResolution == nil {
+        if detectedResolution != resolution {
             detectedResolution = resolution
-            print("[MirrorKit] Detected resolution: \(Int(resolution.width))×\(Int(resolution.height))")
+            print("[MirrorKit] Resolution changed: \(Int(resolution.width))×\(Int(resolution.height))")
         }
     }
 }
@@ -153,14 +154,14 @@ struct UnsafeSampleBuffer: @unchecked Sendable {
     init(_ buffer: CMSampleBuffer) { self.buffer = buffer }
 }
 
-// MARK: - AtomicFlag
+// MARK: - AtomicSize
 
-/// Thread-safe flag used for one-shot resolution detection
-private final class AtomicFlag: @unchecked Sendable {
+/// Thread-safe CGSize used to detect resolution changes on the capture queue.
+private final class AtomicSize: @unchecked Sendable {
     private let lock = NSLock()
-    private var _value = false
+    private var _value: CGSize = .zero
 
-    var value: Bool {
+    var value: CGSize {
         get { lock.withLock { _value } }
         set { lock.withLock { _value = newValue } }
     }
