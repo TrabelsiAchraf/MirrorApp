@@ -7,6 +7,7 @@ struct MirrorContentView: View {
     let deviceManager: DeviceManager
     let captureEngine: CaptureEngine
     var onResolutionDetected: ((NSSize) -> Void)?
+    var onRotationChanged: ((Bool) -> Void)?
 
     @State private var displayLayer = VideoDisplayLayer()
     @State private var isCapturing = false
@@ -14,6 +15,16 @@ struct MirrorContentView: View {
     @State private var isExpanded = false
     @State private var savedFrame: NSRect?
     @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+
+    @State private var isRecording = false
+    @State private var zoomScale: CGFloat = 1.0
+    @State private var baseZoomScale: CGFloat = 1.0
+    @State private var panOffset: CGSize = .zero
+    @State private var basePanOffset: CGSize = .zero
+    @State private var rotationQuarterTurns: Int = 0  // 0 = portrait, 1 = landscape
+    @State private var cachedPortraitSize: NSSize?
+    @State private var toastMessage: String?
+    @State private var toastTask: Task<Void, Never>?
 
     @AppStorage("showDeviceFrame") private var showDeviceFrame = true
 
@@ -46,6 +57,26 @@ struct MirrorContentView: View {
                     mainContent
                 }
             }
+
+            // Toast overlay
+            if let message = toastMessage {
+                VStack {
+                    Spacer()
+                    Text(message)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .background(
+                            Capsule()
+                                .fill(.ultraThinMaterial)
+                                .environment(\.colorScheme, .dark)
+                        )
+                        .padding(.bottom, 30)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+                .allowsHitTesting(false)
+            }
         }
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -59,6 +90,14 @@ struct MirrorContentView: View {
             if case .capturing = newState { return }
             isCapturing = false
             Task { await captureEngine.stopCapture() }
+        }
+        .onAppear {
+            MirrorActions.shared.toggleRecording = { toggleRecording() }
+            MirrorActions.shared.takeSnapshot = { takeSnapshot() }
+            MirrorActions.shared.toggleRotation = { toggleRotation() }
+            MirrorActions.shared.rotateLeft = { rotateLeft() }
+            MirrorActions.shared.rotateRight = { rotateRight() }
+            MirrorActions.shared.resetZoom = { resetZoom() }
         }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView {
@@ -77,8 +116,12 @@ struct MirrorContentView: View {
                     devices: deviceManager.devices,
                     selectedDevice: device,
                     modelName: spec.displayName,
+                    isRecording: isRecording,
                     onSelect: { deviceManager.selectDevice($0) },
-                    onExpand: { toggleExpanded() }
+                    onExpand: { toggleExpanded() },
+                    onToggleRecording: { toggleRecording() },
+                    onSnapshot: { takeSnapshot() },
+                    onToggleRotation: { toggleRotation() }
                 )
                 .padding(.horizontal, 8)
                 .opacity(isHovering ? 1 : 0)
@@ -122,19 +165,179 @@ struct MirrorContentView: View {
 
     /// Device frame containing the video stream
     private var captureView: some View {
-        Group {
-            if showDeviceFrame, let device = deviceManager.selectedDevice {
-                let spec = DeviceFrameProvider.frameSpec(for: device.modelID)
+        GeometryReader { geo in
+            let isLandscape = ((rotationQuarterTurns % 2) + 2) % 2 == 1
+            // Pre-rotation size: swap so rotated content fills the container.
+            let preSize: CGSize = isLandscape
+                ? CGSize(width: geo.size.height, height: geo.size.width)
+                : geo.size
 
-                // The device frame contains the video inside
-                DeviceFrameView(spec: spec) {
+            Group {
+                if showDeviceFrame, let device = deviceManager.selectedDevice {
+                    let spec = DeviceFrameProvider.frameSpec(for: device.modelID)
+                    DeviceFrameView(spec: spec) {
+                        FrameRenderer(displayLayer: displayLayer)
+                    }
+                } else {
                     FrameRenderer(displayLayer: displayLayer)
+                        .clipShape(RoundedRectangle(cornerRadius: 44, style: .continuous))
                 }
-            } else {
-                // Without frame: raw video with rounded corners
-                FrameRenderer(displayLayer: displayLayer)
-                    .clipShape(RoundedRectangle(cornerRadius: 44, style: .continuous))
             }
+            .frame(width: preSize.width, height: preSize.height)
+            .rotationEffect(.degrees(Double(rotationQuarterTurns) * 90))
+            .position(x: geo.size.width / 2, y: geo.size.height / 2)
+        }
+        .scaleEffect(zoomScale)
+        .offset(panOffset)
+        .gesture(
+            MagnificationGesture()
+                .onChanged { value in
+                    zoomScale = max(1.0, min(4.0, baseZoomScale * value))
+                }
+                .onEnded { _ in
+                    baseZoomScale = zoomScale
+                    if zoomScale <= 1.0 { panOffset = .zero; basePanOffset = .zero }
+                }
+        )
+        .simultaneousGesture(
+            DragGesture()
+                .onChanged { value in
+                    guard zoomScale > 1.0 else { return }
+                    panOffset = CGSize(
+                        width: basePanOffset.width + value.translation.width,
+                        height: basePanOffset.height + value.translation.height
+                    )
+                }
+                .onEnded { _ in basePanOffset = panOffset }
+        )
+    }
+
+    // MARK: - Snapshot / Recording / Rotation / Zoom
+
+    func takeSnapshot() {
+        guard let pixelBuffer = displayLayer.lastPixelBuffer,
+              let data = SnapshotEncoder.encodePNG(pixelBuffer: pixelBuffer) else {
+            NSSound.beep()
+            return
+        }
+        do {
+            let url = try ExportManager.savePNG(data)
+            print("[MirrorKit] Snapshot saved: \(url.path)")
+            NSSound(named: "Grab")?.play()
+            showToast("Snapshot saved — \(url.lastPathComponent)", revealing: url)
+        } catch {
+            print("[MirrorKit] Snapshot failed: \(error.localizedDescription)")
+            NSSound.beep()
+        }
+    }
+
+    func toggleRecording() {
+        if isRecording {
+            Task {
+                let url = await captureEngine.videoRecorder.stop()
+                await MainActor.run {
+                    isRecording = false
+                    if let url {
+                        print("[MirrorKit] Recording saved: \(url.path)")
+                        NSSound(named: "Glass")?.play()
+                        showToast("Recording saved — \(url.lastPathComponent)", revealing: url)
+                    }
+                }
+            }
+        } else {
+            guard let resolution = displayLayer.lastPixelBuffer.map({
+                CGSize(width: CVPixelBufferGetWidth($0), height: CVPixelBufferGetHeight($0))
+            }) else { NSSound.beep(); return }
+
+            do {
+                let url = try ExportManager.newRecordingURL()
+                Task {
+                    do {
+                        try await captureEngine.videoRecorder.start(
+                            to: url,
+                            width: Int(resolution.width),
+                            height: Int(resolution.height)
+                        )
+                        await MainActor.run {
+                            isRecording = true
+                            showToast("Recording…", revealing: nil)
+                        }
+                    } catch {
+                        print("[MirrorKit] Recording start failed: \(error.localizedDescription)")
+                        await MainActor.run { NSSound.beep() }
+                    }
+                }
+            } catch {
+                print("[MirrorKit] Could not create recording URL: \(error.localizedDescription)")
+                NSSound.beep()
+            }
+        }
+    }
+
+    func toggleRotation() { rotate(by: 1) }
+    func rotateLeft() { rotate(by: -1) }
+    func rotateRight() { rotate(by: 1) }
+
+    private func rotate(by delta: Int) {
+        // Keep the value unbounded so withAnimation takes the shortest path
+        // (going from 0 to -90 rather than 0 to 270 when rotating left).
+        let next = rotationQuarterTurns + delta
+        let nextLandscape = ((next % 2) + 2) % 2 == 1
+        let wasLandscape = ((rotationQuarterTurns % 2) + 2) % 2 == 1
+
+        // Resize the window animated, but compute the target from a *cached*
+        // portrait size so rapid left/right presses don't drift the dimensions.
+        if nextLandscape != wasLandscape, let window = NSApp.keyWindow {
+            // Capture the portrait reference the first time we know we are in portrait.
+            if cachedPortraitSize == nil, !wasLandscape {
+                cachedPortraitSize = window.frame.size
+            }
+            let portrait = cachedPortraitSize ?? window.frame.size
+            let targetSize: NSSize = nextLandscape
+                ? NSSize(width: portrait.height, height: portrait.width)
+                : portrait
+            let current = window.frame
+            let newOrigin = NSPoint(
+                x: current.midX - targetSize.width / 2,
+                y: current.midY - targetSize.height / 2
+            )
+            window.aspectRatio = targetSize
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.25
+                context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                context.allowsImplicitAnimation = true
+                window.animator().setFrame(
+                    NSRect(origin: newOrigin, size: targetSize),
+                    display: true
+                )
+            }
+        }
+
+        withAnimation(.easeInOut(duration: 0.25)) {
+            rotationQuarterTurns = next
+        }
+    }
+
+    private func showToast(_ message: String, revealing url: URL?) {
+        toastTask?.cancel()
+        withAnimation(.easeInOut(duration: 0.2)) { toastMessage = message }
+        toastTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 2_200_000_000)
+            guard !Task.isCancelled else { return }
+            withAnimation(.easeInOut(duration: 0.2)) { toastMessage = nil }
+        }
+        if let url {
+            // Briefly flash the file in Finder so the user can locate it
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        }
+    }
+
+    func resetZoom() {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            zoomScale = 1.0
+            baseZoomScale = 1.0
+            panOffset = .zero
+            basePanOffset = .zero
         }
     }
 

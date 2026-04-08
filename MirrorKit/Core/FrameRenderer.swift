@@ -30,13 +30,24 @@ struct FrameRenderer: NSViewRepresentable {
 /// thread before invoking display methods.
 final class VideoDisplayLayer: CALayer, @unchecked Sendable {
 
+    /// Last pixel buffer displayed — used for snapshotting.
+    /// Written and read exclusively on the main thread.
+    private(set) var lastPixelBuffer: CVPixelBuffer?
+
+    /// Current zoom / pan / rotation applied to the displayed content.
+    /// Main-thread only.
+    var videoTransform: CGAffineTransform = .identity {
+        didSet { setAffineTransform(videoTransform) }
+    }
+
     override init() {
         super.init()
         // Disable implicit animations to avoid lag
         self.actions = [
             "contents": NSNull(),
             "bounds": NSNull(),
-            "position": NSNull()
+            "position": NSNull(),
+            "transform": NSNull()
         ]
     }
 
@@ -61,5 +72,6 @@ final class VideoDisplayLayer: CALayer, @unchecked Sendable {
         let context = CIContext()
         guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else { return }
         self.contents = cgImage
+        self.lastPixelBuffer = pixelBuffer
     }
 }

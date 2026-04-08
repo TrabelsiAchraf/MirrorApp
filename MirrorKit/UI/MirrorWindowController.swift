@@ -9,6 +9,9 @@ final class MirrorWindowController: NSWindowController {
         didSet { window?.level = isAlwaysOnTop ? .floating : .normal }
     }
 
+    /// Native (unrotated) iPhone resolution, cached so rotation can recompute the aspect ratio.
+    private var baseResolution: NSSize?
+
     init(deviceManager: DeviceManager) {
         self.deviceManager = deviceManager
 
@@ -44,6 +47,9 @@ final class MirrorWindowController: NSWindowController {
             captureEngine: captureEngine,
             onResolutionDetected: { [weak self] resolution in
                 self?.handleResolutionDetected(resolution)
+            },
+            onRotationChanged: { [weak self] isLandscape in
+                self?.handleRotationChanged(isLandscape: isLandscape)
             }
         )
         let hostingView = NSHostingView(rootView: contentView)
@@ -66,7 +72,33 @@ final class MirrorWindowController: NSWindowController {
         window?.makeKeyAndOrderFront(nil)
     }
 
+    private func handleRotationChanged(isLandscape: Bool) {
+        guard let window, let base = baseResolution else { return }
+        let target = isLandscape
+            ? NSSize(width: base.height, height: base.width)
+            : base
+        window.aspectRatio = target
+
+        // Resize to preserve approx current area while matching the new ratio.
+        let current = window.frame
+        let area = current.width * current.height
+        let ratio = target.width / target.height
+        let newHeight = sqrt(area / ratio)
+        let newWidth = newHeight * ratio
+        let newOrigin = NSPoint(
+            x: current.midX - newWidth / 2,
+            y: current.midY - newHeight / 2
+        )
+        let newFrame = NSRect(origin: newOrigin, size: NSSize(width: newWidth, height: newHeight))
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.25
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            window.animator().setFrame(newFrame, display: true)
+        }
+    }
+
     private func handleResolutionDetected(_ resolution: NSSize) {
+        baseResolution = resolution
         window?.aspectRatio = resolution
 
         guard let window, let screen = window.screen ?? NSScreen.main else { return }

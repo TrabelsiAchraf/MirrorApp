@@ -108,16 +108,49 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Keyboard Monitor
 
-    /// Intercepts Cmd+T to toggle always-on-top
+    /// Intercepts Cmd+T (always-on-top) and capture shortcuts (record, snapshot, rotate, zoom reset).
     private func setupKeyboardMonitor() {
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self, event.modifierFlags.contains(.command) else { return event }
+            let shift = event.modifierFlags.contains(.shift)
+            let chars = event.charactersIgnoringModifiers?.lowercased() ?? ""
 
-            if event.charactersIgnoringModifiers == "t" {
+            // Arrow keys (rotate left/right)
+            if let special = event.specialKey, !shift {
+                switch special {
+                case .leftArrow:
+                    MirrorActions.shared.rotateLeft?()
+                    return nil
+                case .rightArrow:
+                    MirrorActions.shared.rotateRight?()
+                    return nil
+                default:
+                    break
+                }
+            }
+
+            switch (chars, shift) {
+            case ("t", false):
                 self.toggleAlwaysOnTopFromMenu()
                 return nil
+            case ("r", false):
+                MirrorActions.shared.toggleRecording?()
+                return nil
+            case ("s", true):
+                MirrorActions.shared.takeSnapshot?()
+                return nil
+            case ("r", true):
+                MirrorActions.shared.toggleRotation?()
+                return nil
+            case ("f", true):
+                self.toggleDeviceFrame()
+                return nil
+            case ("0", false):
+                MirrorActions.shared.resetZoom?()
+                return nil
+            default:
+                return event
             }
-            return event
         }
     }
 
@@ -152,8 +185,52 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         mainMenu.addItem(windowMenuItem)
 
+        // "Capture" menu
+        let captureMenu = NSMenu(title: "Capture")
+        let captureMenuItem = NSMenuItem()
+        captureMenuItem.submenu = captureMenu
+
+        let recordItem = NSMenuItem(title: "Start / Stop Recording", action: #selector(captureToggleRecording), keyEquivalent: "r")
+        recordItem.target = self
+        captureMenu.addItem(recordItem)
+
+        let snapshotItem = NSMenuItem(title: "Take Snapshot", action: #selector(captureSnapshot), keyEquivalent: "s")
+        snapshotItem.keyEquivalentModifierMask = [.command, .shift]
+        snapshotItem.target = self
+        captureMenu.addItem(snapshotItem)
+
+        captureMenu.addItem(.separator())
+
+        let rotateLeftItem = NSMenuItem(title: "Rotate Left", action: #selector(captureRotateLeft), keyEquivalent: "\u{F702}")
+        rotateLeftItem.keyEquivalentModifierMask = [.command]
+        rotateLeftItem.target = self
+        captureMenu.addItem(rotateLeftItem)
+
+        let rotateRightItem = NSMenuItem(title: "Rotate Right", action: #selector(captureRotateRight), keyEquivalent: "\u{F703}")
+        rotateRightItem.keyEquivalentModifierMask = [.command]
+        rotateRightItem.target = self
+        captureMenu.addItem(rotateRightItem)
+
+        let frameItem = NSMenuItem(title: "Toggle iPhone Frame", action: #selector(toggleDeviceFrame), keyEquivalent: "f")
+        frameItem.keyEquivalentModifierMask = [.command, .shift]
+        frameItem.target = self
+        captureMenu.addItem(frameItem)
+
+        let resetZoomItem = NSMenuItem(title: "Reset Zoom", action: #selector(captureResetZoom), keyEquivalent: "0")
+        resetZoomItem.target = self
+        captureMenu.addItem(resetZoomItem)
+
+        mainMenu.addItem(captureMenuItem)
+
         NSApp.mainMenu = mainMenu
     }
+
+    @objc private func captureToggleRecording() { MirrorActions.shared.toggleRecording?() }
+    @objc private func captureSnapshot() { MirrorActions.shared.takeSnapshot?() }
+    @objc private func captureRotate() { MirrorActions.shared.toggleRotation?() }
+    @objc private func captureRotateLeft() { MirrorActions.shared.rotateLeft?() }
+    @objc private func captureRotateRight() { MirrorActions.shared.rotateRight?() }
+    @objc private func captureResetZoom() { MirrorActions.shared.resetZoom?() }
 
     // MARK: - Actions
 

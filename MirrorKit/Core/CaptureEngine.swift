@@ -35,6 +35,11 @@ actor CaptureEngine {
     /// Detected video stream resolution
     private(set) var detectedResolution: CGSize?
 
+    /// Optional recorder that receives every sample buffer when active.
+    private let recorder = VideoRecorder()
+
+    var videoRecorder: VideoRecorder { recorder }
+
     /// Whether capture is currently running
     var isRunning: Bool {
         session?.isRunning ?? false
@@ -83,6 +88,7 @@ actor CaptureEngine {
         // Delegate that receives the frames
         // Resolution detection + forwarding to the handler
         let resolutionFlag = AtomicFlag()
+        let capturedRecorder = recorder
         let delegate = SampleBufferDelegate { [weak self] sampleBuffer in
             // Detect the resolution from the first frame
             if !resolutionFlag.value,
@@ -93,6 +99,10 @@ actor CaptureEngine {
                 let resolution = CGSize(width: width, height: height)
                 Task { await self?.updateResolution(resolution) }
             }
+
+            // Forward to recorder (no-op if not recording)
+            let wrapped = UnsafeSampleBuffer(sampleBuffer)
+            Task { await capturedRecorder.append(wrapped) }
 
             frameHandler(sampleBuffer)
         }
@@ -129,6 +139,16 @@ actor CaptureEngine {
             print("[MirrorKit] Detected resolution: \(Int(resolution.width))×\(Int(resolution.height))")
         }
     }
+}
+
+// MARK: - UnsafeSampleBuffer
+
+/// Sendable wrapper around CMSampleBuffer. CMSampleBuffer only becomes Sendable
+/// on the macOS 15 SDK; on macOS 14 we ferry it across isolation boundaries by
+/// hand. Safe because the buffer is consumed once and not mutated.
+struct UnsafeSampleBuffer: @unchecked Sendable {
+    let buffer: CMSampleBuffer
+    init(_ buffer: CMSampleBuffer) { self.buffer = buffer }
 }
 
 // MARK: - AtomicFlag

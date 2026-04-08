@@ -6,8 +6,12 @@ struct FloatingToolbar: View {
     let devices: [ConnectedDevice]
     let selectedDevice: ConnectedDevice?
     let modelName: String
+    var isRecording: Bool = false
     var onSelect: ((ConnectedDevice) -> Void)?
     var onExpand: (() -> Void)?
+    var onToggleRecording: (() -> Void)?
+    var onSnapshot: (() -> Void)?
+    var onToggleRotation: (() -> Void)?
 
     var body: some View {
         HStack(spacing: 12) {
@@ -27,6 +31,17 @@ struct FloatingToolbar: View {
                     Circle().fill(Color.green).frame(width: 12, height: 12)
                 }
                 .buttonStyle(.plain)
+            }
+
+            // Capture actions
+            HStack(spacing: 6) {
+                toolbarButton(
+                    system: isRecording ? "stop.circle.fill" : "record.circle",
+                    tint: isRecording ? .red : .white,
+                    action: { onToggleRecording?() }
+                )
+                toolbarButton(system: "camera", tint: .white, action: { onSnapshot?() })
+                toolbarButton(system: "rotate.left", tint: .white, action: { onToggleRotation?() })
             }
 
             // Device picker — custom label, native NSMenu on click
@@ -72,6 +87,20 @@ struct FloatingToolbar: View {
                 .fill(.ultraThinMaterial)
                 .environment(\.colorScheme, .dark)
         )
+    }
+
+    private func toolbarButton(system: String, tint: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: system)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(tint)
+                .frame(width: 26, height: 26)
+                .background(
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .fill(Color.white.opacity(0.10))
+                )
+        }
+        .buttonStyle(.plain)
     }
 
     /// Pop up a native NSMenu listing all detected devices.
