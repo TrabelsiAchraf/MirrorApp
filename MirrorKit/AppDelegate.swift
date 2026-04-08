@@ -220,6 +220,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         resetZoomItem.target = self
         captureMenu.addItem(resetZoomItem)
 
+        captureMenu.addItem(.separator())
+
+        let openFolderItem = NSMenuItem(
+            title: "Open Captures Folder",
+            action: #selector(openCapturesFolder),
+            keyEquivalent: "o"
+        )
+        openFolderItem.keyEquivalentModifierMask = [.command, .shift]
+        openFolderItem.target = self
+        captureMenu.addItem(openFolderItem)
+
         mainMenu.addItem(captureMenuItem)
 
         NSApp.mainMenu = mainMenu
@@ -231,6 +242,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func captureRotateLeft() { MirrorActions.shared.rotateLeft?() }
     @objc private func captureRotateRight() { MirrorActions.shared.rotateRight?() }
     @objc private func captureResetZoom() { MirrorActions.shared.resetZoom?() }
+
+    @objc private func openCapturesFolder() {
+        let fm = FileManager.default
+        guard let downloads = try? fm.url(
+            for: .downloadsDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        ) else { return }
+        let folder = downloads.appendingPathComponent("MirrorKit", isDirectory: true)
+        if !fm.fileExists(atPath: folder.path) {
+            try? fm.createDirectory(at: folder, withIntermediateDirectories: true)
+        }
+        NSWorkspace.shared.open(folder)
+    }
 
     // MARK: - Actions
 

@@ -2,8 +2,7 @@ import Foundation
 
 /// Saves snapshots and recordings to `~/Downloads/MirrorKit/`.
 enum ExportManager {
-    /// Resolves (and creates if needed) the MirrorKit folder inside `~/Downloads`.
-    static func ensureOutputDirectory() throws -> URL {
+    private static func ensureFolder() throws -> URL {
         let fm = FileManager.default
         let downloads = try fm.url(
             for: .downloadsDirectory,
@@ -18,18 +17,17 @@ enum ExportManager {
         return folder
     }
 
-    /// Returns a unique URL inside the MirrorKit folder for the given extension.
-    static func uniqueOutputURL(extension ext: String, prefix: String) throws -> URL {
-        let folder = try ensureOutputDirectory()
+    private static func uniqueURL(extension ext: String, prefix: String) throws -> URL {
+        let folder = try ensureFolder()
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        formatter.dateFormat = "yyyy-MM-dd 'at' HH.mm.ss"
         let stamp = formatter.string(from: Date())
-        return folder.appendingPathComponent("\(prefix)_\(stamp).\(ext)")
+        return folder.appendingPathComponent("\(prefix) \(stamp).\(ext)")
     }
 
     @discardableResult
     static func savePNG(_ data: Data) throws -> URL {
-        let url = try uniqueOutputURL(extension: "png", prefix: "Snapshot")
+        let url = try uniqueURL(extension: "png", prefix: "Snapshot")
         try data.write(to: url, options: .atomic)
         return url
     }
@@ -37,6 +35,6 @@ enum ExportManager {
     /// Returns the target URL for a new recording. The caller (AVAssetWriter)
     /// is responsible for writing to it.
     static func newRecordingURL() throws -> URL {
-        try uniqueOutputURL(extension: "mov", prefix: "Recording")
+        try uniqueURL(extension: "mov", prefix: "Recording")
     }
 }
