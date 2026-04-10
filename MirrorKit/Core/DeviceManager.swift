@@ -15,6 +15,9 @@ final class DeviceManager {
     /// Current discovery/capture state
     var state: CaptureState = .idle
 
+    private static let rescanInterval: TimeInterval = 2.0
+    private static let maxRescanAttempts = 15 // 15 × 2s = 30s
+
     // Observer tokens are mutated only from MainActor methods (start/stopDiscovery)
     // and read from `deinit`, which is single-threaded by definition. The unsafe
     // marker lets `deinit` clean them up without an isolation hop.
@@ -22,6 +25,10 @@ final class DeviceManager {
     nonisolated(unsafe) private var connectObserver: NSObjectProtocol?
     @ObservationIgnored
     nonisolated(unsafe) private var disconnectObserver: NSObjectProtocol?
+    @ObservationIgnored
+    nonisolated(unsafe) private var rescanTimer: Timer?
+    @ObservationIgnored
+    nonisolated(unsafe) private var rescanCount = 0
 
     deinit {
         // `removeObserver(_:)` is documented as thread-safe by Apple, so it can
@@ -32,28 +39,46 @@ final class DeviceManager {
         if let observer = disconnectObserver {
             NotificationCenter.default.removeObserver(observer)
         }
+        rescanTimer?.invalidate()
     }
 
     // MARK: - Device discovery
 
-    /// Starts iPhone USB discovery
+    /// Starts iPhone USB discovery after checking camera permission.
     func startDiscovery() {
+        stopDiscovery()
         state = .detecting
 
-        // Scan devices that are already connected
-        scanExistingDevices()
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        switch status {
+        case .authorized:
+            beginDiscovery()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        self?.beginDiscovery()
+                    } else {
+                        self?.state = .error("Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.")
+                    }
+                }
+            }
+        case .denied, .restricted:
+            state = .error("Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.")
+        @unknown default:
+            beginDiscovery()
+        }
+    }
 
-        // Observe connections / disconnections.
-        // The notifications are delivered on `.main` so we can assume MainActor
-        // isolation inside the closure even though its type is nonisolated.
+    /// Actual discovery logic — observers registered BEFORE scan to avoid race condition.
+    private func beginDiscovery() {
+        // Register observers FIRST so no notification is missed
         connectObserver = NotificationCenter.default.addObserver(
             forName: .AVCaptureDeviceWasConnected,
             object: nil,
             queue: .main
         ) { [weak self] notification in
             guard let device = notification.object as? AVCaptureDevice else { return }
-            // Notification is delivered on `.main`; AVCaptureDevice is a stable
-            // system object referenced from the main thread only.
             nonisolated(unsafe) let captured = device
             MainActor.assumeIsolated {
                 self?.handleDeviceConnected(captured)
@@ -71,9 +96,17 @@ final class DeviceManager {
                 self?.handleDeviceDisconnected(captured)
             }
         }
+
+        // Now scan for devices already connected
+        scanExistingDevices()
+
+        // If no device found yet, start polling — CoreMediaIO may need a few seconds
+        if devices.isEmpty {
+            startRescanTimer()
+        }
     }
 
-    /// Stops discovery
+    /// Stops discovery and cleans up timers/observers.
     func stopDiscovery() {
         if let observer = connectObserver {
             NotificationCenter.default.removeObserver(observer)
@@ -82,6 +115,45 @@ final class DeviceManager {
         if let observer = disconnectObserver {
             NotificationCenter.default.removeObserver(observer)
             disconnectObserver = nil
+        }
+        stopRescanTimer()
+    }
+
+    // MARK: - Polling retry
+
+    private func startRescanTimer() {
+        rescanCount = 0
+        rescanTimer = Timer.scheduledTimer(withTimeInterval: Self.rescanInterval, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.rescanForDevices()
+            }
+        }
+    }
+
+    private func stopRescanTimer() {
+        rescanTimer?.invalidate()
+        rescanTimer = nil
+        rescanCount = 0
+    }
+
+    private func rescanForDevices() {
+        rescanCount += 1
+
+        let discovery = AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.external],
+            mediaType: nil,
+            position: .unspecified
+        )
+        for avDevice in discovery.devices where Self.isIOSScreenCapture(avDevice) {
+            addDevice(from: avDevice)
+        }
+        autoSelectIfNeeded()
+
+        if !devices.isEmpty {
+            stopRescanTimer()
+        } else if rescanCount >= Self.maxRescanAttempts {
+            stopRescanTimer()
+            state = .error("No iPhone detected.\n\n• Make sure your iPhone is connected via USB\n• Unlock your iPhone and tap \"Trust This Computer\"\n• Try a different USB cable or port")
         }
     }
 
@@ -97,12 +169,16 @@ final class DeviceManager {
     private func scanExistingDevices() {
         let discovery = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.external],
-            mediaType: .muxed,
+            mediaType: nil,
             position: .unspecified
         )
 
+        print("[MirrorKit] Found \(discovery.devices.count) external device(s)")
         for avDevice in discovery.devices {
-            addDevice(from: avDevice)
+            print("[MirrorKit]   → \(avDevice.localizedName) | model=\(avDevice.modelID) | muxed=\(avDevice.hasMediaType(.muxed)) video=\(avDevice.hasMediaType(.video))")
+            if Self.isIOSScreenCapture(avDevice) {
+                addDevice(from: avDevice)
+            }
         }
 
         // Auto-select if there is only one device
@@ -116,10 +192,17 @@ final class DeviceManager {
     }
 
     private func handleDeviceConnected(_ avDevice: AVCaptureDevice) {
-        // Only handle muxed devices (iOS screens)
-        guard avDevice.hasMediaType(.muxed) else { return }
+        // Accept iOS devices that provide video (muxed or video-only)
+        guard Self.isIOSScreenCapture(avDevice) else { return }
         addDevice(from: avDevice)
         autoSelectIfNeeded()
+        stopRescanTimer()
+    }
+
+    /// USB screen capture devices have `.muxed` media type (audio + video).
+    /// Continuity Camera and webcams have only `.video` — this filter excludes them.
+    private static func isIOSScreenCapture(_ device: AVCaptureDevice) -> Bool {
+        device.hasMediaType(.muxed)
     }
 
     private func handleDeviceDisconnected(_ avDevice: AVCaptureDevice) {

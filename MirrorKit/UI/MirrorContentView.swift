@@ -26,6 +26,8 @@ struct MirrorContentView: View {
     @State private var detectedResolution: NSSize?
     @State private var toastMessage: String?
     @State private var toastTask: Task<Void, Never>?
+    @State private var detectingSeconds: Int = 0
+    @State private var detectingTimer: Timer?
 
     @AppStorage("showDeviceFrame") private var showDeviceFrame = true
 
@@ -396,9 +398,38 @@ struct MirrorContentView: View {
                 .font(.title3)
                 .foregroundColor(.white)
 
-            Text("Waiting for a device…")
+            Text("Searching for devices…")
                 .font(.caption)
                 .foregroundColor(.gray)
+
+            if detectingSeconds >= 5 {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Unlock your iPhone", systemImage: "lock.open")
+                    Label("Tap \"Trust This Computer\" if prompted", systemImage: "hand.tap")
+                    if detectingSeconds >= 10 {
+                        Label("Try a different USB cable or port", systemImage: "cable.connector")
+                    }
+                    if detectingSeconds >= 15 {
+                        Label("Restart your iPhone", systemImage: "arrow.clockwise")
+                    }
+                }
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.top, 8)
+                .transition(.opacity.animation(.easeIn(duration: 0.3)))
+            }
+        }
+        .onAppear {
+            detectingSeconds = 0
+            detectingTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                MainActor.assumeIsolated {
+                    detectingSeconds += 1
+                }
+            }
+        }
+        .onDisappear {
+            detectingTimer?.invalidate()
+            detectingTimer = nil
         }
     }
 
@@ -444,8 +475,16 @@ struct MirrorContentView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
+            if message.contains("Camera access") || message.contains("System Settings") {
+                Button("Open System Settings") {
+                    if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.bordered)
+            }
+
             Button("Retry") {
-                deviceManager.state = .detecting
                 deviceManager.startDiscovery()
             }
             .buttonStyle(.borderedProminent)
@@ -485,7 +524,7 @@ struct MirrorContentView: View {
 
         let discovery = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.external],
-            mediaType: .muxed,
+            mediaType: nil,
             position: .unspecified
         )
         guard let avDevice = discovery.devices.first(where: { $0.uniqueID == deviceID }) else {

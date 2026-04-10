@@ -12,7 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Enable iOS device discovery (iPhone screens via USB)
-        enableScreenCaptureDevices()
+        let coreMediaIOReady = enableScreenCaptureDevices()
 
         // Create and show the mirror window
         mirrorWindowController = MirrorWindowController(deviceManager: deviceManager)
@@ -29,8 +29,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self?.setupMainMenu()
         }
 
-        // Start device discovery
-        deviceManager.startDiscovery()
+        // Start device discovery (or show error if CoreMediaIO failed)
+        if coreMediaIOReady {
+            deviceManager.startDiscovery()
+        } else {
+            deviceManager.state = .error("Failed to initialize screen capture. Please restart MirrorKit.")
+        }
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -296,7 +300,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     /// Enables kCMIOHardwarePropertyAllowScreenCaptureDevices so macOS exposes
     /// iPhone screens connected via USB as AVCaptureDevice instances
-    private func enableScreenCaptureDevices() {
+    @discardableResult
+    private func enableScreenCaptureDevices() -> Bool {
         var property = CMIOObjectPropertyAddress(
             mSelector: CMIOObjectPropertySelector(kCMIOHardwarePropertyAllowScreenCaptureDevices),
             mScope: CMIOObjectPropertyScope(kCMIOObjectPropertyScopeGlobal),
@@ -313,8 +318,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         )
         if status != noErr {
             print("[MirrorKit] CoreMediaIO activation error: \(status)")
-        } else {
-            print("[MirrorKit] CoreMediaIO enabled — iOS device discovery is now possible")
+            return false
         }
+        print("[MirrorKit] CoreMediaIO enabled — iOS device discovery is now possible")
+        return true
     }
 }
