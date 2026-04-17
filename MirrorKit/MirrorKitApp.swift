@@ -6,9 +6,8 @@ struct MirrorKitApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
-        // Empty scene — the window is managed manually via MirrorWindowController
-        Settings {
-            EmptyView()
-        }
+        // All windows are managed via AppDelegate. The Settings scene is required
+        // by SwiftUI but our custom menu opens SettingsView in its own NSWindow.
+        Settings { EmptyView() }
     }
 }

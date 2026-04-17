@@ -281,6 +281,7 @@ struct MirrorContentView: View {
             Task {
                 let url = await captureEngine.videoRecorder.stop()
                 await MainActor.run {
+                    ExportManager.endRecording()
                     isRecording = false
                     if let url {
                         print("[MirrorKit] Recording saved: \(url.path)")

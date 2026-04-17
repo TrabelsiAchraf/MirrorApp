@@ -11,6 +11,7 @@
 		10200181D71770777AA450EC /* MirrorKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36061000D151D1427BFC /* MirrorKitApp.swift */; };
 		1E151C03017B4D864B476751 /* CaptureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */; };
 		20B192FFF33EF90A5C87E7D9 /* DeviceFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B71001D6000191E697A93 /* DeviceFrameView.swift */; };
+		23A13EE313E60ECB63A2E5C9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B2AF0D2ACEAD93E8D5CA66 /* SettingsView.swift */; };
 		443EEAC587794A31683C5CDA /* FrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */; };
 		55916EA552CBC0941A09F38E /* MirrorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5871FA238546EDABACFCB72 /* MirrorContentView.swift */; };
 		587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349A35B6F092B22B3689915A /* MirrorWindowController.swift */; };
@@ -26,10 +27,12 @@
 		DCE1D2F8522D18C38983AE9C /* DeviceFrameProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */; };
 		DD324F060BDC072D1131BB33 /* SnapshotEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A53BCEC98A98982D09600 /* SnapshotEncoder.swift */; };
 		E65448B81FEEEBA7C7B32098 /* FloatingToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */; };
+		E6B3E060AE8BF0B15CCF5A44 /* SaveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6E21085011ACD9882AB0C4 /* SaveLocationManager.swift */; };
 		EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3C7614AFAF1A51912ECFCE /* AboutView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00B2AF0D2ACEAD93E8D5CA66 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		031D6CAFC1E8F271307086A6 /* VideoRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorder.swift; sourceTree = "<group>"; };
 		15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportManager.swift; sourceTree = "<group>"; };
 		216A4C33BE1899343C3148C7 /* CaptureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
@@ -51,6 +54,7 @@
 		D5871FA238546EDABACFCB72 /* MirrorContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorContentView.swift; sourceTree = "<group>"; };
 		F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRenderer.swift; sourceTree = "<group>"; };
 		FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		FE6E21085011ACD9882AB0C4 /* SaveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveLocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -82,6 +86,7 @@
 				D5871FA238546EDABACFCB72 /* MirrorContentView.swift */,
 				349A35B6F092B22B3689915A /* MirrorWindowController.swift */,
 				FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */,
+				00B2AF0D2ACEAD93E8D5CA66 /* SettingsView.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 			children = (
 				5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */,
 				15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */,
+				FE6E21085011ACD9882AB0C4 /* SaveLocationManager.swift */,
 				220A53BCEC98A98982D09600 /* SnapshotEncoder.swift */,
 			);
 			path = Utils;
@@ -225,6 +231,8 @@
 				10200181D71770777AA450EC /* MirrorKitApp.swift in Sources */,
 				587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */,
 				93588D2A69443AE766DE1DC2 /* OnboardingView.swift in Sources */,
+				E6B3E060AE8BF0B15CCF5A44 /* SaveLocationManager.swift in Sources */,
+				23A13EE313E60ECB63A2E5C9 /* SettingsView.swift in Sources */,
 				DD324F060BDC072D1131BB33 /* SnapshotEncoder.swift in Sources */,
 				7E7DE120836BA03CF04CEDAB /* VideoRecorder.swift in Sources */,
 			);

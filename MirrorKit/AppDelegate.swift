@@ -171,6 +171,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         aboutItem.target = self
         appMenu.addItem(aboutItem)
         appMenu.addItem(.separator())
+        let settingsItem = NSMenuItem(title: "Settings…", action: #selector(openSettings), keyEquivalent: ",")
+        settingsItem.target = self
+        appMenu.addItem(settingsItem)
+        appMenu.addItem(.separator())
         appMenu.addItem(NSMenuItem(title: "Quit MirrorKit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         mainMenu.addItem(appMenuItem)
 
@@ -248,18 +252,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func captureResetZoom() { MirrorActions.shared.resetZoom?() }
 
     @objc private func openCapturesFolder() {
-        let fm = FileManager.default
-        guard let downloads = try? fm.url(
-            for: .downloadsDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        ) else { return }
-        let folder = downloads.appendingPathComponent("MirrorKit", isDirectory: true)
-        if !fm.fileExists(atPath: folder.path) {
-            try? fm.createDirectory(at: folder, withIntermediateDirectories: true)
+        if let url = SaveLocationManager.accessSaveFolder() {
+            NSWorkspace.shared.open(url)
+            url.stopAccessingSecurityScopedResource()
+        } else if let url = SaveLocationManager.promptForFolder() {
+            NSWorkspace.shared.open(url)
         }
-        NSWorkspace.shared.open(folder)
     }
 
     // MARK: - Actions
@@ -283,6 +281,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             : UserDefaults.standard.bool(forKey: "showDeviceFrame")
         UserDefaults.standard.set(!current, forKey: "showDeviceFrame")
         updateStatusMenu()
+    }
+
+    private var settingsWindow: NSWindow?
+
+    @objc private func openSettings() {
+        if let existing = settingsWindow, existing.isVisible {
+            existing.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+        let hostingController = NSHostingController(rootView: SettingsView())
+        let window = NSWindow(contentViewController: hostingController)
+        window.title = "Settings"
+        window.styleMask = [.titled, .closable]
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        settingsWindow = window
     }
 
     @objc private func showAboutWindow() {
