@@ -283,22 +283,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         updateStatusMenu()
     }
 
-    private var settingsWindow: NSWindow?
-
     @objc private func openSettings() {
-        if let existing = settingsWindow, existing.isVisible {
-            existing.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            return
-        }
-        let hostingController = NSHostingController(rootView: SettingsView())
-        let window = NSWindow(contentViewController: hostingController)
-        window.title = "Settings"
-        window.styleMask = [.titled, .closable]
-        window.center()
-        window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
-        settingsWindow = window
+        // Open the SwiftUI Settings scene (macOS 14+)
+        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
     }
 
     @objc private func showAboutWindow() {
