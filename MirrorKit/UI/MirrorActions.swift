@@ -13,6 +13,7 @@ final class MirrorActions {
     var rotateLeft: (() -> Void)?
     var rotateRight: (() -> Void)?
     var resetZoom: (() -> Void)?
+    var toggleAnnotationMode: (() -> Void)?
 
     static let shared = MirrorActions()
     private init() {}

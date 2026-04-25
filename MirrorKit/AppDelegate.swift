@@ -113,10 +113,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Keyboard Monitor
 
-    /// Intercepts Cmd+T (always-on-top) and capture shortcuts (record, snapshot, rotate, zoom reset).
+    /// Intercepts Cmd+T (always-on-top), capture shortcuts (record, snapshot, rotate, zoom reset)
+    /// and the bare "A" key for annotation mode (only when the mirror window is key
+    /// and no text field is being edited).
     private func setupKeyboardMonitor() {
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            guard let self, event.modifierFlags.contains(.command) else { return event }
+            guard let self else { return event }
+
+            // Bare "A" toggles annotation mode — only when the mirror window is key
+            // and no text editor is the first responder (so Settings text fields keep
+            // accepting the literal character).
+            if event.modifierFlags.intersection([.command, .option, .control, .shift]).isEmpty,
+               event.charactersIgnoringModifiers?.lowercased() == "a",
+               self.mirrorWindowController?.window?.isKeyWindow == true,
+               !Self.isEditingText() {
+                MirrorActions.shared.toggleAnnotationMode?()
+                return nil
+            }
+
+            guard event.modifierFlags.contains(.command) else { return event }
             let shift = event.modifierFlags.contains(.shift)
             let chars = event.charactersIgnoringModifiers?.lowercased() ?? ""
 
@@ -157,6 +172,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 return event
             }
         }
+    }
+
+    /// True when the focused responder is a text editor (NSTextView, including the
+    /// field editor used by NSTextField/NSSearchField). Lets us preserve typing of
+    /// "a" inside Settings or any other text input.
+    private static func isEditingText() -> Bool {
+        guard let responder = NSApp.keyWindow?.firstResponder else { return false }
+        if let textView = responder as? NSTextView {
+            return textView.isEditable
+        }
+        return false
     }
 
     // MARK: - Main Menu
@@ -229,6 +255,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         resetZoomItem.target = self
         captureMenu.addItem(resetZoomItem)
 
+        // The hotkey is handled by setupKeyboardMonitor (bare "A" with text-field guard);
+        // the menu item itself omits keyEquivalent to avoid intercepting text input.
+        let annotateItem = NSMenuItem(
+            title: "Toggle Annotation Mode",
+            action: #selector(captureToggleAnnotation),
+            keyEquivalent: ""
+        )
+        annotateItem.target = self
+        captureMenu.addItem(annotateItem)
+
         captureMenu.addItem(.separator())
 
         let openFolderItem = NSMenuItem(
@@ -251,6 +287,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func captureRotateLeft() { MirrorActions.shared.rotateLeft?() }
     @objc private func captureRotateRight() { MirrorActions.shared.rotateRight?() }
     @objc private func captureResetZoom() { MirrorActions.shared.resetZoom?() }
+    @objc private func captureToggleAnnotation() { MirrorActions.shared.toggleAnnotationMode?() }
 
     @objc private func openCapturesFolder() {
         if let url = SaveLocationManager.accessSaveFolder() {

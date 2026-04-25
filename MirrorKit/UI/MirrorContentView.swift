@@ -168,6 +168,9 @@ struct MirrorContentView: View {
             MirrorActions.shared.rotateLeft = { rotateLeft() }
             MirrorActions.shared.rotateRight = { rotateRight() }
             MirrorActions.shared.resetZoom = { resetZoom() }
+            MirrorActions.shared.toggleAnnotationMode = {
+                annotationCanvas.isAnnotationModeActive.toggle()
+            }
         }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView {
