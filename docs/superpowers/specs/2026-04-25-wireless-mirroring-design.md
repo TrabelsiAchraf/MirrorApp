@@ -2,8 +2,13 @@
 
 **Date**: 2026-04-25
 **Author**: Achraf Trabelsi
-**Status**: Draft — pending implementation
-**Target release**: MirrorKit v1.1 (free update)
+**Status**: ❌ INVALIDATED by spike on 2026-04-25. See `2026-04-25-wireless-mirroring-spike-results.md`.
+
+The keystone assumption — that Wi-Fi paired iOS devices surface through `AVCaptureDevice.DiscoverySession([.external])` like USB devices — is false. The Wi-Fi paired iPhone visible in Finder is never reported as an `AVCaptureDevice`. Additionally, `kCMIODevicePropertyTransportType` returns `'othr'` for every iOS screen capture device regardless of physical link, so the planned `TransportDetector` could not have distinguished USB from Wi-Fi anyway. QuickTime Player exhibits the same limitation — its iPhone screen recording requires USB.
+
+The companion-iOS-app + WebRTC path (originally option B in brainstorming) is the only realistic way to deliver wireless mirroring on macOS with public APIs. That work is out of v1.1 scope and would need its own design cycle.
+
+**Target release**: MirrorKit v1.1 (free update) — postponed; v1.1 will pivot to other improvements.
 
 ---
 
