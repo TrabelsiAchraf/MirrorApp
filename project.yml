@@ -37,3 +37,33 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_HARDENED_RUNTIME: YES
         SWIFT_EMIT_LOC_STRINGS: YES
+
+  MirrorKitTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: MirrorKitTests
+    dependencies:
+      - target: MirrorKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.achraftrabelsi.MirrorKitTests
+        BUNDLE_LOADER: $(TEST_HOST)
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/MirrorKit.app/Contents/MacOS/MirrorKit
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "6.0"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+
+schemes:
+  MirrorKit:
+    build:
+      targets:
+        MirrorKit: all
+        MirrorKitTests: [test]
+    test:
+      targets:
+        - MirrorKitTests
+    run:
+      config: Debug
+    archive:
+      config: Release

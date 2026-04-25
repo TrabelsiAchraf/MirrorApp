@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		006B70909C5EBA5F49FF92C8 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB894266D811AB2C068CD6D7 /* DeviceManager.swift */; };
+		03CF148D3C1236A7755B1908 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */; };
 		10200181D71770777AA450EC /* MirrorKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36061000D151D1427BFC /* MirrorKitApp.swift */; };
 		1E151C03017B4D864B476751 /* CaptureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */; };
 		20B192FFF33EF90A5C87E7D9 /* DeviceFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B71001D6000191E697A93 /* DeviceFrameView.swift */; };
@@ -31,6 +32,16 @@
 		EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3C7614AFAF1A51912ECFCE /* AboutView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		8F69E8480135AC6E4C694EA6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27F439D173C78FCD62F0ADCE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C1A6F190995D227DF276C5E9;
+			remoteInfo = MirrorKit;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		00B2AF0D2ACEAD93E8D5CA66 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		031D6CAFC1E8F271307086A6 /* VideoRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorder.swift; sourceTree = "<group>"; };
@@ -44,6 +55,7 @@
 		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
 		64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingToolbar.swift; sourceTree = "<group>"; };
 		93F79E3544AD9E9C10EF0889 /* MirrorKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MirrorKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9883623ED6CC2FF2BBAE62D9 /* MirrorKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MirrorKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A80E58117919F87824A9C30 /* MirrorActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorActions.swift; sourceTree = "<group>"; };
 		B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDevice.swift; sourceTree = "<group>"; };
 		B69F98E197254789E3E896F9 /* DevicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePickerView.swift; sourceTree = "<group>"; };
@@ -52,6 +64,7 @@
 		BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureState.swift; sourceTree = "<group>"; };
 		CB894266D811AB2C068CD6D7 /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		D5871FA238546EDABACFCB72 /* MirrorContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorContentView.swift; sourceTree = "<group>"; };
+		D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
 		F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRenderer.swift; sourceTree = "<group>"; };
 		FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		FE6E21085011ACD9882AB0C4 /* SaveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveLocationManager.swift; sourceTree = "<group>"; };
@@ -95,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				A118BD7E08E168A86BBC0A26 /* MirrorKit */,
+				E4A78E43F8D7169832594305 /* MirrorKitTests */,
 				9AD53840479FFBCA4B4BD466 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				93F79E3544AD9E9C10EF0889 /* MirrorKit.app */,
+				9883623ED6CC2FF2BBAE62D9 /* MirrorKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,9 +158,35 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		E4A78E43F8D7169832594305 /* MirrorKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */,
+			);
+			path = MirrorKitTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A6D72BE326B77F648A36CEA4 /* MirrorKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4064202D8DC3D81F5645997D /* Build configuration list for PBXNativeTarget "MirrorKitTests" */;
+			buildPhases = (
+				3171DEEC9965162A0977BDBF /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5A03154A61300C8267BC752A /* PBXTargetDependency */,
+			);
+			name = MirrorKitTests;
+			packageProductDependencies = (
+			);
+			productName = MirrorKitTests;
+			productReference = 9883623ED6CC2FF2BBAE62D9 /* MirrorKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		C1A6F190995D227DF276C5E9 /* MirrorKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 34716F543C8E0E7CE3370C62 /* Build configuration list for PBXNativeTarget "MirrorKit" */;
@@ -173,6 +214,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1620;
 				TargetAttributes = {
+					A6D72BE326B77F648A36CEA4 = {
+						DevelopmentTeam = QN66UQNDZR;
+						ProvisioningStyle = Automatic;
+					};
 					C1A6F190995D227DF276C5E9 = {
 						DevelopmentTeam = QN66UQNDZR;
 						ProvisioningStyle = Automatic;
@@ -194,6 +239,7 @@
 			projectRoot = "";
 			targets = (
 				C1A6F190995D227DF276C5E9 /* MirrorKit */,
+				A6D72BE326B77F648A36CEA4 /* MirrorKitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -238,7 +284,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3171DEEC9965162A0977BDBF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03CF148D3C1236A7755B1908 /* SmokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5A03154A61300C8267BC752A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C1A6F190995D227DF276C5E9 /* MirrorKit */;
+			targetProxy = 8F69E8480135AC6E4C694EA6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1B8B84DB97893FB25A3B9B85 /* Release */ = {
@@ -257,6 +319,25 @@
 				PRODUCT_NAME = MirrorKit;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		4F46CAA73B2E725D4DF4921B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.achraftrabelsi.MirrorKitTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MirrorKit.app/Contents/MacOS/MirrorKit";
 			};
 			name = Release;
 		};
@@ -321,6 +402,25 @@
 				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
+		};
+		B7A6B2D9A0CA9997DACD7397 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.achraftrabelsi.MirrorKitTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MirrorKit.app/Contents/MacOS/MirrorKit";
+			};
+			name = Debug;
 		};
 		DDD8497959699579781A42DC /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -427,6 +527,15 @@
 			buildConfigurations = (
 				E04DD91BDE1F4556DC23222D /* Debug */,
 				7414E4F37426EC9F338F7584 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4064202D8DC3D81F5645997D /* Build configuration list for PBXNativeTarget "MirrorKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B7A6B2D9A0CA9997DACD7397 /* Debug */,
+				4F46CAA73B2E725D4DF4921B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
