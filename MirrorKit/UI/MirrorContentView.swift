@@ -31,6 +31,8 @@ struct MirrorContentView: View {
 
     @AppStorage("backgroundPreset") private var backgroundPresetRaw: String = "midnight"
     @AppStorage("backgroundCustomColor") private var backgroundCustomColorHex: String = "#1F1C40"
+    @AppStorage("bezelStyle") private var bezelStyleRaw: String = "classic"
+    @AppStorage("bezelColor") private var bezelColorRaw: String = "black"
 
     private var currentBackgroundPreset: BackgroundPreset {
         BackgroundPreset(rawValue: backgroundPresetRaw) ?? .midnight
@@ -38,6 +40,14 @@ struct MirrorContentView: View {
 
     private var currentBackgroundCustomColor: Color {
         Color(hex: backgroundCustomColorHex) ?? .black
+    }
+
+    private var currentBezelStyle: BezelStyle {
+        BezelStyle(rawValue: bezelStyleRaw) ?? .classic
+    }
+
+    private var currentFrameColor: DeviceFrameSpec.FrameColor {
+        DeviceFrameSpec.FrameColor(rawValue: bezelColorRaw) ?? .black
     }
 
     var body: some View {
@@ -222,8 +232,9 @@ struct MirrorContentView: View {
 
             Group {
                 if let device = deviceManager.selectedDevice {
-                    let spec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: detectedResolution)
-                    DeviceFrameView(spec: spec) {
+                    let baseSpec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: detectedResolution)
+                    let spec = baseSpec.with(frameColor: currentFrameColor)
+                    DeviceFrameView(spec: spec, style: currentBezelStyle) {
                         FrameRenderer(displayLayer: displayLayer)
                     }
                 } else {
