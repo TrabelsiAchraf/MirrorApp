@@ -1,20 +1,32 @@
 import SwiftUI
 
-/// Device frame container — draws an iPhone frame around the content passed as parameter
+/// Device frame container — wraps the mirror content in one of three styles:
+/// classic (existing colored bezel + Dynamic Island), floating (no bezel +
+/// soft drop shadow), or frameless (just rounded corners).
 struct DeviceFrameView<Content: View>: View {
     let spec: DeviceFrameSpec
+    let style: BezelStyle
     let content: Content
 
-    init(spec: DeviceFrameSpec, @ViewBuilder content: () -> Content) {
+    init(spec: DeviceFrameSpec, style: BezelStyle, @ViewBuilder content: () -> Content) {
         self.spec = spec
+        self.style = style
         self.content = content()
     }
 
     var body: some View {
+        switch style {
+        case .classic:  classicBody
+        case .floating: floatingBody
+        case .none:     framelessBody
+        }
+    }
+
+    // MARK: - Classic (existing v1.0 implementation)
+
+    private var classicBody: some View {
         GeometryReader { geometry in
-            // Scale reference: use the shortest side so bezels stay consistent
-            // in both portrait and landscape orientations.
-            // iPhone native width ~ 390pt, iPad native short side ~ 820pt.
+            // Scale reference: shortest side, so bezels stay consistent in any orientation.
             let reference: CGFloat = spec.kind == .iPad ? 820 : 390
             let baseline = min(geometry.size.width, geometry.size.height) / reference
             let bezel = spec.bezelWidth * baseline
@@ -23,22 +35,17 @@ struct DeviceFrameView<Content: View>: View {
             let outerRadius = spec.cornerRadius * baseline
             let innerRadius = max(outerRadius - bezel, 8)
 
-            // Exact dimensions of the inner screen
             let screenWidth = geometry.size.width - bezel * 2
             let screenHeight = geometry.size.height - verticalBezel * 2
 
-            // The full iPhone frame
             ZStack {
-                // Device body (black rounded rectangle)
                 RoundedRectangle(cornerRadius: outerRadius, style: .continuous)
                     .fill(frameColor)
 
-                // Screen (video content) — fixed size, centered
                 content
                     .frame(width: screenWidth, height: screenHeight)
                     .clipShape(RoundedRectangle(cornerRadius: innerRadius, style: .continuous))
 
-                // Dynamic Island (iPhone only)
                 if spec.kind == .iPhone, spec.notchStyle == .dynamicIsland {
                     VStack {
                         Capsule()
@@ -55,11 +62,34 @@ struct DeviceFrameView<Content: View>: View {
         }
     }
 
+    // MARK: - Floating (no bezel + drop shadow)
+
+    private var floatingBody: some View {
+        GeometryReader { geometry in
+            let reference: CGFloat = spec.kind == .iPad ? 820 : 390
+            let baseline = min(geometry.size.width, geometry.size.height) / reference
+            let outerRadius = spec.cornerRadius * baseline
+
+            content
+                .clipShape(RoundedRectangle(cornerRadius: outerRadius, style: .continuous))
+                .shadow(color: .black.opacity(0.45), radius: 24, x: 0, y: 12)
+        }
+    }
+
+    // MARK: - Frameless (just rounded corners)
+
+    private var framelessBody: some View {
+        content
+            .clipShape(RoundedRectangle(cornerRadius: 44, style: .continuous))
+    }
+
+    // MARK: - Helpers
+
     private var frameColor: Color {
         switch spec.frameColor {
-        case .black: return Color(red: 0.11, green: 0.11, blue: 0.12)
+        case .black:  return Color(red: 0.11, green: 0.11, blue: 0.12)
         case .silver: return Color(red: 0.89, green: 0.89, blue: 0.91)
-        case .gold: return Color(red: 0.96, green: 0.90, blue: 0.81)
+        case .gold:   return Color(red: 0.96, green: 0.90, blue: 0.81)
         }
     }
 }
