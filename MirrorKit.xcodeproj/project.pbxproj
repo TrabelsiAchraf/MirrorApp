@@ -22,6 +22,7 @@
 		6E950E2FD096A38832EB4FC8 /* MirrorActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A80E58117919F87824A9C30 /* MirrorActions.swift */; };
 		704763820F565B390BE6E34D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAE861DD636017AFED82363A /* Assets.xcassets */; };
 		7E7DE120836BA03CF04CEDAB /* VideoRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D6CAFC1E8F271307086A6 /* VideoRecorder.swift */; };
+		8A3D042809482130367061A7 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6355FC27D6A7B3E910476EB1 /* Annotation.swift */; };
 		93588D2A69443AE766DE1DC2 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */; };
 		9E60A84B762FA45636212633 /* BackgroundPresetPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */; };
 		A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A4C33BE1899343C3148C7 /* CaptureEngine.swift */; };
@@ -64,6 +65,7 @@
 		487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPresetPicker.swift; sourceTree = "<group>"; };
 		4B3C7614AFAF1A51912ECFCE /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
+		6355FC27D6A7B3E910476EB1 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingToolbar.swift; sourceTree = "<group>"; };
 		66211715E028458148C49052 /* ColorPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPersistence.swift; sourceTree = "<group>"; };
 		93D7232C2CCB1EF2F2941995 /* BezelStylePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezelStylePicker.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 		24E1662AA7D37983A919F578 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				6355FC27D6A7B3E910476EB1 /* Annotation.swift */,
 				30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */,
 				46F315B1FEEA93A79B23F7AC /* BezelStyle.swift */,
 				BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */,
@@ -282,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */,
+				8A3D042809482130367061A7 /* Annotation.swift in Sources */,
 				ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */,
 				DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */,
 				9E60A84B762FA45636212633 /* BackgroundPresetPicker.swift in Sources */,
