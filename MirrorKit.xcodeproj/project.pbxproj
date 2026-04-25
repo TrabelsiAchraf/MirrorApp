@@ -15,6 +15,7 @@
 		23A13EE313E60ECB63A2E5C9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B2AF0D2ACEAD93E8D5CA66 /* SettingsView.swift */; };
 		2D0C59E25D0688D6E3306F59 /* BackgroundPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */; };
 		443EEAC587794A31683C5CDA /* FrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */; };
+		475F2BEF88567EB0E2378088 /* BezelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F315B1FEEA93A79B23F7AC /* BezelStyle.swift */; };
 		55916EA552CBC0941A09F38E /* MirrorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5871FA238546EDABACFCB72 /* MirrorContentView.swift */; };
 		587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349A35B6F092B22B3689915A /* MirrorWindowController.swift */; };
 		6BD20128F8D17C44F07AA298 /* DevicePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69F98E197254789E3E896F9 /* DevicePickerView.swift */; };
@@ -26,6 +27,7 @@
 		A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A4C33BE1899343C3148C7 /* CaptureEngine.swift */; };
 		A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66211715E028458148C49052 /* ColorPersistence.swift */; };
 		ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */; };
+		C09950884481AB7F30076C8D /* BezelStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6AAB76E278A5AB323480FC /* BezelStyleTests.swift */; };
 		C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */; };
 		CAE9A8DEEFB2E4F8171ADF75 /* ExportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */; };
 		DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */; };
@@ -57,6 +59,7 @@
 		30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPreset.swift; sourceTree = "<group>"; };
 		31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		349A35B6F092B22B3689915A /* MirrorWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorWindowController.swift; sourceTree = "<group>"; };
+		46F315B1FEEA93A79B23F7AC /* BezelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezelStyle.swift; sourceTree = "<group>"; };
 		487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPresetPicker.swift; sourceTree = "<group>"; };
 		4B3C7614AFAF1A51912ECFCE /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
@@ -71,6 +74,7 @@
 		BC6D36061000D151D1427BFC /* MirrorKitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorKitApp.swift; sourceTree = "<group>"; };
 		BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureState.swift; sourceTree = "<group>"; };
 		CB894266D811AB2C068CD6D7 /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
+		CF6AAB76E278A5AB323480FC /* BezelStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezelStyleTests.swift; sourceTree = "<group>"; };
 		D5871FA238546EDABACFCB72 /* MirrorContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorContentView.swift; sourceTree = "<group>"; };
 		D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
 		F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameRenderer.swift; sourceTree = "<group>"; };
@@ -83,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */,
+				46F315B1FEEA93A79B23F7AC /* BezelStyle.swift */,
 				BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */,
 				B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */,
 			);
@@ -173,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */,
+				CF6AAB76E278A5AB323480FC /* BezelStyleTests.swift */,
 				D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */,
 			);
 			path = MirrorKitTests;
@@ -276,6 +282,7 @@
 				ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */,
 				DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */,
 				9E60A84B762FA45636212633 /* BackgroundPresetPicker.swift in Sources */,
+				475F2BEF88567EB0E2378088 /* BezelStyle.swift in Sources */,
 				A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */,
 				1E151C03017B4D864B476751 /* CaptureState.swift in Sources */,
 				A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */,
@@ -304,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D0C59E25D0688D6E3306F59 /* BackgroundPresetTests.swift in Sources */,
+				C09950884481AB7F30076C8D /* BezelStyleTests.swift in Sources */,
 				03CF148D3C1236A7755B1908 /* SmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

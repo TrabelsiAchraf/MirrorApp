@@ -21,7 +21,7 @@ struct DeviceFrameSpec {
         case iPad
     }
 
-    enum FrameColor {
+    enum FrameColor: String, CaseIterable {
         case black
         case silver
         case gold
@@ -42,6 +42,20 @@ struct DeviceFrameSpec {
         case notch
         /// No notch (iPhone SE, older models)
         case none
+    }
+}
+
+extension DeviceFrameSpec {
+    /// Returns a copy of this spec with the frame color replaced.
+    func with(frameColor: FrameColor) -> DeviceFrameSpec {
+        DeviceFrameSpec(
+            displayName: displayName,
+            kind: kind,
+            cornerRadius: cornerRadius,
+            bezelWidth: bezelWidth,
+            frameColor: frameColor,
+            notchStyle: notchStyle
+        )
     }
 }
 
