@@ -34,3 +34,49 @@ struct BezelStyleTests {
         #expect(DeviceFrameSpec.FrameColor.gold.rawValue == "gold")
     }
 }
+
+@Suite("LegacyMigration.migrateBezelStyleIfNeeded")
+struct LegacyMigrationTests {
+    private func freshDefaults() -> UserDefaults {
+        let suiteName = "test.LegacyMigration.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defaults.removePersistentDomain(forName: suiteName)
+        return defaults
+    }
+
+    @Test("Legacy showDeviceFrame=true migrates to bezelStyle=classic")
+    func legacyTrueMigratesToClassic() {
+        let defaults = freshDefaults()
+        defaults.set(true, forKey: "showDeviceFrame")
+        let migrated = LegacyMigration.migrateBezelStyleIfNeeded(in: defaults)
+        #expect(migrated == true)
+        #expect(defaults.string(forKey: "bezelStyle") == "classic")
+    }
+
+    @Test("Legacy showDeviceFrame=false migrates to bezelStyle=none")
+    func legacyFalseMigratesToNone() {
+        let defaults = freshDefaults()
+        defaults.set(false, forKey: "showDeviceFrame")
+        let migrated = LegacyMigration.migrateBezelStyleIfNeeded(in: defaults)
+        #expect(migrated == true)
+        #expect(defaults.string(forKey: "bezelStyle") == "none")
+    }
+
+    @Test("No legacy and no current → defaults to classic")
+    func noLegacyDefaultsToClassic() {
+        let defaults = freshDefaults()
+        let migrated = LegacyMigration.migrateBezelStyleIfNeeded(in: defaults)
+        #expect(migrated == true)
+        #expect(defaults.string(forKey: "bezelStyle") == "classic")
+    }
+
+    @Test("Already-set bezelStyle is not overwritten (idempotent)")
+    func idempotent() {
+        let defaults = freshDefaults()
+        defaults.set("floating", forKey: "bezelStyle")
+        defaults.set(true, forKey: "showDeviceFrame")  // legacy that should be ignored
+        let migrated = LegacyMigration.migrateBezelStyleIfNeeded(in: defaults)
+        #expect(migrated == false)
+        #expect(defaults.string(forKey: "bezelStyle") == "floating")
+    }
+}

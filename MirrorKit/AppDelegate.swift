@@ -11,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var keyMonitor: Any?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        LegacyMigration.migrateBezelStyleIfNeeded(in: .standard)
         // Enable iOS device discovery (iPhone screens via USB)
         let coreMediaIOReady = enableScreenCaptureDevices()
 
