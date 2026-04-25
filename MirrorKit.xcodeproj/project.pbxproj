@@ -22,6 +22,7 @@
 		704763820F565B390BE6E34D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAE861DD636017AFED82363A /* Assets.xcassets */; };
 		7E7DE120836BA03CF04CEDAB /* VideoRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D6CAFC1E8F271307086A6 /* VideoRecorder.swift */; };
 		93588D2A69443AE766DE1DC2 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */; };
+		9E60A84B762FA45636212633 /* BackgroundPresetPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */; };
 		A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A4C33BE1899343C3148C7 /* CaptureEngine.swift */; };
 		A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66211715E028458148C49052 /* ColorPersistence.swift */; };
 		ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */; };
@@ -56,6 +57,7 @@
 		30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPreset.swift; sourceTree = "<group>"; };
 		31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		349A35B6F092B22B3689915A /* MirrorWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorWindowController.swift; sourceTree = "<group>"; };
+		487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPresetPicker.swift; sourceTree = "<group>"; };
 		4B3C7614AFAF1A51912ECFCE /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
 		64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingToolbar.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				4B3C7614AFAF1A51912ECFCE /* AboutView.swift */,
+				487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */,
 				2F1B71001D6000191E697A93 /* DeviceFrameView.swift */,
 				B69F98E197254789E3E896F9 /* DevicePickerView.swift */,
 				64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */,
@@ -272,6 +275,7 @@
 				EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */,
 				ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */,
 				DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */,
+				9E60A84B762FA45636212633 /* BackgroundPresetPicker.swift in Sources */,
 				A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */,
 				1E151C03017B4D864B476751 /* CaptureState.swift in Sources */,
 				A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */,

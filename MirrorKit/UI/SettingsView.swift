@@ -1,8 +1,7 @@
 import SwiftUI
 
-/// Settings window content — save location and display preferences.
+/// Settings window content — save location, bezel style, and background.
 struct SettingsView: View {
-    @AppStorage("showDeviceFrame") private var showDeviceFrame = true
     @State private var saveFolderPath: String = SaveLocationManager.resolveBookmark()?.path ?? "Not set"
 
     var body: some View {
@@ -26,10 +25,10 @@ struct SettingsView: View {
             }
 
             Section("Display") {
-                Toggle("Show device frame", isOn: $showDeviceFrame)
+                BackgroundPresetPicker()
             }
         }
         .formStyle(.grouped)
-        .frame(width: 450, height: 180)
+        .frame(width: 500, height: 360)
     }
 }
