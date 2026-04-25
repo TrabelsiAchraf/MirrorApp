@@ -23,6 +23,7 @@
 		7E7DE120836BA03CF04CEDAB /* VideoRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D6CAFC1E8F271307086A6 /* VideoRecorder.swift */; };
 		93588D2A69443AE766DE1DC2 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCC3AE1AAEEA0702FE6C87B /* OnboardingView.swift */; };
 		A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A4C33BE1899343C3148C7 /* CaptureEngine.swift */; };
+		A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66211715E028458148C49052 /* ColorPersistence.swift */; };
 		ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */; };
 		C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */; };
 		CAE9A8DEEFB2E4F8171ADF75 /* ExportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */; };
@@ -58,6 +59,7 @@
 		4B3C7614AFAF1A51912ECFCE /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
 		64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingToolbar.swift; sourceTree = "<group>"; };
+		66211715E028458148C49052 /* ColorPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPersistence.swift; sourceTree = "<group>"; };
 		93F79E3544AD9E9C10EF0889 /* MirrorKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MirrorKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9883623ED6CC2FF2BBAE62D9 /* MirrorKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MirrorKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A80E58117919F87824A9C30 /* MirrorActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorActions.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 		C5F09490E2B9CFC15A0816A2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				66211715E028458148C49052 /* ColorPersistence.swift */,
 				5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */,
 				15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */,
 				FE6E21085011ACD9882AB0C4 /* SaveLocationManager.swift */,
@@ -271,6 +274,7 @@
 				DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */,
 				A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */,
 				1E151C03017B4D864B476751 /* CaptureState.swift in Sources */,
+				A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */,
 				C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */,
 				DCE1D2F8522D18C38983AE9C /* DeviceFrameProvider.swift in Sources */,
 				20B192FFF33EF90A5C87E7D9 /* DeviceFrameView.swift in Sources */,
