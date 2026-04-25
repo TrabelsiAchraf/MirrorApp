@@ -308,7 +308,7 @@ struct MirrorContentView: View {
             canvasSize: baseImage.size
         )
 
-        guard let data = composited.pngData() else {
+        guard let data = SnapshotEncoder.encodePNG(image: composited) else {
             NSSound.beep()
             return
         }
