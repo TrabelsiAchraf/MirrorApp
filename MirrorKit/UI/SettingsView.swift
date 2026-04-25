@@ -25,6 +25,7 @@ struct SettingsView: View {
             }
 
             Section("Display") {
+                BezelStylePicker()
                 BackgroundPresetPicker()
             }
         }

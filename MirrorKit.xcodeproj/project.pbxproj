@@ -27,6 +27,7 @@
 		A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A4C33BE1899343C3148C7 /* CaptureEngine.swift */; };
 		A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66211715E028458148C49052 /* ColorPersistence.swift */; };
 		ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */; };
+		BDD84124F5A2547A30806C30 /* BezelStylePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7232C2CCB1EF2F2941995 /* BezelStylePicker.swift */; };
 		C09950884481AB7F30076C8D /* BezelStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6AAB76E278A5AB323480FC /* BezelStyleTests.swift */; };
 		C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */; };
 		CAE9A8DEEFB2E4F8171ADF75 /* ExportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */; };
@@ -65,6 +66,7 @@
 		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
 		64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingToolbar.swift; sourceTree = "<group>"; };
 		66211715E028458148C49052 /* ColorPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPersistence.swift; sourceTree = "<group>"; };
+		93D7232C2CCB1EF2F2941995 /* BezelStylePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezelStylePicker.swift; sourceTree = "<group>"; };
 		93F79E3544AD9E9C10EF0889 /* MirrorKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MirrorKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9883623ED6CC2FF2BBAE62D9 /* MirrorKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MirrorKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A80E58117919F87824A9C30 /* MirrorActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorActions.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 			children = (
 				4B3C7614AFAF1A51912ECFCE /* AboutView.swift */,
 				487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */,
+				93D7232C2CCB1EF2F2941995 /* BezelStylePicker.swift */,
 				2F1B71001D6000191E697A93 /* DeviceFrameView.swift */,
 				B69F98E197254789E3E896F9 /* DevicePickerView.swift */,
 				64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */,
@@ -283,6 +286,7 @@
 				DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */,
 				9E60A84B762FA45636212633 /* BackgroundPresetPicker.swift in Sources */,
 				475F2BEF88567EB0E2378088 /* BezelStyle.swift in Sources */,
+				BDD84124F5A2547A30806C30 /* BezelStylePicker.swift in Sources */,
 				A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */,
 				1E151C03017B4D864B476751 /* CaptureState.swift in Sources */,
 				A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */,
