@@ -258,16 +258,11 @@ struct MirrorContentView: View {
                     }
                 }
 
-                if annotationCanvas.isAnnotationModeActive {
-                    AnnotationLayer(canvas: annotationCanvas)
-                        .allowsHitTesting(true)
-                } else {
-                    AnnotationLayer(canvas: annotationCanvas)
-                        .allowsHitTesting(false)
-                        // Always render to keep committed strokes visible even when
-                        // the user has toggled mode off. The only difference is whether
-                        // gestures are absorbed or pass through (zoom/pan still work).
-                }
+                // Always render the annotation layer so committed strokes stay
+                // visible. Hit testing is gated so zoom/pan pass through when
+                // annotation mode is off.
+                AnnotationLayer(canvas: annotationCanvas)
+                    .allowsHitTesting(annotationCanvas.isAnnotationModeActive)
             }
             .frame(width: preSize.width, height: preSize.height)
             .rotationEffect(.degrees(Double(rotationQuarterTurns) * 90))
