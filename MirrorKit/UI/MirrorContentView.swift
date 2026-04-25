@@ -297,10 +297,22 @@ struct MirrorContentView: View {
 
     func takeSnapshot() {
         guard let pixelBuffer = displayLayer.lastPixelBuffer,
-              let data = SnapshotEncoder.encodePNG(pixelBuffer: pixelBuffer) else {
+              let baseImage = SnapshotEncoder.makeNSImage(pixelBuffer: pixelBuffer) else {
             NSSound.beep()
             return
         }
+
+        let composited = AnnotationCompositor.compositeSync(
+            frame: baseImage,
+            annotations: annotationCanvas.annotations,
+            canvasSize: baseImage.size
+        )
+
+        guard let data = composited.pngData() else {
+            NSSound.beep()
+            return
+        }
+
         do {
             let url = try ExportManager.savePNG(data)
             print("[MirrorKit] Snapshot saved: \(url.path)")

@@ -34,6 +34,7 @@
 		BDD84124F5A2547A30806C30 /* BezelStylePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D7232C2CCB1EF2F2941995 /* BezelStylePicker.swift */; };
 		C09950884481AB7F30076C8D /* BezelStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6AAB76E278A5AB323480FC /* BezelStyleTests.swift */; };
 		C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */; };
+		C92ED5265826506C2348BBEE /* AnnotationCompositor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EAC219068F44077FF454AC /* AnnotationCompositor.swift */; };
 		CAE9A8DEEFB2E4F8171ADF75 /* ExportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */; };
 		DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */; };
 		DCE1D2F8522D18C38983AE9C /* DeviceFrameProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */; };
@@ -57,6 +58,7 @@
 /* Begin PBXFileReference section */
 		00B2AF0D2ACEAD93E8D5CA66 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		031D6CAFC1E8F271307086A6 /* VideoRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorder.swift; sourceTree = "<group>"; };
+		09EAC219068F44077FF454AC /* AnnotationCompositor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationCompositor.swift; sourceTree = "<group>"; };
 		15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportManager.swift; sourceTree = "<group>"; };
 		216A4C33BE1899343C3148C7 /* CaptureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
 		220A53BCEC98A98982D09600 /* SnapshotEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotEncoder.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 		C5F09490E2B9CFC15A0816A2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				09EAC219068F44077FF454AC /* AnnotationCompositor.swift */,
 				66211715E028458148C49052 /* ColorPersistence.swift */,
 				5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */,
 				15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */,
@@ -299,6 +302,7 @@
 				EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */,
 				8A3D042809482130367061A7 /* Annotation.swift in Sources */,
 				54B902E8265F2BDD6C6F2A87 /* AnnotationCanvas.swift in Sources */,
+				C92ED5265826506C2348BBEE /* AnnotationCompositor.swift in Sources */,
 				07ACA417B6E3EC1CA4184759 /* AnnotationLayer.swift in Sources */,
 				7F6730292F807A5F9B45A474 /* AnnotationToolbar.swift in Sources */,
 				ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */,
