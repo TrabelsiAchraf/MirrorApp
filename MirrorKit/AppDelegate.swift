@@ -182,6 +182,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let textView = responder as? NSTextView {
             return textView.isEditable
         }
+        if responder is NSTextField {
+            return true
+        }
         return false
     }
 
@@ -258,7 +261,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // The hotkey is handled by setupKeyboardMonitor (bare "A" with text-field guard);
         // the menu item itself omits keyEquivalent to avoid intercepting text input.
         let annotateItem = NSMenuItem(
-            title: "Toggle Annotation Mode",
+            title: "Toggle Annotation Mode  (A)",
             action: #selector(captureToggleAnnotation),
             keyEquivalent: ""
         )
