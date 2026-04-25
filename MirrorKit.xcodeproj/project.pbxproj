@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		006B70909C5EBA5F49FF92C8 /* DeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB894266D811AB2C068CD6D7 /* DeviceManager.swift */; };
 		03CF148D3C1236A7755B1908 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */; };
+		07ACA417B6E3EC1CA4184759 /* AnnotationLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8D36D57F7524A40438EFFE /* AnnotationLayer.swift */; };
 		10200181D71770777AA450EC /* MirrorKitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC6D36061000D151D1427BFC /* MirrorKitApp.swift */; };
 		1E151C03017B4D864B476751 /* CaptureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */; };
 		20B192FFF33EF90A5C87E7D9 /* DeviceFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B71001D6000191E697A93 /* DeviceFrameView.swift */; };
@@ -59,6 +60,7 @@
 		216A4C33BE1899343C3148C7 /* CaptureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
 		220A53BCEC98A98982D09600 /* SnapshotEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotEncoder.swift; sourceTree = "<group>"; };
 		25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPresetTests.swift; sourceTree = "<group>"; };
+		2E8D36D57F7524A40438EFFE /* AnnotationLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationLayer.swift; sourceTree = "<group>"; };
 		2F1B71001D6000191E697A93 /* DeviceFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameView.swift; sourceTree = "<group>"; };
 		30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPreset.swift; sourceTree = "<group>"; };
 		31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				4B3C7614AFAF1A51912ECFCE /* AboutView.swift */,
+				2E8D36D57F7524A40438EFFE /* AnnotationLayer.swift */,
 				487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */,
 				93D7232C2CCB1EF2F2941995 /* BezelStylePicker.swift */,
 				2F1B71001D6000191E697A93 /* DeviceFrameView.swift */,
@@ -293,6 +296,7 @@
 				EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */,
 				8A3D042809482130367061A7 /* Annotation.swift in Sources */,
 				54B902E8265F2BDD6C6F2A87 /* AnnotationCanvas.swift in Sources */,
+				07ACA417B6E3EC1CA4184759 /* AnnotationLayer.swift in Sources */,
 				ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */,
 				DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */,
 				9E60A84B762FA45636212633 /* BackgroundPresetPicker.swift in Sources */,
