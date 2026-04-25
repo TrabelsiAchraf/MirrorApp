@@ -13,6 +13,7 @@
 		1E151C03017B4D864B476751 /* CaptureState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */; };
 		20B192FFF33EF90A5C87E7D9 /* DeviceFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B71001D6000191E697A93 /* DeviceFrameView.swift */; };
 		23A13EE313E60ECB63A2E5C9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B2AF0D2ACEAD93E8D5CA66 /* SettingsView.swift */; };
+		2D0C59E25D0688D6E3306F59 /* BackgroundPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */; };
 		443EEAC587794A31683C5CDA /* FrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */; };
 		55916EA552CBC0941A09F38E /* MirrorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5871FA238546EDABACFCB72 /* MirrorContentView.swift */; };
 		587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349A35B6F092B22B3689915A /* MirrorWindowController.swift */; };
@@ -25,6 +26,7 @@
 		ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */; };
 		C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */; };
 		CAE9A8DEEFB2E4F8171ADF75 /* ExportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */; };
+		DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */; };
 		DCE1D2F8522D18C38983AE9C /* DeviceFrameProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */; };
 		DD324F060BDC072D1131BB33 /* SnapshotEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A53BCEC98A98982D09600 /* SnapshotEncoder.swift */; };
 		E65448B81FEEEBA7C7B32098 /* FloatingToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */; };
@@ -48,7 +50,9 @@
 		15326D2C1CEEF83FB8ED5358 /* ExportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportManager.swift; sourceTree = "<group>"; };
 		216A4C33BE1899343C3148C7 /* CaptureEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
 		220A53BCEC98A98982D09600 /* SnapshotEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotEncoder.swift; sourceTree = "<group>"; };
+		25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPresetTests.swift; sourceTree = "<group>"; };
 		2F1B71001D6000191E697A93 /* DeviceFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameView.swift; sourceTree = "<group>"; };
+		30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPreset.swift; sourceTree = "<group>"; };
 		31D7D2C1B61030D1D1DDB3D0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		349A35B6F092B22B3689915A /* MirrorWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorWindowController.swift; sourceTree = "<group>"; };
 		4B3C7614AFAF1A51912ECFCE /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -74,6 +78,7 @@
 		24E1662AA7D37983A919F578 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				30C11CC4F05B0217DCAD00A0 /* BackgroundPreset.swift */,
 				BF63A0E9E2E94E70F3D73A38 /* CaptureState.swift */,
 				B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */,
 			);
@@ -161,6 +166,7 @@
 		E4A78E43F8D7169832594305 /* MirrorKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */,
 				D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */,
 			);
 			path = MirrorKitTests;
@@ -262,6 +268,7 @@
 			files = (
 				EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */,
 				ADA90A57D7BEAB3D5F6BC256 /* AppDelegate.swift in Sources */,
+				DACDBC6087128C30F7E6C394 /* BackgroundPreset.swift in Sources */,
 				A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */,
 				1E151C03017B4D864B476751 /* CaptureState.swift in Sources */,
 				C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */,
@@ -288,6 +295,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D0C59E25D0688D6E3306F59 /* BackgroundPresetTests.swift in Sources */,
 				03CF148D3C1236A7755B1908 /* SmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
