@@ -63,7 +63,7 @@ struct BackgroundPresetPicker: View {
                 customColor
                 Image(systemName: "plus")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.8))
+                    .foregroundStyle(.white.opacity(0.8))
             }
             .frame(height: 56)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -82,6 +82,7 @@ struct BackgroundPresetPicker: View {
         }
     }
 
+    @MainActor
     private func openColorPanel() {
         let panel = NSColorPanel.shared
         panel.color = NSColor(customColor)
