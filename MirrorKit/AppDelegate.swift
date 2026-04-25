@@ -86,18 +86,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         alwaysOnTopItem.state = (mirrorWindowController?.isAlwaysOnTop ?? false) ? .on : .off
         menu.addItem(alwaysOnTopItem)
 
-        // Device frame toggle
-        let frameItem = NSMenuItem(
-            title: "Show iPhone Frame",
-            action: #selector(toggleDeviceFrame),
-            keyEquivalent: ""
-        )
-        frameItem.target = self
-        frameItem.state = UserDefaults.standard.object(forKey: "showDeviceFrame") == nil
-            ? .on  // Enabled by default
-            : UserDefaults.standard.bool(forKey: "showDeviceFrame") ? .on : .off
-        menu.addItem(frameItem)
-
         menu.addItem(.separator())
 
         // Quit
@@ -161,9 +149,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 return nil
             case ("r", true):
                 MirrorActions.shared.toggleRotation?()
-                return nil
-            case ("f", true):
-                self.toggleDeviceFrame()
                 return nil
             case ("0", false):
                 MirrorActions.shared.resetZoom?()
@@ -249,11 +234,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         rotateRightItem.target = self
         captureMenu.addItem(rotateRightItem)
 
-        let frameItem = NSMenuItem(title: "Toggle iPhone Frame", action: #selector(toggleDeviceFrame), keyEquivalent: "f")
-        frameItem.keyEquivalentModifierMask = [.command, .shift]
-        frameItem.target = self
-        captureMenu.addItem(frameItem)
-
         let resetZoomItem = NSMenuItem(title: "Reset Zoom", action: #selector(captureResetZoom), keyEquivalent: "0")
         resetZoomItem.target = self
         captureMenu.addItem(resetZoomItem)
@@ -313,14 +293,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func toggleAlwaysOnTopFromMenu() {
         mirrorWindowController?.toggleAlwaysOnTop()
-        updateStatusMenu()
-    }
-
-    @objc private func toggleDeviceFrame() {
-        let current = UserDefaults.standard.object(forKey: "showDeviceFrame") == nil
-            ? true
-            : UserDefaults.standard.bool(forKey: "showDeviceFrame")
-        UserDefaults.standard.set(!current, forKey: "showDeviceFrame")
         updateStatusMenu()
     }
 
