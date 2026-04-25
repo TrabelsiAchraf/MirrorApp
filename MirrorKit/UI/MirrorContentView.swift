@@ -29,21 +29,24 @@ struct MirrorContentView: View {
     @State private var detectingSeconds: Int = 0
     @State private var detectingTimer: Timer?
 
-    @AppStorage("showDeviceFrame") private var showDeviceFrame = true
+    @AppStorage("backgroundPreset") private var backgroundPresetRaw: String = "midnight"
+    @AppStorage("backgroundCustomColor") private var backgroundCustomColorHex: String = "#1F1C40"
+
+    private var currentBackgroundPreset: BackgroundPreset {
+        BackgroundPreset(rawValue: backgroundPresetRaw) ?? .midnight
+    }
+
+    private var currentBackgroundCustomColor: Color {
+        Color(hex: backgroundCustomColorHex) ?? .black
+    }
 
     var body: some View {
         ZStack {
             // Background gradient in expanded mode
             if isExpanded {
-                LinearGradient(
-                    colors: [
-                        Color(red: 0.12, green: 0.11, blue: 0.25),
-                        Color(red: 0.08, green: 0.08, blue: 0.18),
-                        Color(red: 0.05, green: 0.05, blue: 0.12)
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
+                currentBackgroundPreset
+                    .makeBackground(customColor: currentBackgroundCustomColor)
+                    .ignoresSafeArea()
             }
 
             VStack(spacing: 4) {
@@ -218,7 +221,7 @@ struct MirrorContentView: View {
                 : geo.size
 
             Group {
-                if showDeviceFrame, let device = deviceManager.selectedDevice {
+                if let device = deviceManager.selectedDevice {
                     let spec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: detectedResolution)
                     DeviceFrameView(spec: spec) {
                         FrameRenderer(displayLayer: displayLayer)
