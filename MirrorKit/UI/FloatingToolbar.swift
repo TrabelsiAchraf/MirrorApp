@@ -12,8 +12,20 @@ struct FloatingToolbar: View {
     var onToggleRecording: (() -> Void)?
     var onSnapshot: (() -> Void)?
     var onToggleRotation: (() -> Void)?
+    var canvas: AnnotationCanvas?
 
     var body: some View {
+        VStack(spacing: 8) {
+            mainRow
+            if let canvas, canvas.isAnnotationModeActive {
+                AnnotationToolbar(canvas: canvas)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .animation(.easeInOut(duration: 0.18), value: canvas?.isAnnotationModeActive ?? false)
+    }
+
+    private var mainRow: some View {
         HStack(spacing: 12) {
             // Traffic lights
             HStack(spacing: 7) {
@@ -42,6 +54,13 @@ struct FloatingToolbar: View {
                 )
                 toolbarButton(system: "camera", tint: .white, action: { onSnapshot?() })
                 toolbarButton(system: "rotate.left", tint: .white, action: { onToggleRotation?() })
+                if let canvas {
+                    toolbarButton(
+                        system: canvas.isAnnotationModeActive ? "pencil.and.outline" : "pencil",
+                        tint: canvas.isAnnotationModeActive ? .accentColor : .white,
+                        action: { canvas.isAnnotationModeActive.toggle() }
+                    )
+                }
             }
 
             // Device picker — custom label, native NSMenu on click
