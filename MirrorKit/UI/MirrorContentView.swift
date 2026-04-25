@@ -15,6 +15,7 @@ struct MirrorContentView: View {
     @State private var isExpanded = false
     @State private var savedFrame: NSRect?
     @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+    @State private var annotationCanvas = AnnotationCanvas()
 
     @State private var isRecording = false
     @State private var zoomScale: CGFloat = 1.0
@@ -101,13 +102,21 @@ struct MirrorContentView: View {
         }
         .onChange(of: deviceManager.state) { _, newState in
             // Reset capture flag and tear down the engine when leaving the
-            // capturing state (e.g. iPhone unplugged or device switch), so
-            // reconnecting can start a fresh capture session.
+            // capturing state.
             if case .capturing = newState { return }
             isCapturing = false
             detectedResolution = nil
             cachedPortraitSize = nil
             Task { await captureEngine.stopCapture() }
+
+            // Clear annotations when leaving an active session.
+            switch newState {
+            case .detecting, .error, .idle:
+                annotationCanvas.clearAll()
+                annotationCanvas.isAnnotationModeActive = false
+            default:
+                break
+            }
         }
         .onChange(of: detectedResolution) { _, newResolution in
             guard let newResolution, let window = NSApp.keyWindow else { return }
@@ -147,6 +156,10 @@ struct MirrorContentView: View {
             detectedResolution = nil
             cachedPortraitSize = nil
             Task { await captureEngine.stopCapture() }
+
+            // Clear annotations on device switch.
+            annotationCanvas.clearAll()
+            annotationCanvas.isAnnotationModeActive = false
         }
         .onAppear {
             MirrorActions.shared.toggleRecording = { toggleRecording() }
@@ -178,7 +191,8 @@ struct MirrorContentView: View {
                     onExpand: { toggleExpanded() },
                     onToggleRecording: { toggleRecording() },
                     onSnapshot: { takeSnapshot() },
-                    onToggleRotation: { toggleRotation() }
+                    onToggleRotation: { toggleRotation() },
+                    canvas: annotationCanvas
                 )
                 .padding(.horizontal, 8)
                 .opacity(isHovering ? 1 : 0)
@@ -230,16 +244,29 @@ struct MirrorContentView: View {
                 ? CGSize(width: geo.size.height, height: geo.size.width)
                 : geo.size
 
-            Group {
-                if let device = deviceManager.selectedDevice {
-                    let baseSpec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: detectedResolution)
-                    let spec = baseSpec.with(frameColor: currentFrameColor)
-                    DeviceFrameView(spec: spec, style: currentBezelStyle) {
+            ZStack {
+                Group {
+                    if let device = deviceManager.selectedDevice {
+                        let baseSpec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: detectedResolution)
+                        let spec = baseSpec.with(frameColor: currentFrameColor)
+                        DeviceFrameView(spec: spec, style: currentBezelStyle) {
+                            FrameRenderer(displayLayer: displayLayer)
+                        }
+                    } else {
                         FrameRenderer(displayLayer: displayLayer)
+                            .clipShape(RoundedRectangle(cornerRadius: 44, style: .continuous))
                     }
+                }
+
+                if annotationCanvas.isAnnotationModeActive {
+                    AnnotationLayer(canvas: annotationCanvas)
+                        .allowsHitTesting(true)
                 } else {
-                    FrameRenderer(displayLayer: displayLayer)
-                        .clipShape(RoundedRectangle(cornerRadius: 44, style: .continuous))
+                    AnnotationLayer(canvas: annotationCanvas)
+                        .allowsHitTesting(false)
+                        // Always render to keep committed strokes visible even when
+                        // the user has toggled mode off. The only difference is whether
+                        // gestures are absorbed or pass through (zoom/pan still work).
                 }
             }
             .frame(width: preSize.width, height: preSize.height)
