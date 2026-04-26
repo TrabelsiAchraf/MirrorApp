@@ -12,6 +12,10 @@ final class MirrorWindowController: NSWindowController {
     /// Native (unrotated) iPhone resolution, cached so rotation can recompute the aspect ratio.
     private var baseResolution: NSSize?
 
+    /// Width reserved for the annotation tools side panel when active.
+    private let annotationPanelWidth: CGFloat = 72
+    private(set) var isAnnotationPanelVisible: Bool = false
+
     init(deviceManager: DeviceManager) {
         self.deviceManager = deviceManager
 
@@ -50,6 +54,9 @@ final class MirrorWindowController: NSWindowController {
             },
             onRotationChanged: { [weak self] isLandscape in
                 self?.handleRotationChanged(isLandscape: isLandscape)
+            },
+            onAnnotationModeChanged: { [weak self] active in
+                self?.setAnnotationPanelVisible(active)
             }
         )
         let hostingView = NSHostingView(rootView: contentView)
@@ -74,24 +81,52 @@ final class MirrorWindowController: NSWindowController {
 
     private func handleRotationChanged(isLandscape: Bool) {
         guard let window, let base = baseResolution else { return }
-        let target = isLandscape
+        let deviceAspect = isLandscape
             ? NSSize(width: base.height, height: base.width)
             : base
-        window.aspectRatio = target
+        let panelW = isAnnotationPanelVisible ? annotationPanelWidth : 0
 
-        // Resize to preserve approx current area while matching the new ratio.
-        let current = window.frame
-        let area = current.width * current.height
-        let ratio = target.width / target.height
-        let newHeight = sqrt(area / ratio)
-        let newWidth = newHeight * ratio
+        // Solve for new device dimensions that preserve the current window
+        // area (device area + panel area). Aspect of device = aspect.w / aspect.h.
+        // Equation: (deviceH * aspectRatio + panelW) * deviceH = area
+        let area = window.frame.width * window.frame.height
+        let r = deviceAspect.width / deviceAspect.height
+        let discriminant = panelW * panelW + 4 * r * area
+        let deviceH = (-panelW + sqrt(discriminant)) / (2 * r)
+        let deviceW = deviceH * r
+        let newWidth = deviceW + panelW
+        let newHeight = deviceH
+
+        window.aspectRatio = NSSize(width: newWidth, height: newHeight)
+
         let newOrigin = NSPoint(
-            x: current.midX - newWidth / 2,
-            y: current.midY - newHeight / 2
+            x: window.frame.midX - newWidth / 2,
+            y: window.frame.midY - newHeight / 2
         )
         let newFrame = NSRect(origin: newOrigin, size: NSSize(width: newWidth, height: newHeight))
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.25
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            window.animator().setFrame(newFrame, display: true)
+        }
+    }
+
+    /// Expand the window to make room for the annotation side panel (or shrink
+    /// it back). Updates `aspectRatio` so subsequent user resizes preserve the
+    /// new device + panel proportions.
+    private func setAnnotationPanelVisible(_ visible: Bool) {
+        guard isAnnotationPanelVisible != visible, let window else { return }
+        isAnnotationPanelVisible = visible
+        let delta: CGFloat = visible ? annotationPanelWidth : -annotationPanelWidth
+
+        var newFrame = window.frame
+        newFrame.size.width = max(window.minSize.width, newFrame.size.width + delta)
+        newFrame.origin.x -= delta / 2  // keep window centered around its midpoint
+
+        window.aspectRatio = NSSize(width: newFrame.width, height: newFrame.height)
+
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.20
             context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             window.animator().setFrame(newFrame, display: true)
         }

@@ -8,6 +8,7 @@ struct MirrorContentView: View {
     let captureEngine: CaptureEngine
     var onResolutionDetected: ((NSSize) -> Void)?
     var onRotationChanged: ((Bool) -> Void)?
+    var onAnnotationModeChanged: ((Bool) -> Void)?
 
     @State private var displayLayer = VideoDisplayLayer()
     @State private var isCapturing = false
@@ -64,22 +65,25 @@ struct MirrorContentView: View {
                 // Floating toolbar ABOVE the frame
                 toolbarArea
 
-                // Main content (device frame or status views) — overlay the
-                // annotation side panel here so it centers on the device area,
-                // not on the whole window (which includes the toolbar slot).
-                Group {
-                    if isExpanded {
-                        mainContent
-                            .aspectRatio(9.0 / 19.5, contentMode: .fit)
-                            .padding(40)
-                    } else {
-                        mainContent
+                // Device area + annotation tools side by side. The window
+                // controller expands the window width when annotation mode
+                // turns on so the panel sits OUTSIDE the bezel without
+                // covering the iPhone screen, and the bezel keeps its
+                // proper aspect ratio.
+                HStack(spacing: 0) {
+                    Group {
+                        if isExpanded {
+                            mainContent
+                                .aspectRatio(9.0 / 19.5, contentMode: .fit)
+                                .padding(40)
+                        } else {
+                            mainContent
+                        }
                     }
-                }
-                .overlay(alignment: .trailing) {
+
                     if annotationCanvas.isAnnotationModeActive {
                         AnnotationToolbar(canvas: annotationCanvas)
-                            .padding(.trailing, 12)
+                            .padding(.horizontal, 6)
                             .transition(.move(edge: .trailing).combined(with: .opacity))
                     }
                 }
@@ -188,6 +192,9 @@ struct MirrorContentView: View {
             // which would steal the mouseDown from SwiftUI's DragGesture. Suspend
             // background-dragging while drawing so strokes are continuous.
             NSApp.windows.first(where: { $0 is BorderlessWindow })?.isMovableByWindowBackground = !active
+            // Expand/shrink the window so the side panel lives next to the bezel
+            // instead of on top of it.
+            onAnnotationModeChanged?(active)
         }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView {
