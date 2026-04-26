@@ -15,19 +15,10 @@ struct FloatingToolbar: View {
     var canvas: AnnotationCanvas?
 
     var body: some View {
-        // Render the annotation toolbar as an overlay so it doesn't push the
-        // mainContent down — the window aspect ratio is locked to the iPhone
-        // resolution, so any vertical layout shift here would deform the bezel.
+        // The AnnotationToolbar is rendered as a side panel by MirrorContentView,
+        // not stacked here — vertical layout shifts would deform the bezel since
+        // the window aspect ratio is locked to the iPhone resolution.
         mainRow
-            .overlay(alignment: .bottom) {
-                if let canvas, canvas.isAnnotationModeActive {
-                    AnnotationToolbar(canvas: canvas)
-                        .fixedSize()
-                        .alignmentGuide(.bottom) { _ in -8 }
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                }
-            }
-            .animation(.easeInOut(duration: 0.18), value: canvas?.isAnnotationModeActive ?? false)
     }
 
     private var mainRow: some View {

@@ -75,6 +75,18 @@ struct MirrorContentView: View {
                 }
             }
 
+            // Annotation tools side panel — trailing edge, vertically centered.
+            // Floats over the bezel since the window's aspect ratio is locked
+            // and there's no room outside the device frame.
+            if annotationCanvas.isAnnotationModeActive {
+                HStack {
+                    Spacer()
+                    AnnotationToolbar(canvas: annotationCanvas)
+                        .padding(.trailing, 12)
+                }
+                .transition(.move(edge: .trailing).combined(with: .opacity))
+            }
+
             // Toast overlay
             if let message = toastMessage {
                 VStack {
@@ -95,6 +107,7 @@ struct MirrorContentView: View {
                 .allowsHitTesting(false)
             }
         }
+        .animation(.easeInOut(duration: 0.18), value: annotationCanvas.isAnnotationModeActive)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHovering = hovering

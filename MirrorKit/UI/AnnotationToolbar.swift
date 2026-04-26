@@ -1,12 +1,12 @@
 import SwiftUI
 
-/// 2nd row of the FloatingToolbar visible when annotation mode is active.
-/// 5 tool buttons + 6 color dots + undo + clear.
+/// Vertical side panel shown when annotation mode is active.
+/// 5 tool buttons + 6 color dots + undo + clear, stacked top-to-bottom.
 struct AnnotationToolbar: View {
     let canvas: AnnotationCanvas
 
     var body: some View {
-        HStack(spacing: 8) {
+        VStack(spacing: 8) {
             ForEach(AnnotationTool.allCases, id: \.self) { tool in
                 toolButton(tool)
             }
@@ -22,8 +22,8 @@ struct AnnotationToolbar: View {
             iconButton("arrow.uturn.backward") { canvas.undo() }
             iconButton("trash") { canvas.clearAll() }
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 14)
         .background(
             Capsule()
                 .fill(.ultraThinMaterial)
@@ -34,7 +34,7 @@ struct AnnotationToolbar: View {
     private var divider: some View {
         Rectangle()
             .fill(Color.white.opacity(0.15))
-            .frame(width: 1, height: 18)
+            .frame(width: 18, height: 1)
     }
 
     private func toolButton(_ tool: AnnotationTool) -> some View {
