@@ -38,9 +38,10 @@ final class MirrorWindowController: NSWindowController {
         window.backgroundColor = .clear
         window.isOpaque = false
         window.hasShadow = true
-        // Half the default device aspect — matches the aspectRatio so the
-        // floor never breaks the lock before an iPhone is detected.
-        window.minSize = NSSize(width: defaultSize.width * 0.5, height: defaultSize.height * 0.5)
+        // Initial floor before resolution detection — keeps the window above
+        // a usable threshold even if the user resizes pre-connection.
+        // updateMinSize tightens this further once the spec is known.
+        window.minSize = NSSize(width: 480, height: 480 * defaultSize.height / defaultSize.width)
         window.aspectRatio = defaultSize
         window.styleMask.insert(.miniaturizable)
         window.collectionBehavior = [.fullScreenPrimary]
@@ -212,6 +213,20 @@ final class MirrorWindowController: NSWindowController {
             finalMin = NSSize(width: minW, height: minW / aspectRatio)
         }
         window.minSize = finalMin
+
+        // NSWindow.minSize doesn't grow a window that's already smaller — it
+        // only blocks future shrink. Force the resize so the bump takes
+        // effect even on already-undersized windows.
+        let frame = window.frame
+        if frame.width < finalMin.width || frame.height < finalMin.height {
+            let newFrame = NSRect(
+                x: frame.midX - finalMin.width / 2,
+                y: frame.midY - finalMin.height / 2,
+                width: finalMin.width,
+                height: finalMin.height
+            )
+            window.setFrame(newFrame, display: true, animate: true)
+        }
     }
 }
 

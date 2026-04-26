@@ -153,13 +153,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             case ("0", false):
                 MirrorActions.shared.resetZoom?()
                 return nil
-            // Cmd+= and Cmd++ both zoom in (US vs AZERTY layout difference).
-            case ("=", false), ("+", _):
-                MirrorActions.shared.zoomIn?()
-                return nil
-            case ("-", false):
-                MirrorActions.shared.zoomOut?()
-                return nil
             default:
                 return event
             }
@@ -240,14 +233,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         rotateRightItem.target = self
         captureMenu.addItem(rotateRightItem)
 
-        let zoomInItem = NSMenuItem(title: "Zoom In", action: #selector(captureZoomIn), keyEquivalent: "=")
-        zoomInItem.target = self
-        captureMenu.addItem(zoomInItem)
-
-        let zoomOutItem = NSMenuItem(title: "Zoom Out", action: #selector(captureZoomOut), keyEquivalent: "-")
-        zoomOutItem.target = self
-        captureMenu.addItem(zoomOutItem)
-
         let resetZoomItem = NSMenuItem(title: "Reset Zoom", action: #selector(captureResetZoom), keyEquivalent: "0")
         resetZoomItem.target = self
         captureMenu.addItem(resetZoomItem)
@@ -284,8 +269,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func captureRotateLeft() { MirrorActions.shared.rotateLeft?() }
     @objc private func captureRotateRight() { MirrorActions.shared.rotateRight?() }
     @objc private func captureResetZoom() { MirrorActions.shared.resetZoom?() }
-    @objc private func captureZoomIn() { MirrorActions.shared.zoomIn?() }
-    @objc private func captureZoomOut() { MirrorActions.shared.zoomOut?() }
     @objc private func captureToggleAnnotation() { MirrorActions.shared.toggleAnnotationMode?() }
 
     @objc private func openCapturesFolder() {

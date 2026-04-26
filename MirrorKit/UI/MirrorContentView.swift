@@ -196,8 +196,6 @@ struct MirrorContentView: View {
             MirrorActions.shared.rotateLeft = { rotateLeft() }
             MirrorActions.shared.rotateRight = { rotateRight() }
             MirrorActions.shared.resetZoom = { resetZoom() }
-            MirrorActions.shared.zoomIn = { zoomIn() }
-            MirrorActions.shared.zoomOut = { zoomOut() }
             MirrorActions.shared.toggleAnnotationMode = {
                 annotationCanvas.isAnnotationModeActive.toggle()
             }
@@ -498,29 +496,6 @@ struct MirrorContentView: View {
             baseZoomScale = 1.0
             panOffset = .zero
             basePanOffset = .zero
-        }
-    }
-
-    /// Single zoom step. Pinch-zoom is unreliable on the borderless window —
-    /// keyboard shortcuts are the dependable path. Step matches Preview /
-    /// Photos (~25 % per press) and clamps to the same [1, 4] range as pinch.
-    func zoomIn() {
-        let next = min(4.0, zoomScale + 0.25)
-        withAnimation(.easeInOut(duration: 0.2)) {
-            zoomScale = next
-            baseZoomScale = next
-        }
-    }
-
-    func zoomOut() {
-        let next = max(1.0, zoomScale - 0.25)
-        withAnimation(.easeInOut(duration: 0.2)) {
-            zoomScale = next
-            baseZoomScale = next
-            if next <= 1.0 {
-                panOffset = .zero
-                basePanOffset = .zero
-            }
         }
     }
 
