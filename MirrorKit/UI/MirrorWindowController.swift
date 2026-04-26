@@ -105,27 +105,34 @@ final class MirrorWindowController: NSWindowController {
         window?.aspectRatio = resolution
         updateMinSize(for: resolution)
 
-        // Reshape the window to the real device aspect while preserving the
-        // larger of: (a) the current on-screen area, or (b) 50% of the native
-        // device area. This keeps the window proportional to the device when
-        // the user is at the default (small) size, and respects their bigger
-        // choice if they already resized.
+        // Reshape the window to the real device aspect. Aim for the largest
+        // aspect-matching size that fits in 90% of the visible screen, but
+        // don't shrink the user's existing window if they already resized
+        // bigger.
         guard let window, let screen = window.screen ?? NSScreen.main else { return }
         let current = window.frame
         let aspect = resolution.width / resolution.height
-        let nativeTargetArea = (resolution.width * 0.5) * (resolution.height * 0.5)
-        let currentArea = current.width * current.height
-        let targetArea = max(nativeTargetArea, currentArea)
-        var newH = sqrt(targetArea / aspect)
-        var newW = aspect * newH
 
-        // Clamp to 80% of visible screen so the window doesn't overflow.
-        let maxW = screen.visibleFrame.width * 0.8
-        let maxH = screen.visibleFrame.height * 0.8
-        if newW > maxW || newH > maxH {
-            let k = min(maxW / newW, maxH / newH)
-            newW *= k
-            newH *= k
+        let maxW = screen.visibleFrame.width * 0.90
+        let maxH = screen.visibleFrame.height * 0.90
+        // Fit the device aspect inside the 90% box: pick whichever dimension
+        // is the limiter, derive the other from the aspect.
+        var newW: CGFloat
+        var newH: CGFloat
+        if maxW / maxH > aspect {
+            newH = maxH
+            newW = newH * aspect
+        } else {
+            newW = maxW
+            newH = newW / aspect
+        }
+
+        // Respect a bigger user-chosen window if they already enlarged it.
+        let currentArea = current.width * current.height
+        let candidateArea = newW * newH
+        if currentArea > candidateArea {
+            newH = sqrt(currentArea / aspect)
+            newW = aspect * newH
         }
 
         let newOrigin = NSPoint(
