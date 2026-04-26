@@ -106,16 +106,20 @@ final class MirrorWindowController: NSWindowController {
         updateMinSize(for: resolution)
 
         // Reshape the window to the real device aspect while preserving the
-        // current on-screen area. Avoids a dramatic shrink when going from the
-        // default size to native, and avoids the iPad-in-iPhone-window letterbox.
+        // larger of: (a) the current on-screen area, or (b) 50% of the native
+        // device area. This keeps the window proportional to the device when
+        // the user is at the default (small) size, and respects their bigger
+        // choice if they already resized.
         guard let window, let screen = window.screen ?? NSScreen.main else { return }
         let current = window.frame
-        let area = current.width * current.height
         let aspect = resolution.width / resolution.height
-        var newH = sqrt(area / aspect)
+        let nativeTargetArea = (resolution.width * 0.5) * (resolution.height * 0.5)
+        let currentArea = current.width * current.height
+        let targetArea = max(nativeTargetArea, currentArea)
+        var newH = sqrt(targetArea / aspect)
         var newW = aspect * newH
 
-        // Clamp to 80% of visible screen if the area-preserving size would overflow.
+        // Clamp to 80% of visible screen so the window doesn't overflow.
         let maxW = screen.visibleFrame.width * 0.8
         let maxH = screen.visibleFrame.height * 0.8
         if newW > maxW || newH > maxH {
