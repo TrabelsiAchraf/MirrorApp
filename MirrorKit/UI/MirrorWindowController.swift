@@ -196,22 +196,24 @@ final class MirrorWindowController: NSWindowController {
     /// and a huge empty area below.
     private func updateMinSize(for aspect: NSSize) {
         guard let window else { return }
-        // The floating toolbar (traffic lights + capture buttons + device pill)
-        // needs ~440pt of horizontal room. Anything below that overflows or
-        // clips controls — bump the absolute floor to 480 with margin.
-        let minScaleFactor: CGFloat = 0.45
-        let absoluteMin: CGFloat = 480
-        let minW = max(absoluteMin, aspect.width * minScaleFactor)
-        let minH = max(absoluteMin, aspect.height * minScaleFactor)
-        // Preserve the aspect ratio in the minimum: pick whichever dimension
-        // hits the absolute floor first and scale the other from it.
+        // The minimum is driven by the toolbar's natural width (~440pt for
+        // traffic lights + 4 capture buttons + device pill), expressed in
+        // screen points — NOT a fraction of the iPhone's pixel resolution
+        // (which would yield ~1180pt height, taller than most Mac screens).
+        let minWidth: CGFloat = 460
         let aspectRatio = aspect.width / aspect.height
-        let finalMin: NSSize
-        if minW / minH < aspectRatio {
-            finalMin = NSSize(width: minH * aspectRatio, height: minH)
-        } else {
-            finalMin = NSSize(width: minW, height: minW / aspectRatio)
+        var finalMin = NSSize(width: minWidth, height: minWidth / aspectRatio)
+
+        // Cap the minimum to 90 % of the available screen so the window can
+        // always fit. Necessary for portrait iPhone aspects on small Macs:
+        // 460pt × (1/0.46) = 1000pt height, which would exceed a 13" MBP.
+        if let screen = window.screen ?? NSScreen.main {
+            let maxH = screen.visibleFrame.height * 0.90
+            if finalMin.height > maxH {
+                finalMin = NSSize(width: maxH * aspectRatio, height: maxH)
+            }
         }
+
         window.minSize = finalMin
 
         // NSWindow.minSize doesn't grow a window that's already smaller — it
