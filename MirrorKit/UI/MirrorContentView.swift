@@ -146,35 +146,11 @@ struct MirrorContentView: View {
             }
         }
         .onChange(of: detectedResolution) { _, newResolution in
+            // Just update the aspectRatio so future user resizes preserve the
+            // device proportions. Don't touch the window size — the captureView
+            // fits the bezel to the iPhone aspect inside the existing window.
             guard let newResolution, let window = NSApp.keyWindow else { return }
-            print("[MirrorKit] Applying new resolution to window: \(Int(newResolution.width))x\(Int(newResolution.height))")
-
             window.aspectRatio = newResolution
-
-            // Target ~50% of the native resolution, clamped to 80% of screen.
-            let screen = window.screen ?? NSScreen.main
-            let visible = screen?.visibleFrame ?? .zero
-            var targetW = newResolution.width * 0.5
-            var targetH = newResolution.height * 0.5
-            let maxW = visible.width * 0.8
-            let maxH = visible.height * 0.8
-            if targetW > maxW || targetH > maxH {
-                let ratio = min(maxW / targetW, maxH / targetH)
-                targetW *= ratio
-                targetH *= ratio
-            }
-            let current = window.frame
-            let newFrame = NSRect(
-                x: current.midX - targetW / 2,
-                y: current.midY - targetH / 2,
-                width: targetW,
-                height: targetH
-            )
-            NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.25
-                context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-                window.animator().setFrame(newFrame, display: true)
-            }
         }
         .onChange(of: deviceManager.selectedDevice?.id) { _, _ in
             // On device switch, stop the current capture so the new device

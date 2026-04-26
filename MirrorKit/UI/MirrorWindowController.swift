@@ -104,35 +104,9 @@ final class MirrorWindowController: NSWindowController {
         baseResolution = resolution
         window?.aspectRatio = resolution
         updateMinSize(for: resolution)
-
-        guard let window, let screen = window.screen ?? NSScreen.main else { return }
-        let maxWidth = screen.visibleFrame.width * 0.8
-        let maxHeight = screen.visibleFrame.height * 0.8
-
-        var targetWidth = resolution.width * 0.5
-        var targetHeight = resolution.height * 0.5
-
-        if targetWidth > maxWidth || targetHeight > maxHeight {
-            let ratio = min(maxWidth / targetWidth, maxHeight / targetHeight)
-            targetWidth *= ratio
-            targetHeight *= ratio
-        }
-
-        let currentFrame = window.frame
-        let newOrigin = NSPoint(
-            x: currentFrame.midX - targetWidth / 2,
-            y: currentFrame.midY - targetHeight / 2
-        )
-        var newFrame = NSRect(origin: newOrigin, size: NSSize(width: targetWidth, height: targetHeight))
-        let visibleFrame = screen.visibleFrame
-        newFrame.origin.x = max(visibleFrame.minX, min(newFrame.origin.x, visibleFrame.maxX - newFrame.width))
-        newFrame.origin.y = max(visibleFrame.minY, min(newFrame.origin.y, visibleFrame.maxY - newFrame.height))
-
-        NSAnimationContext.runAnimationGroup { context in
-            context.duration = 0.25
-            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            window.animator().setFrame(newFrame, display: true)
-        }
+        // Don't resize the window on detection — the user picked their own size,
+        // either by accepting the default or by dragging. The captureView fits
+        // the bezel to the iPhone aspect inside whatever space is available.
     }
 
     /// Update minSize so it matches the current aspect ratio. Without this, the
