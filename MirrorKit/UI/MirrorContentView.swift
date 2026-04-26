@@ -8,7 +8,6 @@ struct MirrorContentView: View {
     let captureEngine: CaptureEngine
     var onResolutionDetected: ((NSSize) -> Void)?
     var onRotationChanged: ((Bool) -> Void)?
-    var onAnnotationModeChanged: ((Bool) -> Void)?
 
     @State private var displayLayer = VideoDisplayLayer()
     @State private var isCapturing = false
@@ -52,6 +51,17 @@ struct MirrorContentView: View {
         DeviceFrameSpec.FrameColor(rawValue: bezelColorRaw) ?? .black
     }
 
+    /// Device aspect for the current rotation. Used to force the captureView to
+    /// keep iPhone proportions even when the side panel reduces the available
+    /// width — the bezel shrinks to fit instead of distorting.
+    private var deviceAspect: CGFloat {
+        let resolution = detectedResolution ?? NSSize(width: 9, height: 19.5)
+        let isLandscape = ((rotationQuarterTurns % 2) + 2) % 2 == 1
+        return isLandscape
+            ? resolution.height / resolution.width
+            : resolution.width / resolution.height
+    }
+
     var body: some View {
         ZStack {
             // Background gradient in expanded mode
@@ -74,12 +84,14 @@ struct MirrorContentView: View {
                     Group {
                         if isExpanded {
                             mainContent
-                                .aspectRatio(9.0 / 19.5, contentMode: .fit)
+                                .aspectRatio(deviceAspect, contentMode: .fit)
                                 .padding(40)
                         } else {
                             mainContent
+                                .aspectRatio(deviceAspect, contentMode: .fit)
                         }
                     }
+                    .frame(maxWidth: .infinity)
 
                     if annotationCanvas.isAnnotationModeActive {
                         AnnotationToolbar(canvas: annotationCanvas)
@@ -192,9 +204,6 @@ struct MirrorContentView: View {
             // which would steal the mouseDown from SwiftUI's DragGesture. Suspend
             // background-dragging while drawing so strokes are continuous.
             NSApp.windows.first(where: { $0 is BorderlessWindow })?.isMovableByWindowBackground = !active
-            // Expand/shrink the window so the side panel lives next to the bezel
-            // instead of on top of it.
-            onAnnotationModeChanged?(active)
         }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView {
