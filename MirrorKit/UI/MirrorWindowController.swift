@@ -104,9 +104,40 @@ final class MirrorWindowController: NSWindowController {
         baseResolution = resolution
         window?.aspectRatio = resolution
         updateMinSize(for: resolution)
-        // Don't resize the window on detection — the user picked their own size,
-        // either by accepting the default or by dragging. The captureView fits
-        // the bezel to the iPhone aspect inside whatever space is available.
+
+        // Reshape the window to the real device aspect while preserving the
+        // current on-screen area. Avoids a dramatic shrink when going from the
+        // default size to native, and avoids the iPad-in-iPhone-window letterbox.
+        guard let window, let screen = window.screen ?? NSScreen.main else { return }
+        let current = window.frame
+        let area = current.width * current.height
+        let aspect = resolution.width / resolution.height
+        var newH = sqrt(area / aspect)
+        var newW = aspect * newH
+
+        // Clamp to 80% of visible screen if the area-preserving size would overflow.
+        let maxW = screen.visibleFrame.width * 0.8
+        let maxH = screen.visibleFrame.height * 0.8
+        if newW > maxW || newH > maxH {
+            let k = min(maxW / newW, maxH / newH)
+            newW *= k
+            newH *= k
+        }
+
+        let newOrigin = NSPoint(
+            x: current.midX - newW / 2,
+            y: current.midY - newH / 2
+        )
+        var newFrame = NSRect(origin: newOrigin, size: NSSize(width: newW, height: newH))
+        let visible = screen.visibleFrame
+        newFrame.origin.x = max(visible.minX, min(newFrame.origin.x, visible.maxX - newFrame.width))
+        newFrame.origin.y = max(visible.minY, min(newFrame.origin.y, visible.maxY - newFrame.height))
+
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.25
+            context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            window.animator().setFrame(newFrame, display: true)
+        }
     }
 
     /// Update minSize so it matches the current aspect ratio. Without this, the
