@@ -34,7 +34,9 @@ final class MirrorWindowController: NSWindowController {
         window.backgroundColor = .clear
         window.isOpaque = false
         window.hasShadow = true
-        window.minSize = NSSize(width: 200, height: 400)
+        // Half the default device aspect — matches the aspectRatio so the
+        // floor never breaks the lock before an iPhone is detected.
+        window.minSize = NSSize(width: defaultSize.width * 0.5, height: defaultSize.height * 0.5)
         window.aspectRatio = defaultSize
         window.styleMask.insert(.miniaturizable)
         window.collectionBehavior = [.fullScreenPrimary]
