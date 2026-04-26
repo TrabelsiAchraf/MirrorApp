@@ -30,13 +30,11 @@ struct DeviceFrameView<Content: View>: View {
             let reference: CGFloat = spec.kind == .iPad ? 820 : 390
             let baseline = min(geometry.size.width, geometry.size.height) / reference
             let bezel = spec.bezelWidth * baseline
-            // iPhones have taller top/bottom bezels than left/right; iPad is uniform.
-            let verticalBezel = spec.kind == .iPad ? bezel : bezel * 1.8
             let outerRadius = spec.cornerRadius * baseline
             let innerRadius = max(outerRadius - bezel, 8)
 
             let screenWidth = geometry.size.width - bezel * 2
-            let screenHeight = geometry.size.height - verticalBezel * 2
+            let screenHeight = geometry.size.height - bezel * 2
 
             ZStack {
                 RoundedRectangle(cornerRadius: outerRadius, style: .continuous)
@@ -54,7 +52,7 @@ struct DeviceFrameView<Content: View>: View {
                                 width: geometry.size.width * 0.25,
                                 height: max(geometry.size.height * 0.015, 8)
                             )
-                            .padding(.top, verticalBezel + geometry.size.height * 0.008)
+                            .padding(.top, bezel + geometry.size.height * 0.008)
                         Spacer()
                     }
                 }
