@@ -50,7 +50,7 @@ final class MirrorWindowController: NSWindowController {
             },
             onRotationChanged: { [weak self] isLandscape in
                 self?.handleRotationChanged(isLandscape: isLandscape)
-            },
+            }
         )
         let hostingView = NSHostingView(rootView: contentView)
         hostingView.layer?.backgroundColor = .clear
@@ -78,6 +78,7 @@ final class MirrorWindowController: NSWindowController {
             ? NSSize(width: base.height, height: base.width)
             : base
         window.aspectRatio = target
+        updateMinSize(for: target)
 
         // Resize to preserve approx current area while matching the new ratio.
         let current = window.frame
@@ -100,6 +101,7 @@ final class MirrorWindowController: NSWindowController {
     private func handleResolutionDetected(_ resolution: NSSize) {
         baseResolution = resolution
         window?.aspectRatio = resolution
+        updateMinSize(for: resolution)
 
         guard let window, let screen = window.screen ?? NSScreen.main else { return }
         let maxWidth = screen.visibleFrame.width * 0.8
@@ -129,6 +131,30 @@ final class MirrorWindowController: NSWindowController {
             context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             window.animator().setFrame(newFrame, display: true)
         }
+    }
+
+    /// Update minSize so it matches the current aspect ratio. Without this, the
+    /// user can resize past minSize and break the aspect lock — the window
+    /// ends up taller-than-aspect-allows with the bezel marooned at the top
+    /// and a huge empty area below.
+    private func updateMinSize(for aspect: NSSize) {
+        guard let window else { return }
+        // Roughly half the default device-aspect window. Picked so the bezel
+        // stays large enough for the toolbar to remain readable.
+        let minScaleFactor: CGFloat = 0.30
+        let absoluteMin: CGFloat = 240
+        let minW = max(absoluteMin, aspect.width * minScaleFactor)
+        let minH = max(absoluteMin, aspect.height * minScaleFactor)
+        // Preserve the aspect ratio in the minimum: pick whichever dimension
+        // hits the absolute floor first and scale the other from it.
+        let aspectRatio = aspect.width / aspect.height
+        let finalMin: NSSize
+        if minW / minH < aspectRatio {
+            finalMin = NSSize(width: minH * aspectRatio, height: minH)
+        } else {
+            finalMin = NSSize(width: minW, height: minW / aspectRatio)
+        }
+        window.minSize = finalMin
     }
 }
 
