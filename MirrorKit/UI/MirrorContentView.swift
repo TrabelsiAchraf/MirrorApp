@@ -272,7 +272,28 @@ struct MirrorContentView: View {
     // MARK: - Capture view
 
     /// Device frame containing the video stream
+    @ViewBuilder
     private var captureView: some View {
+        if zoomScale > 1.0 {
+            // Pan is allowed: attach DragGesture for translation.
+            captureViewBody.simultaneousGesture(
+                DragGesture()
+                    .onChanged { value in
+                        panOffset = CGSize(
+                            width: basePanOffset.width + value.translation.width,
+                            height: basePanOffset.height + value.translation.height
+                        )
+                    }
+                    .onEnded { _ in basePanOffset = panOffset }
+            )
+        } else {
+            // Not zoomed: skip the DragGesture so the window's edges remain
+            // grabbable by AppKit for resize.
+            captureViewBody
+        }
+    }
+
+    private var captureViewBody: some View {
         GeometryReader { geo in
             let isLandscape = ((rotationQuarterTurns % 2) + 2) % 2 == 1
             // Pre-rotation size: swap so rotated content fills the container.
@@ -315,17 +336,6 @@ struct MirrorContentView: View {
                     baseZoomScale = zoomScale
                     if zoomScale <= 1.0 { panOffset = .zero; basePanOffset = .zero }
                 }
-        )
-        .simultaneousGesture(
-            DragGesture()
-                .onChanged { value in
-                    guard zoomScale > 1.0 else { return }
-                    panOffset = CGSize(
-                        width: basePanOffset.width + value.translation.width,
-                        height: basePanOffset.height + value.translation.height
-                    )
-                }
-                .onEnded { _ in basePanOffset = panOffset }
         )
     }
 
