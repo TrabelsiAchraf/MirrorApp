@@ -43,15 +43,15 @@ struct FloatingToolbar: View {
 
             // Capture actions
             HStack(spacing: 6) {
-                toolbarButton(
+                ToolbarIconButton(
                     system: isRecording ? "stop.circle.fill" : "record.circle",
                     tint: isRecording ? .red : .white,
                     action: { onToggleRecording?() }
                 )
-                toolbarButton(system: "camera", tint: .white, action: { onSnapshot?() })
-                toolbarButton(system: "rotate.left", tint: .white, action: { onToggleRotation?() })
+                ToolbarIconButton(system: "camera", tint: .white, action: { onSnapshot?() })
+                ToolbarIconButton(system: "rotate.left", tint: .white, action: { onToggleRotation?() })
                 if let canvas {
-                    toolbarButton(
+                    ToolbarIconButton(
                         system: canvas.isAnnotationModeActive ? "pencil.and.outline" : "pencil",
                         tint: canvas.isAnnotationModeActive ? .accentColor : .white,
                         action: { canvas.isAnnotationModeActive.toggle() }
@@ -60,40 +60,11 @@ struct FloatingToolbar: View {
             }
 
             // Device picker — custom label, native NSMenu on click
-            Button(action: showDevicePopup) {
-                HStack(spacing: 10) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(selectedDevice?.name ?? "No device")
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundColor(.white)
-                            .lineLimit(1)
-                        Text(modelName)
-                            .font(.system(size: 11))
-                            .foregroundColor(.gray)
-                            .lineLimit(1)
-                    }
-
-                    Spacer(minLength: 12)
-
-                    HStack(spacing: 5) {
-                        Image(systemName: "iphone.gen3")
-                            .font(.system(size: 17, weight: .medium))
-                            .foregroundColor(.white)
-                        Image(systemName: "chevron.up.chevron.down")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(.white.opacity(0.75))
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 7)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(Color.white.opacity(0.14))
-                    )
-                }
-                .frame(maxWidth: .infinity)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+            DevicePickerButton(
+                deviceName: selectedDevice?.name ?? "No device",
+                modelName: modelName,
+                action: showDevicePopup
+            )
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
@@ -102,20 +73,6 @@ struct FloatingToolbar: View {
                 .fill(.ultraThinMaterial)
                 .environment(\.colorScheme, .dark)
         )
-    }
-
-    private func toolbarButton(system: String, tint: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Image(systemName: system)
-                .font(.system(size: 15, weight: .medium))
-                .foregroundColor(tint)
-                .frame(width: 26, height: 26)
-                .background(
-                    RoundedRectangle(cornerRadius: 7, style: .continuous)
-                        .fill(Color.white.opacity(0.10))
-                )
-        }
-        .buttonStyle(.plain)
     }
 
     /// Pop up a native NSMenu listing all detected devices.
@@ -135,6 +92,83 @@ struct FloatingToolbar: View {
             menu.addItem(item)
         }
         NSMenu.popUpContextMenu(menu, with: event, for: NSApp.keyWindow?.contentView ?? NSView())
+    }
+}
+
+// MARK: - Hoverable buttons
+
+private struct ToolbarIconButton: View {
+    let system: String
+    let tint: Color
+    let action: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: system)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(tint)
+                .frame(width: 26, height: 26)
+                .background(
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .fill(Color.white.opacity(isHovered ? 0.22 : 0.10))
+                )
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            isHovered = hovering
+            if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+        }
+        .animation(.easeInOut(duration: 0.12), value: isHovered)
+    }
+}
+
+private struct DevicePickerButton: View {
+    let deviceName: String
+    let modelName: String
+    let action: () -> Void
+    @State private var isHovered = false
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(deviceName)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.white)
+                        .lineLimit(1)
+                    Text(modelName)
+                        .font(.system(size: 11))
+                        .foregroundColor(.gray)
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 12)
+
+                HStack(spacing: 5) {
+                    Image(systemName: "iphone.gen3")
+                        .font(.system(size: 17, weight: .medium))
+                        .foregroundColor(.white)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundColor(.white.opacity(0.75))
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 7)
+                .background(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(Color.white.opacity(isHovered ? 0.24 : 0.14))
+                )
+            }
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering in
+            isHovered = hovering
+            if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
+        }
+        .animation(.easeInOut(duration: 0.12), value: isHovered)
     }
 }
 
