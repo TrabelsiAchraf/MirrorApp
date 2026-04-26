@@ -1,8 +1,7 @@
 import SwiftUI
 
-/// Device frame container — wraps the mirror content in one of three styles:
-/// classic (existing colored bezel + Dynamic Island), floating (no bezel +
-/// soft drop shadow), or frameless (just rounded corners).
+/// Device frame container — wraps the mirror content in one of two styles:
+/// classic (colored bezel + Dynamic Island) or frameless (just rounded corners).
 struct DeviceFrameView<Content: View>: View {
     let spec: DeviceFrameSpec
     let style: BezelStyle
@@ -16,9 +15,8 @@ struct DeviceFrameView<Content: View>: View {
 
     var body: some View {
         switch style {
-        case .classic:  classicBody
-        case .floating: floatingBody
-        case .none:     framelessBody
+        case .classic: classicBody
+        case .none:    framelessBody
         }
     }
 
@@ -57,20 +55,6 @@ struct DeviceFrameView<Content: View>: View {
                     }
                 }
             }
-        }
-    }
-
-    // MARK: - Floating (no bezel + drop shadow)
-
-    private var floatingBody: some View {
-        GeometryReader { geometry in
-            let reference: CGFloat = spec.kind == .iPad ? 820 : 390
-            let baseline = min(geometry.size.width, geometry.size.height) / reference
-            let outerRadius = spec.cornerRadius * baseline
-
-            content
-                .clipShape(RoundedRectangle(cornerRadius: outerRadius, style: .continuous))
-                .shadow(color: .black.opacity(0.45), radius: 24, x: 0, y: 12)
         }
     }
 

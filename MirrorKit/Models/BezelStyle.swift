@@ -5,16 +5,14 @@ import Foundation
 /// Task 7 legacy migration.
 enum BezelStyle: String, CaseIterable, Identifiable {
     case classic
-    case floating
     case none
 
     var id: String { rawValue }
 
     var displayName: String {
         switch self {
-        case .classic:  return "Classic"
-        case .floating: return "Floating"
-        case .none:     return "Frameless"
+        case .classic: return "Classic"
+        case .none:    return "Frameless"
         }
     }
 }

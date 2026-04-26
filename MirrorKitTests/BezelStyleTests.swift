@@ -7,7 +7,6 @@ struct BezelStyleTests {
     @Test("Parses valid raw values")
     func parsesValidRawValues() {
         #expect(BezelStyle(rawValue: "classic") == .classic)
-        #expect(BezelStyle(rawValue: "floating") == .floating)
         #expect(BezelStyle(rawValue: "none") == BezelStyle.none)
     }
 
@@ -19,7 +18,6 @@ struct BezelStyleTests {
     @Test("Display names are user-readable")
     func displayNames() {
         #expect(BezelStyle.classic.displayName == "Classic")
-        #expect(BezelStyle.floating.displayName == "Floating")
         #expect(BezelStyle.none.displayName == "Frameless")
     }
 
@@ -73,10 +71,10 @@ struct LegacyMigrationTests {
     @Test("Already-set bezelStyle is not overwritten (idempotent)")
     func idempotent() {
         let defaults = freshDefaults()
-        defaults.set("floating", forKey: "bezelStyle")
+        defaults.set("none", forKey: "bezelStyle")
         defaults.set(true, forKey: "showDeviceFrame")  // legacy that should be ignored
         let migrated = LegacyMigration.migrateBezelStyleIfNeeded(in: defaults)
         #expect(migrated == false)
-        #expect(defaults.string(forKey: "bezelStyle") == "floating")
+        #expect(defaults.string(forKey: "bezelStyle") == "none")
     }
 }
