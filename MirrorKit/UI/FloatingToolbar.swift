@@ -15,14 +15,19 @@ struct FloatingToolbar: View {
     var canvas: AnnotationCanvas?
 
     var body: some View {
-        VStack(spacing: 8) {
-            mainRow
-            if let canvas, canvas.isAnnotationModeActive {
-                AnnotationToolbar(canvas: canvas)
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+        // Render the annotation toolbar as an overlay so it doesn't push the
+        // mainContent down — the window aspect ratio is locked to the iPhone
+        // resolution, so any vertical layout shift here would deform the bezel.
+        mainRow
+            .overlay(alignment: .bottom) {
+                if let canvas, canvas.isAnnotationModeActive {
+                    AnnotationToolbar(canvas: canvas)
+                        .fixedSize()
+                        .alignmentGuide(.bottom) { _ in -8 }
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                }
             }
-        }
-        .animation(.easeInOut(duration: 0.18), value: canvas?.isAnnotationModeActive ?? false)
+            .animation(.easeInOut(duration: 0.18), value: canvas?.isAnnotationModeActive ?? false)
     }
 
     private var mainRow: some View {
