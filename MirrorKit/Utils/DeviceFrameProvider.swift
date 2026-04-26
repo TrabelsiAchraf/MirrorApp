@@ -62,15 +62,21 @@ extension DeviceFrameSpec {
 /// Provides frame specifications for each iPhone model
 enum DeviceFrameProvider {
 
-    /// Window aspect ratio (W:H) that, after the spec's symmetric bezel inset
-    /// is subtracted, leaves an inner screen area exactly matching the device's
-    /// native aspect — so `.resizeAspect` content fills the bezel rect with
-    /// no letterbox AND no stretch.
+    /// Aspect ratio (W:H) the captureView container should be locked to (via
+    /// `.aspectRatio(_, contentMode: .fit)`) so the bezel renderer's inner
+    /// screen rect — after the spec's symmetric bezel inset — exactly matches
+    /// the device's native aspect. Result: `.resizeAspect` fills with no
+    /// letterbox AND no stretch.
+    ///
+    /// We can't lock this on the window itself because the layout above the
+    /// captureView (floating toolbar) steals vertical space — the device area
+    /// has a different aspect than the window.
+    ///
     /// For non-classic styles (no bezel) returns the raw resolution.
     /// Math: (W - 2αW)/(H - 2αW) = ρ → W/H = ρ / (1 - 2α(1-ρ))
     /// where α = bezelWidth / reference and ρ = resolution.width / resolution.height
     /// (assumes portrait — W < H — which is how AVFoundation reports iPhone resolutions).
-    static func windowAspect(for spec: DeviceFrameSpec, resolution: CGSize, hasBezel: Bool) -> CGSize {
+    static func bezelCorrectedAspect(for spec: DeviceFrameSpec, resolution: CGSize, hasBezel: Bool) -> CGSize {
         guard hasBezel, resolution.width > 0, resolution.height > 0 else { return resolution }
         let ρ = resolution.width / resolution.height
         let reference: CGFloat = spec.kind == .iPad ? 820 : 390

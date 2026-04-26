@@ -197,9 +197,9 @@ final class MirrorWindowController: NSWindowController {
         guard let window else { return }
         // The floating toolbar (traffic lights + capture buttons + device pill)
         // needs ~440pt of horizontal room. Anything below that overflows or
-        // clips controls. minScaleFactor 0.45 keeps the device readable.
+        // clips controls — bump the absolute floor to 480 with margin.
         let minScaleFactor: CGFloat = 0.45
-        let absoluteMin: CGFloat = 320
+        let absoluteMin: CGFloat = 480
         let minW = max(absoluteMin, aspect.width * minScaleFactor)
         let minH = max(absoluteMin, aspect.height * minScaleFactor)
         // Preserve the aspect ratio in the minimum: pick whichever dimension
