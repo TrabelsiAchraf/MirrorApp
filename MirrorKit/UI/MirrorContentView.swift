@@ -199,12 +199,6 @@ struct MirrorContentView: View {
                 annotationCanvas.isAnnotationModeActive.toggle()
             }
         }
-        .onChange(of: annotationCanvas.isAnnotationModeActive) { _, active in
-            // The borderless window normally drags from anywhere on its background,
-            // which would steal the mouseDown from SwiftUI's DragGesture. Suspend
-            // background-dragging while drawing so strokes are continuous.
-            NSApp.windows.first(where: { $0 is BorderlessWindow })?.isMovableByWindowBackground = !active
-        }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView {
                 showOnboarding = false

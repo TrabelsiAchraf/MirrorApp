@@ -22,21 +22,30 @@ final class MirrorWindowController: NSWindowController {
             y: screenFrame.midY - defaultSize.height / 2
         )
 
-        // Fully borderless window — the content IS the device
+        // Use a titled window with a transparent, fullSize titlebar. Visually
+        // it looks borderless (the SwiftUI content fills everything), but
+        // AppKit gives us a real top drag-strip and decent resize hit areas
+        // on every edge — much easier to grab than the 5pt borderless edge.
         let window = BorderlessWindow(
             contentRect: NSRect(origin: origin, size: defaultSize),
-            styleMask: [.borderless, .resizable],
+            styleMask: [.titled, .fullSizeContentView, .resizable, .closable, .miniaturizable],
             backing: .buffered,
             defer: false
         )
 
-        window.isMovableByWindowBackground = true
+        window.titlebarAppearsTransparent = true
+        window.titleVisibility = .hidden
+        window.standardWindowButton(.closeButton)?.isHidden = true
+        window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        window.standardWindowButton(.zoomButton)?.isHidden = true
+
+        window.isMovableByWindowBackground = false
         window.backgroundColor = .clear
         window.isOpaque = false
         window.hasShadow = true
-        window.minSize = NSSize(width: 200, height: 400)
+        // Match the default device aspect so the floor never breaks the lock.
+        window.minSize = NSSize(width: defaultSize.width * 0.5, height: defaultSize.height * 0.5)
         window.aspectRatio = defaultSize
-        window.styleMask.insert(.miniaturizable)
         window.collectionBehavior = [.fullScreenPrimary]
 
         super.init(window: window)
