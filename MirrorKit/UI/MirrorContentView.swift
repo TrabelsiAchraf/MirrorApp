@@ -342,7 +342,7 @@ struct MirrorContentView: View {
         do {
             let url = try ExportManager.savePNG(data)
             print("[MirrorKit] Snapshot saved: \(url.path)")
-            NSSound(named: "Grab")?.play()
+            NSSound(named: "Pop")?.play()
             showToast("Snapshot saved — \(url.lastPathComponent)", revealing: url)
         } catch {
             print("[MirrorKit] Snapshot failed: \(error.localizedDescription)")
