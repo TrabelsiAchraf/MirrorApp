@@ -129,21 +129,22 @@ private struct DevicePickerButton: View {
     @State private var isHovered = false
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: 10) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(deviceName)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                    Text(modelName)
-                        .font(.system(size: 11))
-                        .foregroundColor(.gray)
-                        .lineLimit(1)
-                }
+        HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(deviceName)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                Text(modelName)
+                    .font(.system(size: 11))
+                    .foregroundColor(.gray)
+                    .lineLimit(1)
+            }
 
-                Spacer(minLength: 12)
+            Spacer(minLength: 12)
 
+            // Only the pill is clickable — clicks on the name area pass through.
+            Button(action: action) {
                 HStack(spacing: 5) {
                     Image(systemName: "iphone.gen3")
                         .font(.system(size: 17, weight: .medium))
@@ -158,15 +159,15 @@ private struct DevicePickerButton: View {
                     RoundedRectangle(cornerRadius: 8, style: .continuous)
                         .fill(Color.white.opacity(isHovered ? 0.24 : 0.14))
                 )
+                .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             }
-            .frame(maxWidth: .infinity)
-            .contentShape(Rectangle())
+            .buttonStyle(.plain)
+            .onHover { hovering in
+                isHovered = hovering
+            }
+            .animation(.easeInOut(duration: 0.12), value: isHovered)
         }
-        .buttonStyle(.plain)
-        .onHover { hovering in
-            isHovered = hovering
-        }
-        .animation(.easeInOut(duration: 0.12), value: isHovered)
+        .frame(maxWidth: .infinity)
     }
 }
 
