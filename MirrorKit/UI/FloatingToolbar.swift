@@ -117,7 +117,6 @@ private struct ToolbarIconButton: View {
         .buttonStyle(.plain)
         .onHover { hovering in
             isHovered = hovering
-            if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
         }
         .animation(.easeInOut(duration: 0.12), value: isHovered)
     }
@@ -166,7 +165,6 @@ private struct DevicePickerButton: View {
         .buttonStyle(.plain)
         .onHover { hovering in
             isHovered = hovering
-            if hovering { NSCursor.pointingHand.push() } else { NSCursor.pop() }
         }
         .animation(.easeInOut(duration: 0.12), value: isHovered)
     }
