@@ -195,10 +195,11 @@ final class MirrorWindowController: NSWindowController {
     /// and a huge empty area below.
     private func updateMinSize(for aspect: NSSize) {
         guard let window else { return }
-        // Roughly half the default device-aspect window. Picked so the bezel
-        // stays large enough for the toolbar to remain readable.
-        let minScaleFactor: CGFloat = 0.30
-        let absoluteMin: CGFloat = 240
+        // The floating toolbar (traffic lights + capture buttons + device pill)
+        // needs ~440pt of horizontal room. Anything below that overflows or
+        // clips controls. minScaleFactor 0.45 keeps the device readable.
+        let minScaleFactor: CGFloat = 0.45
+        let absoluteMin: CGFloat = 320
         let minW = max(absoluteMin, aspect.width * minScaleFactor)
         let minH = max(absoluteMin, aspect.height * minScaleFactor)
         // Preserve the aspect ratio in the minimum: pick whichever dimension

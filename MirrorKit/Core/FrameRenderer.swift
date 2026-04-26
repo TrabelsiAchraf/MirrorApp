@@ -12,12 +12,7 @@ struct FrameRenderer: NSViewRepresentable {
         let view = NSView()
         view.wantsLayer = true
         view.layer = displayLayer
-        // .resize fills the layer bounds exactly. The bezel renderer subtracts
-        // a symmetric inset from the iPhone-aspect window, so the inner screen
-        // area has a slightly different aspect than the captured frame
-        // (~1–3%). .resizeAspect would letterbox that gap and break the
-        // top/bottom symmetry. The stretch is imperceptible.
-        displayLayer.contentsGravity = .resize
+        displayLayer.contentsGravity = .resizeAspect
         displayLayer.backgroundColor = NSColor.black.cgColor
         return view
     }

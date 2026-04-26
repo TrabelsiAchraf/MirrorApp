@@ -52,6 +52,19 @@ struct MirrorContentView: View {
         DeviceFrameSpec.FrameColor(rawValue: bezelColorRaw) ?? .black
     }
 
+    /// Aspect-corrected window size for the current device + bezel style. Used
+    /// instead of the raw resolution so the inner screen area inside the bezel
+    /// exactly matches the device's native aspect — no letterbox, no stretch.
+    private func correctedWindowAspect(for resolution: NSSize) -> NSSize {
+        guard let device = deviceManager.selectedDevice else { return resolution }
+        let spec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: resolution)
+        return DeviceFrameProvider.windowAspect(
+            for: spec,
+            resolution: resolution,
+            hasBezel: currentBezelStyle == .classic
+        )
+    }
+
     /// Device aspect for the current rotation. Used to force the captureView to
     /// keep iPhone proportions even when the side panel reduces the available
     /// width — the bezel shrinks to fit instead of distorting.
@@ -154,7 +167,13 @@ struct MirrorContentView: View {
             // device proportions. Don't touch the window size — the captureView
             // fits the bezel to the iPhone aspect inside the existing window.
             guard let newResolution, let window = NSApp.keyWindow else { return }
-            window.aspectRatio = newResolution
+            window.aspectRatio = correctedWindowAspect(for: newResolution)
+        }
+        .onChange(of: bezelStyleRaw) { _, _ in
+            // Bezel toggle changes the inset, so the window aspect needs to
+            // re-correct to keep the inner screen area at the iPhone aspect.
+            guard let resolution = detectedResolution, let window = NSApp.keyWindow else { return }
+            window.aspectRatio = correctedWindowAspect(for: resolution)
         }
         .onChange(of: deviceManager.selectedDevice?.id) { _, _ in
             // On device switch, stop the current capture so the new device
@@ -637,7 +656,10 @@ struct MirrorContentView: View {
                         DispatchQueue.main.async {
                             let nsSize = NSSize(width: resolution.width, height: resolution.height)
                             detectedResolution = nsSize
-                            onResolutionDetected?(nsSize)
+                            // Pass the aspect-corrected size so the window
+                            // controller's aspectRatio + minSize + fit-to-screen
+                            // logic compensates for the bezel inset.
+                            onResolutionDetected?(correctedWindowAspect(for: nsSize))
                         }
                     }
                 )

@@ -62,6 +62,25 @@ extension DeviceFrameSpec {
 /// Provides frame specifications for each iPhone model
 enum DeviceFrameProvider {
 
+    /// Window aspect ratio (W:H) that, after the spec's symmetric bezel inset
+    /// is subtracted, leaves an inner screen area exactly matching the device's
+    /// native aspect — so `.resizeAspect` content fills the bezel rect with
+    /// no letterbox AND no stretch.
+    /// For non-classic styles (no bezel) returns the raw resolution.
+    /// Math: (W - 2αW)/(H - 2αW) = ρ → W/H = ρ / (1 - 2α(1-ρ))
+    /// where α = bezelWidth / reference and ρ = resolution.width / resolution.height
+    /// (assumes portrait — W < H — which is how AVFoundation reports iPhone resolutions).
+    static func windowAspect(for spec: DeviceFrameSpec, resolution: CGSize, hasBezel: Bool) -> CGSize {
+        guard hasBezel, resolution.width > 0, resolution.height > 0 else { return resolution }
+        let ρ = resolution.width / resolution.height
+        let reference: CGFloat = spec.kind == .iPad ? 820 : 390
+        let α = spec.bezelWidth / reference
+        let factor = 1 - 2 * α * (1 - ρ)
+        guard factor > 0 else { return resolution }
+        let correctedRatio = ρ / factor
+        return CGSize(width: resolution.height * correctedRatio, height: resolution.height)
+    }
+
     /// Returns the frame specification for a given modelID. If the modelID
     /// identifies an iPad, an iPad-shaped spec is returned. When `resolution`
     /// is provided, the aspect ratio is used as a secondary heuristic — AVFoundation
