@@ -64,27 +64,25 @@ struct MirrorContentView: View {
                 // Floating toolbar ABOVE the frame
                 toolbarArea
 
-                // Main content (device frame or status views)
-                if isExpanded {
-                    // Expanded mode: device frame centered, not stretched
-                    mainContent
-                        .aspectRatio(9.0 / 19.5, contentMode: .fit)
-                        .padding(40)
-                } else {
-                    mainContent
+                // Main content (device frame or status views) — overlay the
+                // annotation side panel here so it centers on the device area,
+                // not on the whole window (which includes the toolbar slot).
+                Group {
+                    if isExpanded {
+                        mainContent
+                            .aspectRatio(9.0 / 19.5, contentMode: .fit)
+                            .padding(40)
+                    } else {
+                        mainContent
+                    }
                 }
-            }
-
-            // Annotation tools side panel — trailing edge, vertically centered.
-            // Floats over the bezel since the window's aspect ratio is locked
-            // and there's no room outside the device frame.
-            if annotationCanvas.isAnnotationModeActive {
-                HStack {
-                    Spacer()
-                    AnnotationToolbar(canvas: annotationCanvas)
-                        .padding(.trailing, 12)
+                .overlay(alignment: .trailing) {
+                    if annotationCanvas.isAnnotationModeActive {
+                        AnnotationToolbar(canvas: annotationCanvas)
+                            .padding(.trailing, 12)
+                            .transition(.move(edge: .trailing).combined(with: .opacity))
+                    }
                 }
-                .transition(.move(edge: .trailing).combined(with: .opacity))
             }
 
             // Toast overlay
