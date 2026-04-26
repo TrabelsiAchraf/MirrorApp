@@ -342,11 +342,22 @@ struct MirrorContentView: View {
         do {
             let url = try ExportManager.savePNG(data)
             print("[MirrorKit] Snapshot saved: \(url.path)")
-            NSSound(named: "Pop")?.play()
+            playShutterSound()
             showToast("Snapshot saved — \(url.lastPathComponent)", revealing: url)
         } catch {
             print("[MirrorKit] Snapshot failed: \(error.localizedDescription)")
             NSSound.beep()
+        }
+    }
+
+    /// macOS's actual screenshot "cheeeck" sound — lives outside NSSound's
+    /// default search path so we load it by URL. Falls back to Pop if missing.
+    private func playShutterSound() {
+        let path = "/System/Library/Components/CoreAudio.component/Contents/SharedSupport/SystemSounds/system/Grab.aif"
+        if let sound = NSSound(contentsOfFile: path, byReference: true) {
+            sound.play()
+        } else {
+            NSSound(named: "Pop")?.play()
         }
     }
 
