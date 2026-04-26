@@ -8,6 +8,7 @@ struct MirrorContentView: View {
     let captureEngine: CaptureEngine
     var onResolutionDetected: ((NSSize) -> Void)?
     var onRotationChanged: ((Bool) -> Void)?
+    var onAnnotationModeChanged: ((Bool) -> Void)?
 
     @State private var displayLayer = VideoDisplayLayer()
     @State private var isCapturing = false
@@ -84,14 +85,12 @@ struct MirrorContentView: View {
                     Group {
                         if isExpanded {
                             mainContent
-                                .aspectRatio(deviceAspect, contentMode: .fit)
+                                .aspectRatio(9.0 / 19.5, contentMode: .fit)
                                 .padding(40)
                         } else {
                             mainContent
-                                .aspectRatio(deviceAspect, contentMode: .fit)
                         }
                     }
-                    .frame(maxWidth: .infinity)
 
                     if annotationCanvas.isAnnotationModeActive {
                         AnnotationToolbar(canvas: annotationCanvas)
@@ -122,6 +121,11 @@ struct MirrorContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: annotationCanvas.isAnnotationModeActive)
+        .onChange(of: annotationCanvas.isAnnotationModeActive) { _, active in
+            // Ask the window controller to expand/shrink the window so the
+            // side panel sits next to the bezel without shrinking it.
+            onAnnotationModeChanged?(active)
+        }
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.2)) {
                 isHovering = hovering
