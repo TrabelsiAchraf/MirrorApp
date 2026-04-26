@@ -4,7 +4,7 @@ import Foundation
 /// the AppKit-level keyboard monitor and menu items in `AppDelegate`.
 ///
 /// The view fills in the closures on `onAppear`; AppDelegate invokes them
-/// from Cmd+R / Cmd+Shift+S / etc.
+/// from Cmd+R / Cmd+S / etc.
 @MainActor
 final class MirrorActions {
     var toggleRecording: (() -> Void)?

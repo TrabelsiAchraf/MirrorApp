@@ -218,7 +218,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         captureMenu.addItem(recordItem)
 
         let snapshotItem = NSMenuItem(title: "Take Snapshot", action: #selector(captureSnapshot), keyEquivalent: "s")
-        snapshotItem.keyEquivalentModifierMask = [.command, .shift]
         snapshotItem.target = self
         captureMenu.addItem(snapshotItem)
 
