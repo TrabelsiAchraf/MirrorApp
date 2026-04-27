@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 
 /// Mirror window controller
-final class MirrorWindowController: NSWindowController {
+final class MirrorWindowController: NSWindowController, NSWindowDelegate {
     private let deviceManager: DeviceManager
 
     private(set) var isAlwaysOnTop = false {
@@ -65,6 +65,17 @@ final class MirrorWindowController: NSWindowController {
         let hostingView = NSHostingView(rootView: contentView)
         hostingView.layer?.backgroundColor = .clear
         window.contentView = hostingView
+        window.delegate = self
+    }
+
+    /// Borderless windows with locked aspectRatio sometimes let the user drag
+    /// past minSize. Clamp explicitly here so the device can't shrink to 1cm.
+    func windowWillResize(_ sender: NSWindow, to frameSize: NSSize) -> NSSize {
+        let minS = sender.minSize
+        return NSSize(
+            width: max(frameSize.width, minS.width),
+            height: max(frameSize.height, minS.height)
+        )
     }
 
     @available(*, unavailable)
