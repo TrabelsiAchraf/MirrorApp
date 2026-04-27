@@ -17,6 +17,8 @@ settings:
     CURRENT_PROJECT_VERSION: "8"
     DEVELOPMENT_TEAM: "QN66UQNDZR"
     CODE_SIGN_STYLE: Automatic
+    INSTALL_GROUP: ""
+    INSTALL_OWNER: ""
 
 targets:
   MirrorKit:
