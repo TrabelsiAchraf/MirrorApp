@@ -94,7 +94,6 @@ enum DeviceFrameProvider {
     /// ratio of iPads is the most reliable signal.
     static func frameSpec(for modelID: String, resolution: CGSize? = nil) -> DeviceFrameSpec {
         let iPad = modelID.hasPrefix("iPad") || isIPadResolution(resolution)
-        print("[MirrorKit] frameSpec modelID=\(modelID) resolution=\(resolution.map { "\(Int($0.width))x\(Int($0.height))" } ?? "nil") → \(iPad ? "iPad" : "iPhone")")
         return iPad ? iPadSpec(for: modelID) : iPhoneSpec(for: modelID)
     }
 
