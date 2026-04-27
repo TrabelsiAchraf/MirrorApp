@@ -16,6 +16,12 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
     private let annotationPanelWidth: CGFloat = 72
     private(set) var isAnnotationPanelVisible: Bool = false
 
+    /// Authoritative minimum size for the window. We don't trust `window.minSize`
+    /// because NSHostingView quietly overwrites it with the SwiftUI content's
+    /// intrinsic minimum (which can be tiny — toolbar width × 0pt). We clamp
+    /// against this stored value in windowWillResize / windowDidResize.
+    private var enforcedMinSize: NSSize = NSSize(width: 480, height: 480 * 844 / 390)
+
     init(deviceManager: DeviceManager) {
         self.deviceManager = deviceManager
 
@@ -64,17 +70,21 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
         )
         let hostingView = NSHostingView(rootView: contentView)
         hostingView.layer?.backgroundColor = .clear
+        // Stop SwiftUI from propagating the content's intrinsic minimum back
+        // onto window.minSize — the toolbar's natural collapsed size is much
+        // smaller than what the bezel needs to stay readable.
+        hostingView.sizingOptions = []
         window.contentView = hostingView
         window.delegate = self
     }
 
-    /// Borderless windows with locked aspectRatio sometimes let the user drag
-    /// past minSize. Clamp explicitly here so the device can't shrink to 1cm.
+    /// Borderless windows with locked aspectRatio let the user drag past
+    /// `window.minSize`, and SwiftUI overwrites that property anyway. Clamp
+    /// against our own stored `enforcedMinSize` instead.
     func windowWillResize(_ sender: NSWindow, to frameSize: NSSize) -> NSSize {
-        let minS = sender.minSize
         return NSSize(
-            width: max(frameSize.width, minS.width),
-            height: max(frameSize.height, minS.height)
+            width: max(frameSize.width, enforcedMinSize.width),
+            height: max(frameSize.height, enforcedMinSize.height)
         )
     }
 
@@ -83,12 +93,11 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
     /// user drags from; this catches anything that slipped through.
     func windowDidResize(_ notification: Notification) {
         guard let win = notification.object as? NSWindow else { return }
-        let minS = win.minSize
         let frame = win.frame
-        if frame.width < minS.width || frame.height < minS.height {
+        if frame.width < enforcedMinSize.width || frame.height < enforcedMinSize.height {
             var corrected = frame
-            corrected.size.width = max(frame.width, minS.width)
-            corrected.size.height = max(frame.height, minS.height)
+            corrected.size.width = max(frame.width, enforcedMinSize.width)
+            corrected.size.height = max(frame.height, enforcedMinSize.height)
             win.setFrame(corrected, display: true, animate: false)
         }
     }
@@ -222,17 +231,9 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
     /// and a huge empty area below.
     private func updateMinSize(for aspect: NSSize) {
         guard let window else { return }
-        // The minimum is driven by the toolbar's natural width (~440pt for
-        // traffic lights + 4 capture buttons + device pill), expressed in
-        // screen points — NOT a fraction of the iPhone's pixel resolution
-        // (which would yield ~1180pt height, taller than most Mac screens).
         let minWidth: CGFloat = 460
         let aspectRatio = aspect.width / aspect.height
         var finalMin = NSSize(width: minWidth, height: minWidth / aspectRatio)
-
-        // Cap the minimum to 90 % of the available screen so the window can
-        // always fit. Necessary for portrait iPhone aspects on small Macs:
-        // 460pt × (1/0.46) = 1000pt height, which would exceed a 13" MBP.
         if let screen = window.screen ?? NSScreen.main {
             let maxH = screen.visibleFrame.height * 0.90
             if finalMin.height > maxH {
@@ -240,6 +241,7 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
             }
         }
 
+        enforcedMinSize = finalMin
         window.minSize = finalMin
         window.contentMinSize = finalMin
 
