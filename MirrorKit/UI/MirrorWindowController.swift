@@ -78,6 +78,21 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
         )
     }
 
+    /// Backup clamp — fires AFTER the resize commits. windowWillResize is
+    /// sometimes bypassed on borderless windows depending on which edge the
+    /// user drags from; this catches anything that slipped through.
+    func windowDidResize(_ notification: Notification) {
+        guard let win = notification.object as? NSWindow else { return }
+        let minS = win.minSize
+        let frame = win.frame
+        if frame.width < minS.width || frame.height < minS.height {
+            var corrected = frame
+            corrected.size.width = max(frame.width, minS.width)
+            corrected.size.height = max(frame.height, minS.height)
+            win.setFrame(corrected, display: true, animate: false)
+        }
+    }
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) is not supported")
@@ -226,6 +241,7 @@ final class MirrorWindowController: NSWindowController, NSWindowDelegate {
         }
 
         window.minSize = finalMin
+        window.contentMinSize = finalMin
 
         // NSWindow.minSize doesn't grow a window that's already smaller — it
         // only blocks future shrink. Force the resize so the bump takes
