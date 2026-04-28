@@ -103,9 +103,12 @@ actor CaptureEngine {
                 }
             }
 
-            // Forward to recorder (no-op if not recording)
-            let wrapped = UnsafeSampleBuffer(sampleBuffer)
-            Task { await capturedRecorder.append(wrapped) }
+            // Forward to recorder only when actively recording (skip the
+            // Task allocation entirely otherwise — saves ~60 wakes/sec).
+            if capturedRecorder.isRecordingFlag.value {
+                let wrapped = UnsafeSampleBuffer(sampleBuffer)
+                Task { await capturedRecorder.append(wrapped) }
+            }
 
             frameHandler(sampleBuffer)
         }

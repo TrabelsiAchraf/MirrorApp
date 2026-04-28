@@ -650,13 +650,11 @@ struct MirrorContentView: View {
                 try await captureEngine.startCapture(
                     device: avDevice,
                     frameHandler: { [displayLayer] sampleBuffer in
-                        // CMSampleBuffer is not Sendable on the macOS 14 SDK (it becomes
-                        // Sendable on macOS 15). The buffer is consumed once on the main
-                        // thread and never retained, so the unsafe transfer is sound.
-                        nonisolated(unsafe) let buffer = sampleBuffer
-                        DispatchQueue.main.async {
-                            displayLayer.displaySampleBuffer(buffer)
-                        }
+                        // Coalesced display: the layer stores the latest buffer
+                        // and dispatches to main only when no dispatch is already
+                        // pending. This naturally throttles ProMotion 120fps
+                        // streams down to the Mac's display refresh rate.
+                        displayLayer.scheduleSampleBuffer(sampleBuffer)
                     },
                     onResolutionChange: { resolution in
                         // Delivered from the capture queue whenever the stream

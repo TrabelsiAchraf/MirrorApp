@@ -1,6 +1,7 @@
 import AVFoundation
 import CoreMedia
 import Foundation
+import os
 
 /// Records incoming CMSampleBuffers to a .mov file via AVAssetWriter.
 /// Video only (v1) — audio can be added later.
@@ -23,6 +24,10 @@ actor VideoRecorder {
     private var input: AVAssetWriterInput?
     private var sessionStarted = false
     private(set) var outputURL: URL?
+
+    /// Fast, lock-free flag readable from the capture queue without hopping
+    /// to the actor. Avoids creating a Task per frame when not recording.
+    let isRecordingFlag = AtomicBool()
 
     var isRecording: Bool { writer != nil }
 
@@ -54,6 +59,7 @@ actor VideoRecorder {
         self.input = input
         self.sessionStarted = false
         self.outputURL = url
+        isRecordingFlag.value = true
     }
 
     /// Append a sample buffer. Safe to call when not recording — it becomes a no-op.
@@ -83,6 +89,19 @@ actor VideoRecorder {
         self.input = nil
         self.sessionStarted = false
         self.outputURL = nil
+        isRecordingFlag.value = false
         return url
+    }
+}
+
+// MARK: - AtomicBool
+
+/// Lock-free boolean readable from any thread without actor hopping.
+final class AtomicBool: @unchecked Sendable {
+    private let _value = OSAllocatedUnfairLock(initialState: false)
+
+    var value: Bool {
+        get { _value.withLock { $0 } }
+        set { _value.withLock { $0 = newValue } }
     }
 }
