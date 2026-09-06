@@ -598,7 +598,14 @@ struct MirrorContentView: View {
             }
 
             Button("Retry") {
-                deviceManager.startDiscovery()
+                // A capture failure keeps the selected device: re-selecting it
+                // goes back through .connected → startCapture. Discovery-level
+                // errors (no device / no permission) restart discovery instead.
+                if let device = deviceManager.selectedDevice {
+                    deviceManager.selectDevice(device)
+                } else {
+                    deviceManager.startDiscovery()
+                }
             }
             .buttonStyle(.borderedProminent)
         }
@@ -645,10 +652,16 @@ struct MirrorContentView: View {
             return
         }
 
+        let deviceName = avDevice.localizedName
+        // AVCaptureDevice is not Sendable; reading `localizedName` above ties it
+        // to the main actor, so hand it to the engine explicitly (same pattern
+        // as DeviceManager's notification handlers).
+        nonisolated(unsafe) let captureDevice = avDevice
+
         Task {
             do {
                 try await captureEngine.startCapture(
-                    device: avDevice,
+                    device: captureDevice,
                     frameHandler: { [displayLayer] sampleBuffer in
                         // Coalesced display: the layer stores the latest buffer
                         // and dispatches to main only when no dispatch is already
@@ -663,6 +676,14 @@ struct MirrorContentView: View {
                             let nsSize = NSSize(width: resolution.width, height: resolution.height)
                             detectedResolution = nsSize
                             onResolutionDetected?(nsSize)
+                        }
+                    },
+                    onFailure: { [deviceManager] failure in
+                        // The session started but died (or never produced a
+                        // frame). Switching to .error tears the engine down via
+                        // the onChange(of: deviceManager.state) handler.
+                        Task { @MainActor in
+                            deviceManager.state = .error(failure.message(deviceName: deviceName))
                         }
                     }
                 )

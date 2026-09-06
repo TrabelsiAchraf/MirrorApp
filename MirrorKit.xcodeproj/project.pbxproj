@@ -17,6 +17,7 @@
 		2D0C59E25D0688D6E3306F59 /* BackgroundPresetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */; };
 		443EEAC587794A31683C5CDA /* FrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */; };
 		475F2BEF88567EB0E2378088 /* BezelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46F315B1FEEA93A79B23F7AC /* BezelStyle.swift */; };
+		48159B2C52276D92ED3EDF65 /* CaptureFailureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC4E22EED5F02213435ACE3E /* CaptureFailureTests.swift */; };
 		54B902E8265F2BDD6C6F2A87 /* AnnotationCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B532CBFDF21DCA39A8844E /* AnnotationCanvas.swift */; };
 		55916EA552CBC0941A09F38E /* MirrorContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5871FA238546EDABACFCB72 /* MirrorContentView.swift */; };
 		587401D2FC284E6C0D26C8DD /* MirrorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349A35B6F092B22B3689915A /* MirrorWindowController.swift */; };
@@ -40,6 +41,7 @@
 		DCE1D2F8522D18C38983AE9C /* DeviceFrameProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */; };
 		DD324F060BDC072D1131BB33 /* SnapshotEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220A53BCEC98A98982D09600 /* SnapshotEncoder.swift */; };
 		DDFEF77BADC6C7A9DB8DE0F3 /* AnnotationCanvasTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4093EC36C9CC8AF0AA9961 /* AnnotationCanvasTests.swift */; };
+		E5599112659923ACA5224EBD /* CaptureFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8398E0620B5F8273FEB51A /* CaptureFailure.swift */; };
 		E65448B81FEEEBA7C7B32098 /* FloatingToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */; };
 		E6B3E060AE8BF0B15CCF5A44 /* SaveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6E21085011ACD9882AB0C4 /* SaveLocationManager.swift */; };
 		EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3C7614AFAF1A51912ECFCE /* AboutView.swift */; };
@@ -72,6 +74,7 @@
 		46F315B1FEEA93A79B23F7AC /* BezelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BezelStyle.swift; sourceTree = "<group>"; };
 		487BC697EB5D601939E9F6BF /* BackgroundPresetPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundPresetPicker.swift; sourceTree = "<group>"; };
 		4B3C7614AFAF1A51912ECFCE /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		4D8398E0620B5F8273FEB51A /* CaptureFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureFailure.swift; sourceTree = "<group>"; };
 		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
 		6355FC27D6A7B3E910476EB1 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingToolbar.swift; sourceTree = "<group>"; };
@@ -82,6 +85,7 @@
 		9A80E58117919F87824A9C30 /* MirrorActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MirrorActions.swift; sourceTree = "<group>"; };
 		A3B532CBFDF21DCA39A8844E /* AnnotationCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationCanvas.swift; sourceTree = "<group>"; };
 		AA4093EC36C9CC8AF0AA9961 /* AnnotationCanvasTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationCanvasTests.swift; sourceTree = "<group>"; };
+		AC4E22EED5F02213435ACE3E /* CaptureFailureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureFailureTests.swift; sourceTree = "<group>"; };
 		B06B33EEDA9207B33F10BECD /* ConnectedDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDevice.swift; sourceTree = "<group>"; };
 		B69F98E197254789E3E896F9 /* DevicePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicePickerView.swift; sourceTree = "<group>"; };
 		BAE861DD636017AFED82363A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -174,6 +178,7 @@
 			children = (
 				A3B532CBFDF21DCA39A8844E /* AnnotationCanvas.swift */,
 				216A4C33BE1899343C3148C7 /* CaptureEngine.swift */,
+				4D8398E0620B5F8273FEB51A /* CaptureFailure.swift */,
 				CB894266D811AB2C068CD6D7 /* DeviceManager.swift */,
 				F15DA81B0B34130CE6BB6C57 /* FrameRenderer.swift */,
 				031D6CAFC1E8F271307086A6 /* VideoRecorder.swift */,
@@ -200,6 +205,7 @@
 				AA4093EC36C9CC8AF0AA9961 /* AnnotationCanvasTests.swift */,
 				25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */,
 				CF6AAB76E278A5AB323480FC /* BezelStyleTests.swift */,
+				AC4E22EED5F02213435ACE3E /* CaptureFailureTests.swift */,
 				D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */,
 			);
 			path = MirrorKitTests;
@@ -311,6 +317,7 @@
 				475F2BEF88567EB0E2378088 /* BezelStyle.swift in Sources */,
 				BDD84124F5A2547A30806C30 /* BezelStylePicker.swift in Sources */,
 				A62B32DCA288029AF21BBE4F /* CaptureEngine.swift in Sources */,
+				E5599112659923ACA5224EBD /* CaptureFailure.swift in Sources */,
 				1E151C03017B4D864B476751 /* CaptureState.swift in Sources */,
 				A9256F65417BBDC84A21776E /* ColorPersistence.swift in Sources */,
 				C634D3B0392C9D8880DB5965 /* ConnectedDevice.swift in Sources */,
@@ -340,6 +347,7 @@
 				DDFEF77BADC6C7A9DB8DE0F3 /* AnnotationCanvasTests.swift in Sources */,
 				2D0C59E25D0688D6E3306F59 /* BackgroundPresetTests.swift in Sources */,
 				C09950884481AB7F30076C8D /* BezelStyleTests.swift in Sources */,
+				48159B2C52276D92ED3EDF65 /* CaptureFailureTests.swift in Sources */,
 				03CF148D3C1236A7755B1908 /* SmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
