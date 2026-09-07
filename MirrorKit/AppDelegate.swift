@@ -48,6 +48,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         false // The app stays alive via the status item even after the window is closed
     }
 
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        // Dock icon click (or `open -a MirrorKit`) after the window was closed:
+        // bring the mirror window back instead of doing nothing.
+        if !flag {
+            showMirrorWindow()
+        }
+        return true
+    }
+
     // MARK: - Status Item (Menu Bar Icon)
 
     private func setupStatusItem() {
