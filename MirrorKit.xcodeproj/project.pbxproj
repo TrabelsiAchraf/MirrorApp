@@ -45,6 +45,7 @@
 		E65448B81FEEEBA7C7B32098 /* FloatingToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */; };
 		E6B3E060AE8BF0B15CCF5A44 /* SaveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6E21085011ACD9882AB0C4 /* SaveLocationManager.swift */; };
 		EF36F2F7FDE47A7B7D9FB05E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3C7614AFAF1A51912ECFCE /* AboutView.swift */; };
+		FA1BE805075E5E2E55E4F7EB /* DeviceManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AB3A456D957D8F046B8EB8 /* DeviceManagerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		4B3C7614AFAF1A51912ECFCE /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		4D8398E0620B5F8273FEB51A /* CaptureFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureFailure.swift; sourceTree = "<group>"; };
 		5C3B3B073E952FDB63F832ED /* DeviceFrameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceFrameProvider.swift; sourceTree = "<group>"; };
+		61AB3A456D957D8F046B8EB8 /* DeviceManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManagerTests.swift; sourceTree = "<group>"; };
 		6355FC27D6A7B3E910476EB1 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		64BDFE720FD03065E1B0CA8F /* FloatingToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingToolbar.swift; sourceTree = "<group>"; };
 		66211715E028458148C49052 /* ColorPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPersistence.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				25B9D9BE8A16879154DDAA05 /* BackgroundPresetTests.swift */,
 				CF6AAB76E278A5AB323480FC /* BezelStyleTests.swift */,
 				AC4E22EED5F02213435ACE3E /* CaptureFailureTests.swift */,
+				61AB3A456D957D8F046B8EB8 /* DeviceManagerTests.swift */,
 				D9BEDC356147C3BADF6DE342 /* SmokeTests.swift */,
 			);
 			path = MirrorKitTests;
@@ -348,6 +351,7 @@
 				2D0C59E25D0688D6E3306F59 /* BackgroundPresetTests.swift in Sources */,
 				C09950884481AB7F30076C8D /* BezelStyleTests.swift in Sources */,
 				48159B2C52276D92ED3EDF65 /* CaptureFailureTests.swift in Sources */,
+				FA1BE805075E5E2E55E4F7EB /* DeviceManagerTests.swift in Sources */,
 				03CF148D3C1236A7755B1908 /* SmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

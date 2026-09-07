@@ -15,6 +15,20 @@ final class DeviceManager {
     /// Current discovery/capture state
     var state: CaptureState = .idle
 
+    /// UserDefaults key holding the `uniqueID` of the iPhone the user picked last.
+    static let lastSelectedDeviceKey = "lastSelectedDeviceID"
+
+    @ObservationIgnored
+    private let defaults: UserDefaults
+    /// True once the user explicitly picked a device in this session; the
+    /// remembered device must not override an explicit choice.
+    @ObservationIgnored
+    private var userPickedThisSession = false
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
+
     private static let rescanInterval: TimeInterval = 2.0
     private static let maxRescanAttempts = 15 // 15 × 2s = 30s
 
@@ -147,7 +161,6 @@ final class DeviceManager {
         for avDevice in discovery.devices where Self.isIOSScreenCapture(avDevice) {
             addDevice(from: avDevice)
         }
-        autoSelectIfNeeded()
 
         if !devices.isEmpty {
             stopRescanTimer()
@@ -157,8 +170,15 @@ final class DeviceManager {
         }
     }
 
-    /// Selects a device for capture
+    /// Selects a device for capture — user intent: remembered across launches.
     func selectDevice(_ device: ConnectedDevice) {
+        userPickedThisSession = true
+        defaults.set(device.id, forKey: Self.lastSelectedDeviceKey)
+        activate(device)
+    }
+
+    /// Makes `device` the active one without touching the stored preference.
+    private func activate(_ device: ConnectedDevice) {
         selectedDevice = device
         state = .connected(device)
     }
@@ -181,9 +201,6 @@ final class DeviceManager {
             }
         }
 
-        // Auto-select if there is only one device
-        autoSelectIfNeeded()
-
         // If no device was found, stay in detecting mode
         // Devices may take a few seconds to appear after CoreMediaIO activation
         if devices.isEmpty {
@@ -195,7 +212,6 @@ final class DeviceManager {
         // Accept iOS devices that provide video (muxed or video-only)
         guard Self.isIOSScreenCapture(avDevice) else { return }
         addDevice(from: avDevice)
-        autoSelectIfNeeded()
         stopRescanTimer()
     }
 
@@ -206,14 +222,17 @@ final class DeviceManager {
     }
 
     private func handleDeviceDisconnected(_ avDevice: AVCaptureDevice) {
-        let deviceID = avDevice.uniqueID
+        unregister(deviceID: avDevice.uniqueID)
+    }
+
+    /// Removes a device; falls back to another connected device or to detecting.
+    func unregister(deviceID: String) {
         devices.removeAll { $0.id == deviceID }
 
         if selectedDevice?.id == deviceID {
             selectedDevice = nil
-            // Select the next available device or fall back to detecting
             if let next = devices.first {
-                selectDevice(next)
+                activate(next)   // fallback, not a user choice
             } else {
                 state = .detecting
             }
@@ -221,21 +240,41 @@ final class DeviceManager {
     }
 
     private func addDevice(from avDevice: AVCaptureDevice) {
-        // Avoid duplicates
-        guard !devices.contains(where: { $0.id == avDevice.uniqueID }) else { return }
-
-        let device = ConnectedDevice(
+        register(ConnectedDevice(
             id: avDevice.uniqueID,
             name: avDevice.localizedName,
             modelID: avDevice.modelID
-        )
+        ))
+    }
+
+    /// Adds a device (ignoring duplicates) and applies the auto-selection rules.
+    /// Internal so tests can drive the manager without AVCaptureDevice.
+    func register(_ device: ConnectedDevice) {
+        guard !devices.contains(where: { $0.id == device.id }) else { return }
         devices.append(device)
         print("[MirrorKit] Device detected: \(device.name) (\(device.modelID))")
+        autoSelectIfNeeded()
     }
 
     private func autoSelectIfNeeded() {
-        if devices.count == 1, selectedDevice == nil {
-            selectDevice(devices[0])
+        let remembered = defaults.string(forKey: Self.lastSelectedDeviceKey)
+
+        if selectedDevice == nil {
+            if devices.count == 1 {
+                activate(devices[0])
+            } else if let match = devices.first(where: { $0.id == remembered }) {
+                activate(match)
+            }
+            return
+        }
+
+        // Something is already active. If it was picked automatically and the
+        // remembered device has just shown up, prefer the remembered one.
+        if !userPickedThisSession,
+           let remembered,
+           selectedDevice?.id != remembered,
+           let match = devices.first(where: { $0.id == remembered }) {
+            activate(match)
         }
     }
 }
