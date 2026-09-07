@@ -38,7 +38,7 @@ the changelog section at the bottom.
 
 ## Shipped
 
-### 1.2.0
+### 1.2.0 — submitted to the App Store on 2026-09-07 (build 0709020261535)
 
 - Capture runtime errors (`'!dev'`, disconnected, in use) surface as an
   actionable error view instead of a black screen.
