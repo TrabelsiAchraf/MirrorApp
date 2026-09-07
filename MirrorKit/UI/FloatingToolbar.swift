@@ -29,16 +29,19 @@ struct FloatingToolbar: View {
                     Circle().fill(Color.red).frame(width: 12, height: 12)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Close window")
 
                 Button(action: { NSApp.keyWindow?.miniaturize(nil) }) {
                     Circle().fill(Color.yellow).frame(width: 12, height: 12)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Minimize window")
 
                 Button(action: { onExpand?() }) {
                     Circle().fill(Color.green).frame(width: 12, height: 12)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Toggle expanded mode")
             }
 
             // Capture actions
@@ -46,14 +49,16 @@ struct FloatingToolbar: View {
                 ToolbarIconButton(
                     system: isRecording ? "stop.circle.fill" : "record.circle",
                     tint: isRecording ? .red : .white,
+                    label: isRecording ? "Stop recording" : "Start recording",
                     action: { onToggleRecording?() }
                 )
-                ToolbarIconButton(system: "camera", tint: .white, action: { onSnapshot?() })
-                ToolbarIconButton(system: "rotate.left", tint: .white, action: { onToggleRotation?() })
+                ToolbarIconButton(system: "camera", tint: .white, label: "Take snapshot", action: { onSnapshot?() })
+                ToolbarIconButton(system: "rotate.left", tint: .white, label: "Rotate", action: { onToggleRotation?() })
                 if let canvas {
                     ToolbarIconButton(
                         system: canvas.isAnnotationModeActive ? "pencil.and.outline" : "pencil",
                         tint: canvas.isAnnotationModeActive ? .accentColor : .white,
+                        label: canvas.isAnnotationModeActive ? "Exit annotation mode" : "Annotate",
                         action: { canvas.isAnnotationModeActive.toggle() }
                     )
                 }
@@ -116,6 +121,7 @@ struct FloatingToolbar: View {
 private struct ToolbarIconButton: View {
     let system: String
     let tint: Color
+    let label: String
     let action: () -> Void
     @State private var isHovered = false
 
@@ -131,6 +137,8 @@ private struct ToolbarIconButton: View {
                 )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(label)
+        .help(label)
         .onHover { hovering in
             isHovered = hovering
         }
@@ -178,6 +186,9 @@ private struct DevicePickerButton: View {
                 .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Device and settings menu")
+            .accessibilityValue(deviceName)
+            .help("Choose device or open Settings")
             .onHover { hovering in
                 isHovered = hovering
             }
