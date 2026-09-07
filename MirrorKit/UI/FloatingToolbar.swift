@@ -49,16 +49,16 @@ struct FloatingToolbar: View {
                 ToolbarIconButton(
                     system: isRecording ? "stop.circle.fill" : "record.circle",
                     tint: isRecording ? .red : .white,
-                    label: isRecording ? "Stop recording" : "Start recording",
+                    label: isRecording ? String(localized: "Stop recording") : String(localized: "Start recording"),
                     action: { onToggleRecording?() }
                 )
-                ToolbarIconButton(system: "camera", tint: .white, label: "Take snapshot", action: { onSnapshot?() })
-                ToolbarIconButton(system: "rotate.left", tint: .white, label: "Rotate", action: { onToggleRotation?() })
+                ToolbarIconButton(system: "camera", tint: .white, label: String(localized: "Take snapshot"), action: { onSnapshot?() })
+                ToolbarIconButton(system: "rotate.left", tint: .white, label: String(localized: "Rotate"), action: { onToggleRotation?() })
                 if let canvas {
                     ToolbarIconButton(
                         system: canvas.isAnnotationModeActive ? "pencil.and.outline" : "pencil",
                         tint: canvas.isAnnotationModeActive ? .accentColor : .white,
-                        label: canvas.isAnnotationModeActive ? "Exit annotation mode" : "Annotate",
+                        label: canvas.isAnnotationModeActive ? String(localized: "Exit annotation mode") : String(localized: "Annotate"),
                         action: { canvas.isAnnotationModeActive.toggle() }
                     )
                 }
