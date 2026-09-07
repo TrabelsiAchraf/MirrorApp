@@ -192,6 +192,7 @@ final class DeviceManager {
 
     /// Makes `device` the active one without touching the stored preference.
     private func activate(_ device: ConnectedDevice) {
+        print("[MirrorKit] Activating \(device.name) (was: \(selectedDevice?.name ?? "none"), state: \(state))")
         selectedDevice = device
         state = .connected(device)
     }
@@ -259,6 +260,8 @@ final class DeviceManager {
 
     /// Removes a device; falls back to another connected device or to detecting.
     func unregister(deviceID: String) {
+        let name = devices.first { $0.id == deviceID }?.name ?? deviceID
+        print("[MirrorKit] Device disconnected: \(name) (selected: \(selectedDevice?.name ?? "none"), state: \(state))")
         devices.removeAll { $0.id == deviceID }
 
         // While an error is displayed, leave the selection and the message

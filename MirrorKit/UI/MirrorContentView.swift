@@ -734,6 +734,15 @@ struct MirrorContentView: View {
                 )
 
                 await MainActor.run {
+                    // The '!dev' runtime error can arrive *during* startRunning(),
+                    // i.e. before we get here: onFailure has then already moved
+                    // the state to .error and torn the session down. Overwriting
+                    // that with .capturing left a black view with no message.
+                    // Only claim .capturing if this session is still the current
+                    // one and nothing changed the state meanwhile.
+                    guard generation == captureGeneration,
+                          case .connected(let current) = deviceManager.state,
+                          current.id == deviceID else { return }
                     isCapturing = true
                     deviceManager.state = .capturing
                 }
