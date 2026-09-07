@@ -271,6 +271,16 @@
         }
       }
     },
+    "Connecting to %@…" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connexion à %@…"
+          }
+        }
+      }
+    },
     "Custom" : {
       "localizations" : {
         "fr" : {
@@ -757,16 +767,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Démarrer / arrêter l’enregistrement"
-          }
-        }
-      }
-    },
-    "Start Mirroring" : {
-      "localizations" : {
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Démarrer la recopie d’écran"
           }
         }
       }

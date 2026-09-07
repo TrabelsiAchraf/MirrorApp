@@ -38,7 +38,7 @@ struct LocalizationTests {
     @Test func catalogCoversTheStringsRoutedInCode() throws {
         let keys = Set(try Self.strings(in: "Localizable").keys)
         for expected in [
-            "Retry", "Show Window", "Settings…", "Start Mirroring", "Welcome to MirrorKit",
+            "Retry", "Show Window", "Settings…", "Connecting to %@…", "Welcome to MirrorKit",
             "Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.",
             "%@ was disconnected.\n\nReconnect the USB cable and try again.",
             "No video received from %@ after %lld seconds.\n\n• Unlock the iPhone and keep its screen on\n• Unplug and reconnect the iPhone\n• Try a different USB cable or port",

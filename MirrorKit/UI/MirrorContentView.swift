@@ -583,16 +583,18 @@ struct MirrorContentView: View {
                 .font(.title2)
                 .foregroundColor(.white)
 
-            Button(action: {
-                startCapture(deviceID: device.id)
-            }) {
-                Label("Start Mirroring", systemImage: "play.fill")
-                    .font(.headline)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
+            // Capture starts automatically on appear; show progress instead of
+            // a redundant button. Failures are held back for a moment (see
+            // startCapture) so this state is visible and the error view does
+            // not flash in like a glitch.
+            HStack(spacing: 10) {
+                ProgressView()
+                    .controlSize(.small)
+                    .tint(.white)
+                Text("Connecting to \(device.name)…")
+                    .font(.callout)
+                    .foregroundColor(.gray)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(.blue)
         }
         .onAppear {
             startCapture(deviceID: device.id)
@@ -693,6 +695,10 @@ struct MirrorContentView: View {
         captureGeneration += 1
         let generation = captureGeneration
         let layerGeneration = displayLayer.currentGeneration
+        // A refused stream fails ~30 ms after start; hold the error view back
+        // so the "Connecting…" state is perceivable instead of a flash.
+        let startedAt = ContinuousClock.now
+        let minimumConnectingDuration: Duration = .seconds(1)
 
         Task {
             do {
@@ -720,6 +726,12 @@ struct MirrorContentView: View {
                         Task { @MainActor in
                             guard generation == captureGeneration else { return }
                             if failure.isFatal {
+                                let elapsed = ContinuousClock.now - startedAt
+                                if elapsed < minimumConnectingDuration {
+                                    try? await Task.sleep(for: minimumConnectingDuration - elapsed)
+                                    // The user may have switched device while we waited.
+                                    guard generation == captureGeneration else { return }
+                                }
                                 // Switching to .error tears the engine down via
                                 // the onChange(of: deviceManager.state) handler.
                                 deviceManager.state = .error(failure.message(deviceName: deviceName))
