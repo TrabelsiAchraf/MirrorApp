@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ did not send any video for %lld seconds.\n\n• Restart the iPhone, then reconnect it — this fixes most cases\n• Unlock the iPhone and keep its screen on\n• On the iPhone, check Screen Time › Content & Privacy Restrictions › Screen Recording is allowed" : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ n’a envoyé aucune vidéo pendant %lld secondes.\n\n• Redémarrez l’iPhone, puis rebranchez-le — cela suffit dans la plupart des cas\n• Déverrouillez l’iPhone et laissez son écran allumé\n• Sur l’iPhone, vérifiez que Temps d’écran › Restrictions relatives au contenu et à la confidentialité › Enregistrement de l’écran est autorisé"
+          }
+        }
+      }
+    },
     "%@ is already being captured by another app.\n\nQuit QuickTime Player or any other mirroring app, then retry." : {
       "localizations" : {
         "fr" : {

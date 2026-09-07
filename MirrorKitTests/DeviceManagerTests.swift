@@ -107,6 +107,57 @@ struct DeviceManagerTests {
         #expect(manager.selectedDevice?.id == "B")
     }
 
+    @Test func errorStateSurvivesRepublishOfTheFailedDevice() {
+        // A refused screen stream makes CoreMediaIO unpublish/republish the
+        // iPhone. The error view must stay, with no fallback and no take-over.
+        let defaults = makeDefaults()
+        let manager = DeviceManager(defaults: defaults)
+        manager.register(a)
+        manager.register(b)
+        manager.selectDevice(b)
+        manager.state = .error("refused")
+        manager.unregister(deviceID: "B")
+        #expect(manager.state == .error("refused"))
+        #expect(manager.selectedDevice?.id == "B")
+        #expect(manager.devices.map(\.id) == ["A"])
+        manager.register(b)
+        #expect(manager.state == .error("refused"))
+        #expect(manager.selectedDevice?.id == "B")
+    }
+
+    @Test func discoveryErrorStillAutoSelectsANewDevice() {
+        // "No iPhone detected" has no selected device: plugging one in must
+        // still switch to it automatically.
+        let manager = DeviceManager(defaults: makeDefaults())
+        manager.state = .error("No iPhone detected.")
+        manager.register(a)
+        #expect(manager.selectedDevice?.id == "A")
+        #expect(manager.state == .connected(a))
+    }
+
+    @Test func retryFallsBackWhenTheFailedDeviceIsGone() {
+        let manager = DeviceManager(defaults: makeDefaults())
+        manager.register(a)
+        manager.register(b)
+        manager.selectDevice(b)
+        manager.state = .error("refused")
+        manager.unregister(deviceID: "B")
+        manager.retrySelectedDevice()
+        #expect(manager.selectedDevice?.id == "A")
+        #expect(manager.state == .connected(a))
+    }
+
+    @Test func retryGoesBackToDetectingWhenNoDeviceRemains() {
+        let manager = DeviceManager(defaults: makeDefaults())
+        manager.register(a)
+        manager.selectDevice(a)
+        manager.state = .error("refused")
+        manager.unregister(deviceID: "A")
+        manager.retrySelectedDevice()
+        #expect(manager.selectedDevice == nil)
+        #expect(manager.state == .detecting)
+    }
+
     @Test func registerIgnoresDuplicates() {
         let manager = DeviceManager(defaults: makeDefaults())
         manager.register(a)

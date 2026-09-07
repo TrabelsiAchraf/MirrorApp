@@ -181,6 +181,15 @@ final class DeviceManager {
         activate(device)
     }
 
+    /// True while the error view describes a failure of the *selected* device
+    /// (refused stream, dead stream). Discovery errors ("No iPhone detected",
+    /// camera permission) have no selection and must keep auto-selecting a
+    /// device that shows up.
+    private var isShowingCaptureError: Bool {
+        if case .error = state { return selectedDevice != nil }
+        return false
+    }
+
     /// Makes `device` the active one without touching the stored preference.
     private func activate(_ device: ConnectedDevice) {
         selectedDevice = device
@@ -192,6 +201,17 @@ final class DeviceManager {
     /// `userPickedThisSession` are left untouched. No-op when nothing is selected.
     func retrySelectedDevice() {
         guard let device = selectedDevice else { return }
+        // The failed device may have been unplugged while the error was shown.
+        guard devices.contains(where: { $0.id == device.id }) else {
+            selectedDevice = nil
+            if let next = devices.first {
+                userPickedThisSession = false
+                activate(next)
+            } else {
+                state = .detecting
+            }
+            return
+        }
         activate(device)
     }
 
@@ -241,6 +261,14 @@ final class DeviceManager {
     func unregister(deviceID: String) {
         devices.removeAll { $0.id == deviceID }
 
+        // While an error is displayed, leave the selection and the message
+        // alone. A failed screen stream makes CoreMediaIO unpublish and
+        // republish the iPhone; reacting to that would replace the error view
+        // with a fallback capture and then bounce back to the failing device
+        // (remembered-device take-over) — an endless loop with no guidance.
+        // The user resolves it with Retry or by picking another device.
+        if isShowingCaptureError { return }
+
         if selectedDevice?.id == deviceID {
             selectedDevice = nil
             if let next = devices.first {
@@ -287,6 +315,10 @@ final class DeviceManager {
     /// When something is already selected, the remembered device can still
     /// take over an automatic (non-user) selection once it shows up (rule below).
     private func autoSelectIfNeeded() {
+        // Never auto-switch away from (or back to) a device while its error is
+        // on screen — see `unregister`.
+        if isShowingCaptureError { return }
+
         let remembered = defaults.string(forKey: Self.lastSelectedDeviceKey)
 
         if selectedDevice == nil {

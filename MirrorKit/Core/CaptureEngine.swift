@@ -43,6 +43,11 @@ actor CaptureEngine {
     /// timer as a safety net.
     static let firstFrameTimeout: TimeInterval = 10
 
+    /// If the first frame is still missing after this long and no runtime
+    /// error was delivered either, the stream is declared dead so the user
+    /// gets the error view with guidance instead of an endless hint.
+    static let deadStreamTimeout: TimeInterval = 45
+
     /// Detected video stream resolution
     private(set) var detectedResolution: CGSize?
 
@@ -169,14 +174,25 @@ actor CaptureEngine {
 
             // Safety net: the runtime error is not always delivered, so also
             // fail if nothing shows up within the timeout.
-            let timeout = Self.firstFrameTimeout
+            let hintTimeout = Self.firstFrameTimeout
+            let deadTimeout = Self.deadStreamTimeout
             firstFrameWatchdog = Task.detached(priority: .utility) {
-                try? await Task.sleep(for: .seconds(timeout))
+                try? await Task.sleep(for: .seconds(hintTimeout))
                 guard !Task.isCancelled, !receivedFirstFrame.isSet else { return }
-                print("[MirrorKit] No frame received after \(Int(timeout))s")
+                print("[MirrorKit] No frame received after \(Int(hintTimeout))s")
                 // Hint only — must not consume the one-shot slot reserved for
                 // terminal failures, which can still arrive later.
-                onFailure(.noFrames(timeout: timeout))
+                onFailure(.noFrames(timeout: hintTimeout))
+
+                // Second stage: the assistant does not always deliver the
+                // runtime error when the iPhone refuses the stream. Give up
+                // for good after the long timeout so the user sees guidance.
+                try? await Task.sleep(for: .seconds(deadTimeout - hintTimeout))
+                guard !Task.isCancelled, !receivedFirstFrame.isSet else { return }
+                print("[MirrorKit] Still no frame after \(Int(deadTimeout))s — declaring the stream dead")
+                if failureReported.setIfClear() {
+                    onFailure(.streamTimedOut(timeout: deadTimeout))
+                }
             }
         }
 

@@ -28,6 +28,9 @@ struct MirrorContentView: View {
     @State private var detectedResolution: NSSize?
     /// Non-blocking hint shown over the capture view while no frame has arrived.
     @State private var waitingHint: String?
+    /// Bumped on every startCapture so callbacks from a superseded session
+    /// (device switch, retry) are ignored on the main actor.
+    @State private var captureGeneration = 0
     @State private var toastMessage: String?
     @State private var toastTask: Task<Void, Never>?
     @State private var detectingSeconds: Int = 0
@@ -164,6 +167,9 @@ struct MirrorContentView: View {
             detectedResolution = nil
             waitingHint = nil
             cachedPortraitSize = nil
+            // Drop the last frame so the error view or the next device never
+            // sits behind a stale image of the previous iPhone.
+            displayLayer.clear()
             Task { await captureEngine.stopCapture() }
 
             // Clear annotations when leaving an active session.
@@ -189,6 +195,7 @@ struct MirrorContentView: View {
             detectedResolution = nil
             waitingHint = nil
             cachedPortraitSize = nil
+            displayLayer.clear()
             Task { await captureEngine.stopCapture() }
 
             // Clear annotations on device switch.
@@ -679,6 +686,14 @@ struct MirrorContentView: View {
         // as DeviceManager's notification handlers).
         nonisolated(unsafe) let captureDevice = avDevice
 
+        // Tag this session: the display layer drops frames from an older
+        // generation, and the main-actor callbacks below ignore superseded
+        // sessions (a late frame from the previous iPhone must not resurrect
+        // its resolution or repaint its screen after a device switch).
+        captureGeneration += 1
+        let generation = captureGeneration
+        let layerGeneration = displayLayer.currentGeneration
+
         Task {
             do {
                 try await captureEngine.startCapture(
@@ -688,12 +703,13 @@ struct MirrorContentView: View {
                         // and dispatches to main only when no dispatch is already
                         // pending. This naturally throttles ProMotion 120fps
                         // streams down to the Mac's display refresh rate.
-                        displayLayer.scheduleSampleBuffer(sampleBuffer)
+                        displayLayer.scheduleSampleBuffer(sampleBuffer, generation: layerGeneration)
                     },
                     onResolutionChange: { resolution in
                         // Delivered from the capture queue whenever the stream
                         // dimensions change (first frame + device rotations).
                         DispatchQueue.main.async {
+                            guard generation == captureGeneration else { return }
                             waitingHint = nil
                             let nsSize = NSSize(width: resolution.width, height: resolution.height)
                             detectedResolution = nsSize
@@ -702,6 +718,7 @@ struct MirrorContentView: View {
                     },
                     onFailure: { [deviceManager] failure in
                         Task { @MainActor in
+                            guard generation == captureGeneration else { return }
                             if failure.isFatal {
                                 // Switching to .error tears the engine down via
                                 // the onChange(of: deviceManager.state) handler.

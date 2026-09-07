@@ -62,8 +62,18 @@ struct CaptureFailureTests {
         #expect(CaptureFailure.other("boom").message(deviceName: "Virus").contains("boom"))
     }
 
+    @Test func streamTimedOutIsFatalAndGuidesTheUser() {
+        let failure = CaptureFailure.streamTimedOut(timeout: 45)
+        #expect(failure.isFatal)
+        let message = failure.message(deviceName: "Virus")
+        #expect(message.contains("Virus"))
+        #expect(message.contains("45 seconds"))
+        #expect(message.contains("Restart the iPhone"))
+    }
+
     @Test func onlyNoFramesIsNonFatal() {
         #expect(CaptureFailure.noFrames(timeout: 10).isFatal == false)
+        #expect(CaptureFailure.streamTimedOut(timeout: 45).isFatal)
         #expect(CaptureFailure.deviceRefused.isFatal)
         #expect(CaptureFailure.deviceDisconnected.isFatal)
         #expect(CaptureFailure.deviceInUse.isFatal)

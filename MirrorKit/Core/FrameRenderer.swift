@@ -71,12 +71,15 @@ final class VideoDisplayLayer: CALayer, @unchecked Sendable {
     /// intermediate frames are skipped, matching the display refresh rate
     /// instead of the camera's (which can be 120fps on ProMotion iPhones).
     /// Safe to call from any thread.
-    func scheduleSampleBuffer(_ sampleBuffer: CMSampleBuffer) {
+    func scheduleSampleBuffer(_ sampleBuffer: CMSampleBuffer, generation: Int? = nil) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         // CVPixelBuffer is not Sendable on macOS 14 SDK but the lock
         // serialises all access, so the transfer is safe.
         nonisolated(unsafe) let pb = pixelBuffer
         let needsDispatch = pendingLock.withLock { state -> Bool in
+            // Frames from a session that was cleared since (device switch)
+            // must not repaint the old iPhone's screen.
+            if let generation, generation != state.generation { return false }
             state.pixelBuffer = pb
             if state.dispatched { return false }
             state.dispatched = true
@@ -90,6 +93,23 @@ final class VideoDisplayLayer: CALayer, @unchecked Sendable {
                 layer.drainPending()
             }
         }
+    }
+
+    /// Generation to tag frames with; bumped by `clear()`. Safe from any thread.
+    var currentGeneration: Int {
+        pendingLock.withLock { $0.generation }
+    }
+
+    /// Drops the displayed image and any pending frame, and invalidates the
+    /// current generation so late frames from the previous session are ignored.
+    /// Must be called on the main thread (touches `contents`).
+    func clear() {
+        pendingLock.withLock { state in
+            state.pixelBuffer = nil
+            state.generation += 1
+        }
+        contents = nil
+        lastPixelBuffer = nil
     }
 
     /// Called on the main thread to display the latest pending buffer.
@@ -136,6 +156,8 @@ final class VideoDisplayLayer: CALayer, @unchecked Sendable {
 private struct PendingState: @unchecked Sendable {
     var pixelBuffer: CVPixelBuffer?
     var dispatched = false
+    /// Incremented by `clear()`; frames tagged with an older value are dropped.
+    var generation = 0
 }
 
 /// Thin wrapper to ferry a CVPixelBuffer across Sendable boundaries.
