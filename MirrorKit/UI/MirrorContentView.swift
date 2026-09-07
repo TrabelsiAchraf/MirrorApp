@@ -231,13 +231,21 @@ struct MirrorContentView: View {
     /// Toolbar area — always takes the same height, content visible on hover
     private var toolbarArea: some View {
         Group {
-            if let device = deviceManager.selectedDevice {
-                let spec = DeviceFrameProvider.frameSpec(for: device.modelID, resolution: detectedResolution)
+            // Keep the toolbar reachable whenever there is something to act
+            // on: with a selected device (capturing, connecting or in error)
+            // or with other devices to switch to. Capture actions are only
+            // enabled while video is flowing.
+            if deviceManager.selectedDevice != nil || !deviceManager.devices.isEmpty {
+                let device = deviceManager.selectedDevice
+                let modelName = device.map {
+                    DeviceFrameProvider.frameSpec(for: $0.modelID, resolution: detectedResolution).displayName
+                } ?? ""
                 FloatingToolbar(
                     devices: deviceManager.devices,
                     selectedDevice: device,
-                    modelName: spec.displayName,
+                    modelName: modelName,
                     isRecording: isRecording,
+                    actionsEnabled: deviceManager.state == .capturing,
                     onSelect: { deviceManager.selectDevice($0) },
                     onExpand: { toggleExpanded() },
                     onToggleRecording: { toggleRecording() },
@@ -740,6 +748,10 @@ struct MirrorContentView: View {
                                     // The user may have switched device while we waited.
                                     guard generation == captureGeneration else { return }
                                 }
+                                // The selection may also have moved on (device
+                                // unplugged, fallback): don't stamp its error
+                                // over another device's state.
+                                guard deviceManager.selectedDevice?.id == deviceID else { return }
                                 // Switching to .error tears the engine down via
                                 // the onChange(of: deviceManager.state) handler.
                                 deviceManager.state = .error(failure.message(deviceName: deviceName))

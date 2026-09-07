@@ -7,6 +7,10 @@ struct FloatingToolbar: View {
     let selectedDevice: ConnectedDevice?
     let modelName: String
     var isRecording: Bool = false
+    /// False while no video is flowing (connecting, error): the capture
+    /// actions are greyed out, but window controls and the device/settings
+    /// menu stay usable so the user can switch to a working iPhone.
+    var actionsEnabled: Bool = true
     var onSelect: ((ConnectedDevice) -> Void)?
     var onExpand: (() -> Void)?
     var onToggleRecording: (() -> Void)?
@@ -63,6 +67,8 @@ struct FloatingToolbar: View {
                     )
                 }
             }
+            .disabled(!actionsEnabled)
+            .opacity(actionsEnabled ? 1 : 0.35)
 
             // Device picker — custom label, native NSMenu on click
             DevicePickerButton(

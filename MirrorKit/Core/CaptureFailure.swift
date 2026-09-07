@@ -56,6 +56,12 @@ enum CaptureFailure: Equatable, Sendable {
                 return .deviceDisconnected
             case .deviceInUseByAnotherApplication, .deviceAlreadyUsedByAnotherSession:
                 return .deviceInUse
+            case .unknown:
+                // The screen-capture assistant reports every refusal as
+                // AVError.unknown with a CoreMediaIO OSStatus underneath:
+                // '!dev' on the first handshake failure, -308 once the iPhone
+                // is stuck in an "invalid state". Both need the same guidance.
+                return .deviceRefused
             default:
                 break
             }

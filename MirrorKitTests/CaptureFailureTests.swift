@@ -26,6 +26,18 @@ struct CaptureFailureTests {
         #expect(CaptureFailure.classify(badDeviceRuntimeError()) == .deviceRefused)
     }
 
+    @Test func classifiesAnyUnknownRuntimeErrorAsRefused() {
+        // Once the iPhone is stuck, the assistant reports OSStatus -308 instead
+        // of '!dev'; the user needs the same guidance.
+        let underlying = NSError(domain: NSOSStatusErrorDomain, code: -308)
+        let error = NSError(
+            domain: AVFoundationErrorDomain,
+            code: AVError.Code.unknown.rawValue,
+            userInfo: [NSUnderlyingErrorKey: underlying, NSLocalizedDescriptionKey: "The operation could not be completed"]
+        )
+        #expect(CaptureFailure.classify(error) == .deviceRefused)
+    }
+
     @Test func classifiesDisconnectedAndInUse() {
         let disconnected = NSError(domain: AVFoundationErrorDomain, code: AVError.Code.deviceWasDisconnected.rawValue)
         let inUse = NSError(domain: AVFoundationErrorDomain, code: AVError.Code.deviceInUseByAnotherApplication.rawValue)
