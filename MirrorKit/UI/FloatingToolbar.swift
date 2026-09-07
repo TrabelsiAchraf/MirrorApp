@@ -75,10 +75,26 @@ struct FloatingToolbar: View {
         )
     }
 
-    /// Pop up a native NSMenu listing all detected devices.
+    /// Pop up a native NSMenu with Settings on top, then all detected devices.
     private func showDevicePopup() {
-        guard !devices.isEmpty, let event = NSApp.currentEvent else { return }
+        guard let event = NSApp.currentEvent else { return }
         let menu = NSMenu()
+
+        let settingsItem = NSMenuItem(
+            title: "Settings…",
+            action: #selector(MenuActionTarget.handle(_:)),
+            keyEquivalent: ""
+        )
+        settingsItem.image = NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil)
+        let settingsTarget = MenuActionTarget { MirrorActions.shared.openSettings?() }
+        settingsItem.target = settingsTarget
+        settingsItem.representedObject = settingsTarget
+        menu.addItem(settingsItem)
+
+        if !devices.isEmpty {
+            menu.addItem(.separator())
+        }
+
         for device in devices {
             let item = NSMenuItem(
                 title: device.name,

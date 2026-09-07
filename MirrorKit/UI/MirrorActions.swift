@@ -14,6 +14,10 @@ final class MirrorActions {
     var rotateRight: (() -> Void)?
     var resetZoom: (() -> Void)?
     var toggleAnnotationMode: (() -> Void)?
+    /// Opens the SwiftUI Settings scene. Backed by the `openSettings`
+    /// environment action — the legacy `showSettingsWindow:` selector is
+    /// rejected by SwiftUI on macOS 15+ and silently does nothing.
+    var openSettings: (() -> Void)?
 
     static let shared = MirrorActions()
     private init() {}

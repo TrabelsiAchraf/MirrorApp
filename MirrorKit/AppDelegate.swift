@@ -296,8 +296,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func openSettings() {
-        // Open the SwiftUI Settings scene (macOS 14+)
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        NSApp.activate(ignoringOtherApps: true)
+        if let open = MirrorActions.shared.openSettings {
+            // SwiftUI's `openSettings` environment action (macOS 14+), registered
+            // by MirrorContentView on appear.
+            open()
+        } else {
+            // Fallback before the content view has appeared. Rejected by SwiftUI
+            // on macOS 15+, but harmless.
+            NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        }
     }
 
     @objc private func showAboutWindow() {

@@ -31,6 +31,8 @@ struct MirrorContentView: View {
     @State private var detectingSeconds: Int = 0
     @State private var detectingTimer: Timer?
 
+    @Environment(\.openSettings) private var openSettings
+
     @AppStorage("backgroundPreset") private var backgroundPresetRaw: String = "midnight"
     @AppStorage("backgroundCustomColor") private var backgroundCustomColorHex: String = "#1F1C40"
     @AppStorage("bezelStyle") private var bezelStyleRaw: String = "classic"
@@ -196,6 +198,7 @@ struct MirrorContentView: View {
             MirrorActions.shared.rotateLeft = { rotateLeft() }
             MirrorActions.shared.rotateRight = { rotateRight() }
             MirrorActions.shared.resetZoom = { resetZoom() }
+            MirrorActions.shared.openSettings = { openSettings() }
             MirrorActions.shared.toggleAnnotationMode = {
                 annotationCanvas.isAnnotationModeActive.toggle()
             }
