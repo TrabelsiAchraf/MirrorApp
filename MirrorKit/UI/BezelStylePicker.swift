@@ -14,7 +14,9 @@ struct BezelStylePicker: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             LabeledContent("Bezel style") {
-                Picker("", selection: $styleRaw) {
+                // Real label (hidden visually) so accessibility gets a name and
+                // Xcode's string extraction doesn't produce an empty key.
+                Picker("Bezel style", selection: $styleRaw) {
                     ForEach(BezelStyle.allCases) { style in
                         Text(style.displayName).tag(style.rawValue)
                     }
@@ -25,7 +27,7 @@ struct BezelStylePicker: View {
 
             if style == .classic {
                 LabeledContent("Bezel color") {
-                    Picker("", selection: $colorRaw) {
+                    Picker("Bezel color", selection: $colorRaw) {
                         Text("Black").tag("black")
                         Text("Silver").tag("silver")
                         Text("Gold").tag("gold")

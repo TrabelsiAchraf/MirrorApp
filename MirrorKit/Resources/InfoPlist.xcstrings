@@ -1,12 +1,61 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "MirrorKit"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "MirrorKit"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
     "NSCameraUsageDescription" : {
       "extractionState" : "manual",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "MirrorKit needs access to your iPhone connected via USB in order to display its screen." } },
-        "fr" : { "stringUnit" : { "state" : "translated", "value" : "MirrorKit a besoin d’accéder à votre iPhone branché en USB pour afficher son écran." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MirrorKit needs access to your iPhone connected via USB in order to display its screen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MirrorKit a besoin d’accéder à votre iPhone branché en USB pour afficher son écran."
+          }
+        }
       }
+    },
+    "NSHumanReadableCopyright" : {
+      "comment" : "Copyright (human-readable)",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Copyright © 2026 Achraf Trabelsi. All rights reserved."
+          }
+        }
+      },
+      "shouldTranslate" : false
     }
   },
   "version" : "1.0"

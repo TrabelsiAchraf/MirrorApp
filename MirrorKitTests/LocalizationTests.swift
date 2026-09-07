@@ -24,6 +24,9 @@ struct LocalizationTests {
         let strings = try Self.strings(in: catalog)
         #expect(!strings.isEmpty)
         for (key, entry) in strings {
+            // Keys marked "Don't translate" in Xcode (bundle name, copyright)
+            // legitimately have no French unit.
+            if entry["shouldTranslate"] as? Bool == false { continue }
             let localizations = entry["localizations"] as? [String: Any]
             let fr = localizations?["fr"] as? [String: Any]
             let unit = fr?["stringUnit"] as? [String: Any]
