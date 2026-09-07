@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleName</key>
 	<string>MirrorKit</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>MirrorKit</string>
 	<key>CFBundleExecutable</key>

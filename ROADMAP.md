@@ -13,7 +13,6 @@ the changelog section at the bottom.
 - **Snapshot export with bezel and background** (App Store-ready visuals), if
   not already fully covered by `AnnotationCompositor`.
 - **Keyboard shortcuts sheet** (Cmd+/) listing R, S, T, 0, arrows, A.
-- **French localization** — no string catalog yet; FR is the primary market.
 
 ## Backlog
 
@@ -44,3 +43,5 @@ the changelog section at the bottom.
   device picker) for VoiceOver.
 - Remember the last selected iPhone and re-select it automatically when
   several devices are connected.
+- French localization: String Catalogs for the UI and the camera permission
+  prompt, selected from the macOS system language.

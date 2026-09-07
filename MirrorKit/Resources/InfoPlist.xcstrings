@@ -1,0 +1,13 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSCameraUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "MirrorKit needs access to your iPhone connected via USB in order to display its screen." } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "MirrorKit a besoin d’accéder à votre iPhone branché en USB pour afficher son écran." } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

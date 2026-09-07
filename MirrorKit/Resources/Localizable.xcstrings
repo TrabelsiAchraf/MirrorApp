@@ -1,0 +1,936 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ is already being captured by another app.\n\nQuit QuickTime Player or any other mirroring app, then retry.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ est déjà capturé par une autre app.\n\nQuittez QuickTime Player ou toute autre app de recopie, puis réessayez."
+          }
+        }
+      }
+    },
+    "%@ was detected but refused to stream its screen.\n\n• Restart the iPhone, then reconnect it — this fixes most cases\n• On the iPhone, check Screen Time › Content & Privacy Restrictions › Screen Recording is allowed\n• Check for a management (MDM) profile that restricts screen recording": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ a été détecté mais refuse de diffuser son écran.\n\n• Redémarrez l’iPhone puis rebranchez-le — cela résout la plupart des cas\n• Sur l’iPhone, vérifiez que Temps d’écran › Restrictions relatives au contenu et à la confidentialité › Enregistrement de l’écran est autorisé\n• Vérifiez qu’aucun profil de gestion (MDM) ne bloque l’enregistrement de l’écran"
+          }
+        }
+      }
+    },
+    "%@ was disconnected.\n\nReconnect the USB cable and try again.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ a été déconnecté.\n\nRebranchez le câble USB et réessayez."
+          }
+        }
+      }
+    },
+    "About MirrorKit": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos de MirrorKit"
+          }
+        }
+      }
+    },
+    "Always on Top": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toujours au premier plan"
+          }
+        }
+      }
+    },
+    "Annotate": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annoter"
+          }
+        }
+      }
+    },
+    "Aurora": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aurore"
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Précédent"
+          }
+        }
+      }
+    },
+    "Background (expanded mode)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrière-plan (mode étendu)"
+          }
+        }
+      }
+    },
+    "Bezel color": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couleur de la bordure"
+          }
+        }
+      }
+    },
+    "Bezel style": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Style de bordure"
+          }
+        }
+      }
+    },
+    "Black": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noir"
+          }
+        }
+      }
+    },
+    "Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’accès à la caméra est nécessaire pour afficher votre iPhone. Autorisez-le dans Réglages Système > Confidentialité et sécurité > Caméra."
+          }
+        }
+      }
+    },
+    "Capture": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capture"
+          }
+        }
+      }
+    },
+    "Capture failed: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échec de la capture : %@"
+          }
+        }
+      }
+    },
+    "Capture input is not supported by the session": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’entrée de capture n’est pas prise en charge par la session"
+          }
+        }
+      }
+    },
+    "Captures": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Captures"
+          }
+        }
+      }
+    },
+    "Charcoal": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anthracite"
+          }
+        }
+      }
+    },
+    "Choose": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir"
+          }
+        }
+      }
+    },
+    "Choose a folder where MirrorKit will save snapshots and recordings.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisissez le dossier où MirrorKit enregistrera les captures et les enregistrements."
+          }
+        }
+      }
+    },
+    "Choose device or open Settings": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir l’appareil ou ouvrir les Réglages"
+          }
+        }
+      }
+    },
+    "Choose…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir…"
+          }
+        }
+      }
+    },
+    "Classic": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Classique"
+          }
+        }
+      }
+    },
+    "Close window": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fermer la fenêtre"
+          }
+        }
+      }
+    },
+    "Connect an iPhone via USB": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Branchez un iPhone en USB"
+          }
+        }
+      }
+    },
+    "Connect your iPhone to your Mac with a USB or USB-C cable. MirrorKit uses a wired connection for real-time, low-latency display.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reliez votre iPhone à votre Mac avec un câble USB ou USB-C. MirrorKit utilise une connexion filaire pour un affichage en temps réel, à faible latence."
+          }
+        }
+      }
+    },
+    "Custom": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personnalisé"
+          }
+        }
+      }
+    },
+    "Custom…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personnalisé…"
+          }
+        }
+      }
+    },
+    "Detected Devices": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appareils détectés"
+          }
+        }
+      }
+    },
+    "Device and settings menu": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu appareil et réglages"
+          }
+        }
+      }
+    },
+    "Device not found": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appareil introuvable"
+          }
+        }
+      }
+    },
+    "Display": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichage"
+          }
+        }
+      }
+    },
+    "Display your iPhone screen\non your Mac via USB.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichez l’écran de votre iPhone\nsur votre Mac via USB."
+          }
+        }
+      }
+    },
+    "Display your iPhone screen directly on your Mac. Perfect for presentations, development, or just keeping an eye on your phone.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Affichez l’écran de votre iPhone directement sur votre Mac. Idéal pour les présentations, le développement, ou simplement pour garder un œil sur votre téléphone."
+          }
+        }
+      }
+    },
+    "Error": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erreur"
+          }
+        }
+      }
+    },
+    "Exit annotation mode": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quitter le mode annotation"
+          }
+        }
+      }
+    },
+    "Failed to configure capture session: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossible de configurer la session de capture : %@"
+          }
+        }
+      }
+    },
+    "Failed to create asset writer: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossible de créer l’enregistreur : %@"
+          }
+        }
+      }
+    },
+    "Failed to create capture input: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossible de créer l’entrée de capture : %@"
+          }
+        }
+      }
+    },
+    "Failed to initialize screen capture. Please restart MirrorKit.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossible d’initialiser la capture d’écran. Veuillez relancer MirrorKit."
+          }
+        }
+      }
+    },
+    "Frameless": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sans bordure"
+          }
+        }
+      }
+    },
+    "Get Started": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Commencer"
+          }
+        }
+      }
+    },
+    "Gold": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Or"
+          }
+        }
+      }
+    },
+    "Grant camera access": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorisez l’accès à la caméra"
+          }
+        }
+      }
+    },
+    "Midnight": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minuit"
+          }
+        }
+      }
+    },
+    "Minimize window": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réduire la fenêtre"
+          }
+        }
+      }
+    },
+    "MirrorKit": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MirrorKit"
+          }
+        }
+      }
+    },
+    "Next": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suivant"
+          }
+        }
+      }
+    },
+    "No device": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun appareil"
+          }
+        }
+      }
+    },
+    "No iPhone detected.\n\n• Make sure your iPhone is connected via USB\n• Unlock your iPhone and tap \"Trust This Computer\"\n• Try a different USB cable or port": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun iPhone détecté.\n\n• Vérifiez que votre iPhone est branché en USB\n• Déverrouillez votre iPhone et touchez « Se fier à cet ordinateur »\n• Essayez un autre câble ou un autre port USB"
+          }
+        }
+      }
+    },
+    "No save folder selected. Please choose a folder in Settings (⌘,).": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun dossier d’enregistrement sélectionné. Choisissez un dossier dans les Réglages (⌘,)."
+          }
+        }
+      }
+    },
+    "No video received from %@ after %lld seconds.\n\n• Unlock the iPhone and keep its screen on\n• Unplug and reconnect the iPhone\n• Try a different USB cable or port": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune vidéo reçue de %@ après %lld secondes.\n\n• Déverrouillez l’iPhone et laissez son écran allumé\n• Débranchez puis rebranchez l’iPhone\n• Essayez un autre câble ou un autre port USB"
+          }
+        }
+      }
+    },
+    "Not set": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non défini"
+          }
+        }
+      }
+    },
+    "Ocean": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Océan"
+          }
+        }
+      }
+    },
+    "Open Captures Folder": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir le dossier des captures"
+          }
+        }
+      }
+    },
+    "Open System Settings": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir les Réglages Système"
+          }
+        }
+      }
+    },
+    "Plug in your iPhone via USB": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Branchez votre iPhone en USB"
+          }
+        }
+      }
+    },
+    "Quit MirrorKit": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quitter MirrorKit"
+          }
+        }
+      }
+    },
+    "Recorder is not ready": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’enregistreur n’est pas prêt"
+          }
+        }
+      }
+    },
+    "Recording saved — %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrement sauvegardé — %@"
+          }
+        }
+      }
+    },
+    "Recording…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrement…"
+          }
+        }
+      }
+    },
+    "Reset Zoom": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser le zoom"
+          }
+        }
+      }
+    },
+    "Restart your iPhone": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redémarrez votre iPhone"
+          }
+        }
+      }
+    },
+    "Retry": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réessayer"
+          }
+        }
+      }
+    },
+    "Rotate": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pivoter"
+          }
+        }
+      }
+    },
+    "Rotate Left": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pivoter à gauche"
+          }
+        }
+      }
+    },
+    "Rotate Right": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pivoter à droite"
+          }
+        }
+      }
+    },
+    "Save location": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Emplacement d’enregistrement"
+          }
+        }
+      }
+    },
+    "Searching for devices…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recherche d’appareils…"
+          }
+        }
+      }
+    },
+    "Settings…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages…"
+          }
+        }
+      }
+    },
+    "Show Window": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Afficher la fenêtre"
+          }
+        }
+      }
+    },
+    "Silver": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Argent"
+          }
+        }
+      }
+    },
+    "Snapshot saved — %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capture enregistrée — %@"
+          }
+        }
+      }
+    },
+    "Snow": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neige"
+          }
+        }
+      }
+    },
+    "Start / Stop Recording": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrer / arrêter l’enregistrement"
+          }
+        }
+      }
+    },
+    "Start Mirroring": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrer la recopie"
+          }
+        }
+      }
+    },
+    "Start recording": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Démarrer l’enregistrement"
+          }
+        }
+      }
+    },
+    "Stop recording": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrêter l’enregistrement"
+          }
+        }
+      }
+    },
+    "Sunset": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crépuscule"
+          }
+        }
+      }
+    },
+    "Take Snapshot": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prendre une capture"
+          }
+        }
+      }
+    },
+    "Take snapshot": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prendre une capture"
+          }
+        }
+      }
+    },
+    "Tap \"Trust This Computer\" if prompted": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Touchez « Se fier à cet ordinateur » si demandé"
+          }
+        }
+      }
+    },
+    "Toggle Annotation Mode  (A)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mode annotation  (A)"
+          }
+        }
+      }
+    },
+    "Toggle expanded mode": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Basculer le mode étendu"
+          }
+        }
+      }
+    },
+    "Try a different USB cable or port": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Essayez un autre câble ou un autre port USB"
+          }
+        }
+      }
+    },
+    "Unlock your iPhone": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déverrouillez votre iPhone"
+          }
+        }
+      }
+    },
+    "Version %@ (%@)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version %@ (%@)"
+          }
+        }
+      }
+    },
+    "Video output is not supported by the session": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La sortie vidéo n’est pas prise en charge par la session"
+          }
+        }
+      }
+    },
+    "Waiting for video from %@… Unlock the iPhone and keep its screen on.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En attente de la vidéo de %@… Déverrouillez l’iPhone et laissez son écran allumé."
+          }
+        }
+      }
+    },
+    "Welcome to MirrorKit": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bienvenue dans MirrorKit"
+          }
+        }
+      }
+    },
+    "Window": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fenêtre"
+          }
+        }
+      }
+    },
+    "macOS will ask for camera permission. This is normal — your iPhone is seen as a video capture device. No data is recorded or transmitted.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "macOS demandera l’autorisation d’accéder à la caméra. C’est normal : votre iPhone est vu comme un appareil de capture vidéo. Aucune donnée n’est enregistrée ni transmise."
+          }
+        }
+      }
+    },
+    "© 2026 Achraf Trabelsi": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "© 2026 Achraf Trabelsi"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
