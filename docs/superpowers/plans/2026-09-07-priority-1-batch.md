@@ -186,7 +186,7 @@ git commit -m "fix: show a waiting hint instead of an error when the first frame
 
 **Why:** AVFoundation reports `modelID = "iOS Device"` for every USB iPhone, so `DeviceFrameProvider.frameSpec` always falls into the `default` spec ("iPhone", no notch, radius 40). The stream resolution is the only model signal we have.
 
-**Precondition (verify first, do not skip):** the stream must be native-size. Launch the Debug app from a terminal (`script -q -F /tmp/mk.log <path to MirrorKit.app>/Contents/MacOS/MirrorKit`), connect an **unlocked** iPhone 14 Pro and read the `[MirrorKit] Resolution changed: W×H` line. Expected `1179×2556`. If the value is a scaled size such as `886×1920`, stop: resolution cannot identify the model, drop this task and note it in ROADMAP.md.
+**Precondition (verified 2026-09-07):** the stream is native-size, but the width can be rounded to an even number: the iPhone 14 Pro (native 1179×2556) logged `[MirrorKit] Resolution changed: 1180×2556`. The lookup must therefore tolerate ±2 px per dimension.
 
 **Files:**
 - Create: `MirrorKit/Utils/IPhoneResolutionCatalog.swift`
@@ -215,6 +215,13 @@ struct DeviceFrameProviderTests {
         #expect(spec.displayName == "iPhone 17 Pro Max")
         #expect(spec.notchStyle == .dynamicIsland)
         #expect(spec.kind == .iPhone)
+    }
+
+    @Test func evenRoundedWidthStillMatches() {
+        // AVFoundation reports 1180×2556 for the 1179×2556 iPhone 14 Pro panel.
+        let spec = DeviceFrameProvider.frameSpec(for: generic, resolution: CGSize(width: 1180, height: 2556))
+        #expect(spec.displayName == "iPhone 16")
+        #expect(spec.notchStyle == .dynamicIsland)
     }
 
     @Test func landscapeResolutionMatchesTheSameModel() {
@@ -258,7 +265,7 @@ Note: `DeviceFrameSpec.NotchStyle` and `.Kind` must be `Equatable` for `#expect(
 
 - [ ] **Step 2: Run `xcodegen generate` then the tests to verify they fail**
 
-Expected: `genericModelIDUsesResolutionForProMax` fails with `displayName == "iPhone"` (and 3 others fail the same way); `specificModelIDStillWins` and `iPadResolutionStillProducesIPadSpec` pass already.
+Expected: `genericModelIDUsesResolutionForProMax` fails with `displayName == "iPhone"` (and 4 others fail the same way); `specificModelIDStillWins`, `unknownResolutionFallsBackToGenericIPhone` and `iPadResolutionStillProducesIPadSpec` pass already.
 
 - [ ] **Step 3: Create the resolution catalog**
 
@@ -275,37 +282,45 @@ import CoreGraphics
 /// style shared by the whole group.
 enum IPhoneResolutionCatalog {
     struct Entry {
+        /// Native portrait panel size in pixels.
+        let width: Int
+        let height: Int
         let displayName: String
         let notchStyle: DeviceFrameSpec.NotchStyle
         let cornerRadius: CGFloat
         let bezelWidth: CGFloat
     }
 
-    /// Keyed by portrait size "width x height" in pixels.
-    private static let entries: [String: Entry] = [
+    /// The capture stream can round an odd native width up to an even number
+    /// (the 1179×2556 iPhone 14 Pro streams as 1180×2556), so the lookup
+    /// accepts a small per-dimension slack.
+    static let tolerance = 2
+
+    private static let entries: [Entry] = [
         // Dynamic Island generation
-        "1320x2868": Entry(displayName: "iPhone 17 Pro Max", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 5), // 16 Pro Max
-        "1206x2622": Entry(displayName: "iPhone 17 Pro", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 5),     // 17, 16 Pro
-        "1260x2736": Entry(displayName: "iPhone Air", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 5),
-        "1290x2796": Entry(displayName: "iPhone 16 Plus", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 6),    // 15 Plus, 15 Pro Max, 14 Pro Max
-        "1179x2556": Entry(displayName: "iPhone 16", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 6),         // 15, 15 Pro, 14 Pro
+        Entry(width: 1320, height: 2868, displayName: "iPhone 17 Pro Max", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 5), // 16 Pro Max
+        Entry(width: 1206, height: 2622, displayName: "iPhone 17 Pro", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 5),     // 17, 16 Pro
+        Entry(width: 1260, height: 2736, displayName: "iPhone Air", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 5),
+        Entry(width: 1290, height: 2796, displayName: "iPhone 16 Plus", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 6),    // 15 Plus, 15 Pro Max, 14 Pro Max
+        Entry(width: 1179, height: 2556, displayName: "iPhone 16", notchStyle: .dynamicIsland, cornerRadius: 55, bezelWidth: 6),         // 15, 15 Pro, 14 Pro
         // Notch generation
-        "1170x2532": Entry(displayName: "iPhone 14", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),                 // 13, 12 (16e shares it)
-        "1284x2778": Entry(displayName: "iPhone 14 Plus", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),            // 13 Pro Max, 12 Pro Max
-        "1080x2340": Entry(displayName: "iPhone 13 mini", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),            // 12 mini
-        "1125x2436": Entry(displayName: "iPhone 11 Pro", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),             // XS, X
-        "1242x2688": Entry(displayName: "iPhone 11 Pro Max", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),         // XS Max
-        "828x1792": Entry(displayName: "iPhone 11", notchStyle: .notch, cornerRadius: 47, bezelWidth: 7),                  // XR
+        Entry(width: 1170, height: 2532, displayName: "iPhone 14", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),                 // 13, 12 (16e shares it)
+        Entry(width: 1284, height: 2778, displayName: "iPhone 14 Plus", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),            // 13 Pro Max, 12 Pro Max
+        Entry(width: 1080, height: 2340, displayName: "iPhone 13 mini", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),            // 12 mini
+        Entry(width: 1125, height: 2436, displayName: "iPhone 11 Pro", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),             // XS, X
+        Entry(width: 1242, height: 2688, displayName: "iPhone 11 Pro Max", notchStyle: .notch, cornerRadius: 47, bezelWidth: 6),         // XS Max
+        Entry(width: 828, height: 1792, displayName: "iPhone 11", notchStyle: .notch, cornerRadius: 47, bezelWidth: 7),                  // XR
         // Home button generation
-        "750x1334": Entry(displayName: "iPhone SE", notchStyle: .none, cornerRadius: 40, bezelWidth: 8),                   // 8, 7, 6s
-        "1080x1920": Entry(displayName: "iPhone 8 Plus", notchStyle: .none, cornerRadius: 40, bezelWidth: 8),
+        Entry(width: 750, height: 1334, displayName: "iPhone SE", notchStyle: .none, cornerRadius: 40, bezelWidth: 8),                   // 8, 7, 6s
+        Entry(width: 1080, height: 1920, displayName: "iPhone 8 Plus", notchStyle: .none, cornerRadius: 40, bezelWidth: 8),
     ]
 
-    /// Orientation-insensitive lookup. Returns `nil` for unknown sizes.
+    /// Orientation-insensitive lookup with `tolerance` px of slack per
+    /// dimension. Returns `nil` for unknown sizes.
     static func match(_ resolution: CGSize) -> Entry? {
         let w = Int(min(resolution.width, resolution.height).rounded())
         let h = Int(max(resolution.width, resolution.height).rounded())
-        return entries["\(w)x\(h)"]
+        return entries.first { abs($0.width - w) <= tolerance && abs($0.height - h) <= tolerance }
     }
 }
 ```
@@ -342,11 +357,11 @@ In `DeviceFrameProvider.swift`, replace `frameSpec(for:resolution:)`:
 
 - [ ] **Step 5: Run tests to verify they pass**
 
-Run the build + test command. Expected: `Test run with 37 tests in 7 suites passed`.
+Run the build + test command. Expected: the 8 new `DeviceFrameProvider` tests pass along with the existing suites (`TEST SUCCEEDED`).
 
 - [ ] **Step 6: Verify on device**
 
-Launch the Debug app with the iPhone 14 Pro (unlocked): toolbar shows "iPhone 16" under the device name (shared 1179×2556 panel — expected), bezel has a Dynamic Island. With the 17 Pro Max: "iPhone 17 Pro Max".
+Launch the Debug app with the iPhone 14 Pro (unlocked): toolbar shows "iPhone 16" under the device name (shared 1179×2556 panel streamed as 1180×2556 — expected), bezel has a Dynamic Island. With the 17 Pro Max: "iPhone 17 Pro Max".
 
 - [ ] **Step 7: Commit**
 
