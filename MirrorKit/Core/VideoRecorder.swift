@@ -13,9 +13,9 @@ actor VideoRecorder {
         var errorDescription: String? {
             switch self {
             case .writerCreationFailed(let error):
-                return "Failed to create asset writer: \(error.localizedDescription)"
+                return String(localized: "Failed to create asset writer: \(error.localizedDescription)")
             case .notReady:
-                return "Recorder is not ready"
+                return String(localized: "Recorder is not ready")
             }
         }
     }

@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Settings window content — save location, bezel style, and background.
 struct SettingsView: View {
-    @State private var saveFolderPath: String = SaveLocationManager.resolveBookmark()?.path ?? "Not set"
+    @State private var saveFolderPath: String = SaveLocationManager.resolveBookmark()?.path ?? String(localized: "Not set")
 
     var body: some View {
         Form {

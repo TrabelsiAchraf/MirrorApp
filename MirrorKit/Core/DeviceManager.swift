@@ -18,6 +18,10 @@ final class DeviceManager {
     /// UserDefaults key holding the `uniqueID` of the iPhone the user picked last.
     static let lastSelectedDeviceKey = "lastSelectedDeviceID"
 
+    /// Shown when camera permission is missing. Kept as one shared value so the
+    /// error view can recognise it and offer to open System Settings.
+    static let cameraAccessMessage = String(localized: "Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.")
+
     @ObservationIgnored
     private let defaults: UserDefaults
     /// True once the user explicitly picked a device in this session; the
@@ -73,12 +77,12 @@ final class DeviceManager {
                     if granted {
                         self?.beginDiscovery()
                     } else {
-                        self?.state = .error("Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.")
+                        self?.state = .error(Self.cameraAccessMessage)
                     }
                 }
             }
         case .denied, .restricted:
-            state = .error("Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.")
+            state = .error(Self.cameraAccessMessage)
         @unknown default:
             beginDiscovery()
         }
@@ -166,7 +170,7 @@ final class DeviceManager {
             stopRescanTimer()
         } else if rescanCount >= Self.maxRescanAttempts {
             stopRescanTimer()
-            state = .error("No iPhone detected.\n\n• Make sure your iPhone is connected via USB\n• Unlock your iPhone and tap \"Trust This Computer\"\n• Try a different USB cable or port")
+            state = .error(String(localized: "No iPhone detected.\n\n• Make sure your iPhone is connected via USB\n• Unlock your iPhone and tap \"Trust This Computer\"\n• Try a different USB cable or port"))
         }
     }
 

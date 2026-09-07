@@ -390,7 +390,7 @@ struct MirrorContentView: View {
             let url = try ExportManager.savePNG(data)
             print("[MirrorKit] Snapshot saved: \(url.path)")
             playShutterSound()
-            showToast("Snapshot saved — \(url.lastPathComponent)", revealing: url)
+            showToast(String(localized: "Snapshot saved — \(url.lastPathComponent)"), revealing: url)
         } catch {
             print("[MirrorKit] Snapshot failed: \(error.localizedDescription)")
             NSSound.beep()
@@ -418,7 +418,7 @@ struct MirrorContentView: View {
                     if let url {
                         print("[MirrorKit] Recording saved: \(url.path)")
                         NSSound(named: "Glass")?.play()
-                        showToast("Recording saved — \(url.lastPathComponent)", revealing: url)
+                        showToast(String(localized: "Recording saved — \(url.lastPathComponent)"), revealing: url)
                     }
                 }
             }
@@ -438,7 +438,7 @@ struct MirrorContentView: View {
                         )
                         await MainActor.run {
                             isRecording = true
-                            showToast("Recording…", revealing: nil)
+                            showToast(String(localized: "Recording…"), revealing: nil)
                         }
                     } catch {
                         print("[MirrorKit] Recording start failed: \(error.localizedDescription)")
@@ -608,7 +608,7 @@ struct MirrorContentView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
-            if message.contains("Camera access") || message.contains("System Settings") {
+            if message == DeviceManager.cameraAccessMessage {
                 Button("Open System Settings") {
                     if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Camera") {
                         NSWorkspace.shared.open(url)
@@ -669,7 +669,7 @@ struct MirrorContentView: View {
             position: .unspecified
         )
         guard let avDevice = discovery.devices.first(where: { $0.uniqueID == deviceID }) else {
-            deviceManager.state = .error("Device not found")
+            deviceManager.state = .error(String(localized: "Device not found"))
             return
         }
 

@@ -34,7 +34,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if coreMediaIOReady {
             deviceManager.startDiscovery()
         } else {
-            deviceManager.state = .error("Failed to initialize screen capture. Please restart MirrorKit.")
+            deviceManager.state = .error(String(localized: "Failed to initialize screen capture. Please restart MirrorKit."))
         }
     }
 
@@ -76,7 +76,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Show window
         let showItem = NSMenuItem(
-            title: "Show Window",
+            title: String(localized: "Show Window"),
             action: #selector(showMirrorWindow),
             keyEquivalent: ""
         )
@@ -87,7 +87,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Always-on-top toggle
         let alwaysOnTopItem = NSMenuItem(
-            title: "Always on Top",
+            title: String(localized: "Always on Top"),
             action: #selector(toggleAlwaysOnTopFromMenu),
             keyEquivalent: ""
         )
@@ -99,7 +99,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Settings
         let settingsItem = NSMenuItem(
-            title: "Settings…",
+            title: String(localized: "Settings…"),
             action: #selector(openSettings),
             keyEquivalent: ""
         )
@@ -110,7 +110,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Quit
         let quitItem = NSMenuItem(
-            title: "Quit MirrorKit",
+            title: String(localized: "Quit MirrorKit"),
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )
@@ -202,24 +202,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let appMenu = NSMenu()
         let appMenuItem = NSMenuItem()
         appMenuItem.submenu = appMenu
-        let aboutItem = NSMenuItem(title: "About MirrorKit", action: #selector(showAboutWindow), keyEquivalent: "")
+        let aboutItem = NSMenuItem(title: String(localized: "About MirrorKit"), action: #selector(showAboutWindow), keyEquivalent: "")
         aboutItem.target = self
         appMenu.addItem(aboutItem)
         appMenu.addItem(.separator())
-        let settingsItem = NSMenuItem(title: "Settings…", action: #selector(openSettings), keyEquivalent: ",")
+        let settingsItem = NSMenuItem(title: String(localized: "Settings…"), action: #selector(openSettings), keyEquivalent: ",")
         settingsItem.target = self
         appMenu.addItem(settingsItem)
         appMenu.addItem(.separator())
-        appMenu.addItem(NSMenuItem(title: "Quit MirrorKit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        appMenu.addItem(NSMenuItem(title: String(localized: "Quit MirrorKit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         mainMenu.addItem(appMenuItem)
 
         // "Window" menu
-        let windowMenu = NSMenu(title: "Window")
+        let windowMenu = NSMenu(title: String(localized: "Window"))
         let windowMenuItem = NSMenuItem()
         windowMenuItem.submenu = windowMenu
 
         let alwaysOnTopItem = NSMenuItem(
-            title: "Always on Top",
+            title: String(localized: "Always on Top"),
             action: #selector(toggleAlwaysOnTopFromMenu),
             keyEquivalent: "t"
         )
@@ -229,38 +229,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         mainMenu.addItem(windowMenuItem)
 
         // "Capture" menu
-        let captureMenu = NSMenu(title: "Capture")
+        let captureMenu = NSMenu(title: String(localized: "Capture"))
         let captureMenuItem = NSMenuItem()
         captureMenuItem.submenu = captureMenu
 
-        let recordItem = NSMenuItem(title: "Start / Stop Recording", action: #selector(captureToggleRecording), keyEquivalent: "r")
+        let recordItem = NSMenuItem(title: String(localized: "Start / Stop Recording"), action: #selector(captureToggleRecording), keyEquivalent: "r")
         recordItem.target = self
         captureMenu.addItem(recordItem)
 
-        let snapshotItem = NSMenuItem(title: "Take Snapshot", action: #selector(captureSnapshot), keyEquivalent: "s")
+        let snapshotItem = NSMenuItem(title: String(localized: "Take Snapshot"), action: #selector(captureSnapshot), keyEquivalent: "s")
         snapshotItem.target = self
         captureMenu.addItem(snapshotItem)
 
         captureMenu.addItem(.separator())
 
-        let rotateLeftItem = NSMenuItem(title: "Rotate Left", action: #selector(captureRotateLeft), keyEquivalent: "\u{F702}")
+        let rotateLeftItem = NSMenuItem(title: String(localized: "Rotate Left"), action: #selector(captureRotateLeft), keyEquivalent: "\u{F702}")
         rotateLeftItem.keyEquivalentModifierMask = [.command]
         rotateLeftItem.target = self
         captureMenu.addItem(rotateLeftItem)
 
-        let rotateRightItem = NSMenuItem(title: "Rotate Right", action: #selector(captureRotateRight), keyEquivalent: "\u{F703}")
+        let rotateRightItem = NSMenuItem(title: String(localized: "Rotate Right"), action: #selector(captureRotateRight), keyEquivalent: "\u{F703}")
         rotateRightItem.keyEquivalentModifierMask = [.command]
         rotateRightItem.target = self
         captureMenu.addItem(rotateRightItem)
 
-        let resetZoomItem = NSMenuItem(title: "Reset Zoom", action: #selector(captureResetZoom), keyEquivalent: "0")
+        let resetZoomItem = NSMenuItem(title: String(localized: "Reset Zoom"), action: #selector(captureResetZoom), keyEquivalent: "0")
         resetZoomItem.target = self
         captureMenu.addItem(resetZoomItem)
 
         // The hotkey is handled by setupKeyboardMonitor (bare "A" with text-field guard);
         // the menu item itself omits keyEquivalent to avoid intercepting text input.
         let annotateItem = NSMenuItem(
-            title: "Toggle Annotation Mode  (A)",
+            title: String(localized: "Toggle Annotation Mode  (A)"),
             action: #selector(captureToggleAnnotation),
             keyEquivalent: ""
         )
@@ -270,7 +270,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         captureMenu.addItem(.separator())
 
         let openFolderItem = NSMenuItem(
-            title: "Open Captures Folder",
+            title: String(localized: "Open Captures Folder"),
             action: #selector(openCapturesFolder),
             keyEquivalent: "o"
         )
@@ -332,7 +332,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let aboutView = AboutView()
         let hostingController = NSHostingController(rootView: aboutView)
         let aboutWindow = NSWindow(contentViewController: hostingController)
-        aboutWindow.title = "About MirrorKit"
+        aboutWindow.title = String(localized: "About MirrorKit")
         aboutWindow.styleMask = [.titled, .closable]
         aboutWindow.center()
         aboutWindow.makeKeyAndOrderFront(nil)

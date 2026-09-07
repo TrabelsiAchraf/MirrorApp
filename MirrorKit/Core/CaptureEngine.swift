@@ -11,13 +11,13 @@ enum CaptureError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .inputCreationFailed(let error):
-            return "Failed to create capture input: \(error.localizedDescription)"
+            return String(localized: "Failed to create capture input: \(error.localizedDescription)")
         case .inputNotSupported:
-            return "Capture input is not supported by the session"
+            return String(localized: "Capture input is not supported by the session")
         case .outputNotSupported:
-            return "Video output is not supported by the session"
+            return String(localized: "Video output is not supported by the session")
         case .sessionConfigurationFailed(let reason):
-            return "Failed to configure capture session: \(reason)"
+            return String(localized: "Failed to configure capture session: \(reason)")
         }
     }
 }

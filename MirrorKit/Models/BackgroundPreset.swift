@@ -17,14 +17,14 @@ enum BackgroundPreset: String, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .midnight:  return "Midnight"
-        case .charcoal:  return "Charcoal"
-        case .snow:      return "Snow"
-        case .sunset:    return "Sunset"
-        case .ocean:     return "Ocean"
-        case .aurora:    return "Aurora"
-        case .black:     return "Black"
-        case .custom:    return "Custom"
+        case .midnight:  return String(localized: "Midnight")
+        case .charcoal:  return String(localized: "Charcoal")
+        case .snow:      return String(localized: "Snow")
+        case .sunset:    return String(localized: "Sunset")
+        case .ocean:     return String(localized: "Ocean")
+        case .aurora:    return String(localized: "Aurora")
+        case .black:     return String(localized: "Black")
+        case .custom:    return String(localized: "Custom")
         }
     }
 

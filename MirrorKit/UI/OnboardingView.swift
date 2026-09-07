@@ -9,18 +9,18 @@ struct OnboardingView: View {
     private let steps: [(icon: String, title: String, description: String)] = [
         (
             "iphone.and.arrow.forward",
-            "Welcome to MirrorKit",
-            "Display your iPhone screen directly on your Mac. Perfect for presentations, development, or just keeping an eye on your phone."
+            String(localized: "Welcome to MirrorKit"),
+            String(localized: "Display your iPhone screen directly on your Mac. Perfect for presentations, development, or just keeping an eye on your phone.")
         ),
         (
             "cable.connector",
-            "Plug in your iPhone via USB",
-            "Connect your iPhone to your Mac with a USB or USB-C cable. MirrorKit uses a wired connection for real-time, low-latency display."
+            String(localized: "Plug in your iPhone via USB"),
+            String(localized: "Connect your iPhone to your Mac with a USB or USB-C cable. MirrorKit uses a wired connection for real-time, low-latency display.")
         ),
         (
             "camera.fill",
-            "Grant camera access",
-            "macOS will ask for camera permission. This is normal — your iPhone is seen as a video capture device. No data is recorded or transmitted."
+            String(localized: "Grant camera access"),
+            String(localized: "macOS will ask for camera permission. This is normal — your iPhone is seen as a video capture device. No data is recorded or transmitted.")
         )
     ]
 

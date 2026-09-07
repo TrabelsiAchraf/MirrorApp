@@ -7,7 +7,7 @@ enum ExportManager {
         case noSaveFolder
 
         var errorDescription: String? {
-            "No save folder selected. Please choose a folder in Settings (⌘,)."
+            String(localized: "No save folder selected. Please choose a folder in Settings (⌘,).")
         }
     }
 

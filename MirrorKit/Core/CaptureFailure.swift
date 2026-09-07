@@ -36,7 +36,7 @@ enum CaptureFailure: Equatable, Sendable {
     /// One-line text for the non-blocking overlay shown while no frame has
     /// arrived yet.
     func hint(deviceName: String) -> String {
-        "Waiting for video from \(deviceName)… Unlock the iPhone and keep its screen on."
+        String(localized: "Waiting for video from \(deviceName)… Unlock the iPhone and keep its screen on.")
     }
 
     /// Maps an error delivered by `AVCaptureSessionRuntimeError` to a failure.
@@ -70,27 +70,15 @@ enum CaptureFailure: Equatable, Sendable {
     func message(deviceName: String) -> String {
         switch self {
         case .deviceRefused:
-            return """
-            \(deviceName) was detected but refused to stream its screen.
-
-            • Restart the iPhone, then reconnect it — this fixes most cases
-            • On the iPhone, check Screen Time › Content & Privacy Restrictions › Screen Recording is allowed
-            • Check for a management (MDM) profile that restricts screen recording
-            """
+            return String(localized: "\(deviceName) was detected but refused to stream its screen.\n\n• Restart the iPhone, then reconnect it — this fixes most cases\n• On the iPhone, check Screen Time › Content & Privacy Restrictions › Screen Recording is allowed\n• Check for a management (MDM) profile that restricts screen recording")
         case .deviceDisconnected:
-            return "\(deviceName) was disconnected.\n\nReconnect the USB cable and try again."
+            return String(localized: "\(deviceName) was disconnected.\n\nReconnect the USB cable and try again.")
         case .deviceInUse:
-            return "\(deviceName) is already being captured by another app.\n\nQuit QuickTime Player or any other mirroring app, then retry."
+            return String(localized: "\(deviceName) is already being captured by another app.\n\nQuit QuickTime Player or any other mirroring app, then retry.")
         case .noFrames(let timeout):
-            return """
-            No video received from \(deviceName) after \(Int(timeout)) seconds.
-
-            • Unlock the iPhone and keep its screen on
-            • Unplug and reconnect the iPhone
-            • Try a different USB cable or port
-            """
+            return String(localized: "No video received from \(deviceName) after \(Int(timeout)) seconds.\n\n• Unlock the iPhone and keep its screen on\n• Unplug and reconnect the iPhone\n• Try a different USB cable or port")
         case .other(let description):
-            return "Capture failed: \(description)"
+            return String(localized: "Capture failed: \(description)")
         }
     }
 

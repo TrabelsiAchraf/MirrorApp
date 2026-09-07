@@ -51,8 +51,8 @@ enum SaveLocationManager {
         panel.canChooseFiles = false
         panel.canCreateDirectories = true
         panel.allowsMultipleSelection = false
-        panel.prompt = "Choose"
-        panel.message = "Choose a folder where MirrorKit will save snapshots and recordings."
+        panel.prompt = String(localized: "Choose")
+        panel.message = String(localized: "Choose a folder where MirrorKit will save snapshots and recordings.")
 
         guard panel.runModal() == .OK, let url = panel.url else { return nil }
         saveBookmark(for: url)

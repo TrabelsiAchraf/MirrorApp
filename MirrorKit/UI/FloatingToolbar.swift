@@ -66,7 +66,7 @@ struct FloatingToolbar: View {
 
             // Device picker — custom label, native NSMenu on click
             DevicePickerButton(
-                deviceName: selectedDevice?.name ?? "No device",
+                deviceName: selectedDevice?.name ?? String(localized: "No device"),
                 modelName: modelName,
                 action: showDevicePopup
             )
@@ -86,7 +86,7 @@ struct FloatingToolbar: View {
         let menu = NSMenu()
 
         let settingsItem = NSMenuItem(
-            title: "Settings…",
+            title: String(localized: "Settings…"),
             action: #selector(MenuActionTarget.handle(_:)),
             keyEquivalent: ""
         )

@@ -11,8 +11,8 @@ enum BezelStyle: String, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .classic: return "Classic"
-        case .none:    return "Frameless"
+        case .classic: return String(localized: "Classic")
+        case .none:    return String(localized: "Frameless")
         }
     }
 }
