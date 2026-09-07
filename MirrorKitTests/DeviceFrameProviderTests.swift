@@ -57,4 +57,10 @@ struct DeviceFrameProviderTests {
         let spec = DeviceFrameProvider.frameSpec(for: generic, resolution: CGSize(width: 1668, height: 2388))
         #expect(spec.kind == .iPad)
     }
+
+    @Test func resolutionOutsideToleranceDoesNotMatch() {
+        // 3 px off the 1179×2556 panel must fall back to the generic spec.
+        let spec = DeviceFrameProvider.frameSpec(for: generic, resolution: CGSize(width: 1182, height: 2556))
+        #expect(spec.displayName == "iPhone")
+    }
 }

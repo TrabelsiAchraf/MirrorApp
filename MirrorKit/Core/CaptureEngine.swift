@@ -63,9 +63,10 @@ actor CaptureEngine {
     ///   - device: The AVCaptureDevice representing the iPhone
     ///   - frameHandler: Callback called for every received frame (called on the capture queue)
     ///   - onResolutionChange: Called from the capture queue when the stream dimensions change
-    ///   - onFailure: Called at most once, from an arbitrary queue, when the running
-    ///     session fails (runtime error) or never delivers a frame. The caller is
-    ///     expected to stop the capture and surface the failure.
+    ///   - onFailure: Called from an arbitrary queue. Terminal failures (runtime
+    ///     errors) are reported at most once and the caller is expected to stop
+    ///     the capture; the non-fatal `.noFrames` hint may precede them and must
+    ///     not tear anything down.
     func startCapture(
         device: AVCaptureDevice,
         frameHandler: @escaping @Sendable (CMSampleBuffer) -> Void,
@@ -173,9 +174,9 @@ actor CaptureEngine {
                 try? await Task.sleep(for: .seconds(timeout))
                 guard !Task.isCancelled, !receivedFirstFrame.isSet else { return }
                 print("[MirrorKit] No frame received after \(Int(timeout))s")
-                if failureReported.setIfClear() {
-                    onFailure(.noFrames(timeout: timeout))
-                }
+                // Hint only — must not consume the one-shot slot reserved for
+                // terminal failures, which can still arrive later.
+                onFailure(.noFrames(timeout: timeout))
             }
         }
 

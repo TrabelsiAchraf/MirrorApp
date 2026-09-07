@@ -249,6 +249,11 @@ final class DeviceManager {
                 state = .detecting
             }
         }
+
+        // Removing a device that wasn't selected can still leave nothing
+        // selected (e.g. a prior state with no usable preference) — give the
+        // fallback rules another chance to resolve a selection.
+        autoSelectIfNeeded()
     }
 
     private func addDevice(from avDevice: AVCaptureDevice) {
@@ -268,6 +273,15 @@ final class DeviceManager {
         autoSelectIfNeeded()
     }
 
+    /// Resolves a selection whenever nothing is currently selected, in order:
+    /// 1. A single connected device is always selected.
+    /// 2. The remembered device (last explicit pick), if it's connected.
+    /// 3. The first connected device — a last resort so the toolbar's device
+    ///    picker appears and the user can switch, instead of getting stuck on
+    ///    "Searching for devices…" with several iPhones plugged in.
+    ///
+    /// When something is already selected, the remembered device can still
+    /// take over an automatic (non-user) selection once it shows up (rule below).
     private func autoSelectIfNeeded() {
         let remembered = defaults.string(forKey: Self.lastSelectedDeviceKey)
 
@@ -276,6 +290,10 @@ final class DeviceManager {
                 activate(devices[0])
             } else if let match = devices.first(where: { $0.id == remembered }) {
                 activate(match)
+            } else if let first = devices.first {
+                // Several devices, no usable preference: pick the first so the
+                // toolbar's device picker appears and the user can switch.
+                activate(first)
             }
             return
         }

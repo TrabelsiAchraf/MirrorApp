@@ -85,4 +85,32 @@ struct DeviceManagerTests {
         manager.register(b)
         #expect(manager.selectedDevice?.id == "B")
     }
+
+    @Test func severalDevicesWithoutPreferenceSelectTheFirst() {
+        let manager = DeviceManager(defaults: makeDefaults())
+        manager.register(a)
+        manager.register(b)
+        #expect(manager.selectedDevice?.id == "A")
+        #expect(manager.state == .connected(a))
+    }
+
+    @Test func unregisteringANonSelectedDeviceKeepsTheUserPick() {
+        let defaults = makeDefaults()
+        defaults.set("A", forKey: DeviceManager.lastSelectedDeviceKey)
+        let manager = DeviceManager(defaults: defaults)
+        manager.register(a)
+        manager.register(b)
+        manager.selectDevice(b)          // explicit pick this session
+        manager.unregister(deviceID: "A")  // not the selected one
+        #expect(manager.selectedDevice?.id == "B")
+        manager.register(a)              // remembered id is now "B"; A returning must not take over
+        #expect(manager.selectedDevice?.id == "B")
+    }
+
+    @Test func registerIgnoresDuplicates() {
+        let manager = DeviceManager(defaults: makeDefaults())
+        manager.register(a)
+        manager.register(a)
+        #expect(manager.devices.count == 1)
+    }
 }

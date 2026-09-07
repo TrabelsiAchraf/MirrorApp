@@ -706,7 +706,10 @@ struct MirrorContentView: View {
                                 // Switching to .error tears the engine down via
                                 // the onChange(of: deviceManager.state) handler.
                                 deviceManager.state = .error(failure.message(deviceName: deviceName))
-                            } else {
+                            } else if detectedResolution == nil {
+                                // Only show the hint while no frame has arrived yet.
+                                // If the first frame landed between the watchdog's
+                                // check and this callback, don't resurrect a stale hint.
                                 waitingHint = failure.hint(deviceName: deviceName)
                             }
                         }
