@@ -280,19 +280,6 @@ struct MirrorContentView: View {
                 captureView
                     .aspectRatio(captureViewAspect, contentMode: .fit)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .overlay(alignment: .bottom) {
-                        if let waitingHint {
-                            Label(waitingHint, systemImage: "hourglass")
-                                .font(.callout)
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 10)
-                                .background(Capsule().fill(.ultraThinMaterial).environment(\.colorScheme, .dark))
-                                .padding(.bottom, 40)
-                                .transition(.opacity)
-                        }
-                    }
-                    .animation(.easeInOut(duration: 0.2), value: waitingHint)
 
             case .error(let message):
                 errorView(message: message)
@@ -595,7 +582,24 @@ struct MirrorContentView: View {
                     .font(.callout)
                     .foregroundColor(.gray)
             }
+
+            // After 10 s without a frame (locked iPhone, slow handshake) the
+            // engine's watchdog adds a non-blocking hint; the session keeps
+            // running and the first frame switches to the capture view.
+            if let waitingHint {
+                Label(waitingHint, systemImage: "hourglass")
+                    .font(.callout)
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .background(Capsule().fill(.ultraThinMaterial).environment(\.colorScheme, .dark))
+                    .padding(.top, 8)
+                    .transition(.opacity)
+            }
         }
+        .padding(.horizontal, 24)
+        .animation(.easeInOut(duration: 0.2), value: waitingHint)
         .onAppear {
             startCapture(deviceID: device.id)
         }
@@ -717,6 +721,10 @@ struct MirrorContentView: View {
                         DispatchQueue.main.async {
                             guard generation == captureGeneration else { return }
                             waitingHint = nil
+                            // First frame: frames are flowing, show the capture view.
+                            if case .connected = deviceManager.state {
+                                deviceManager.state = .capturing
+                            }
                             let nsSize = NSSize(width: resolution.width, height: resolution.height)
                             detectedResolution = nsSize
                             onResolutionDetected?(nsSize)
@@ -747,16 +755,19 @@ struct MirrorContentView: View {
 
                 await MainActor.run {
                     // The '!dev' runtime error can arrive *during* startRunning(),
-                    // i.e. before we get here: onFailure has then already moved
-                    // the state to .error and torn the session down. Overwriting
-                    // that with .capturing left a black view with no message.
-                    // Only claim .capturing if this session is still the current
-                    // one and nothing changed the state meanwhile.
+                    // i.e. before we get here: onFailure may already have moved
+                    // (or scheduled moving) the state to .error. Only mark the
+                    // session as running if it is still the current one and the
+                    // state was not changed meanwhile.
                     guard generation == captureGeneration,
                           case .connected(let current) = deviceManager.state,
                           current.id == deviceID else { return }
+                    // The session is running, but the UI stays in the
+                    // "Connecting…" state until the first frame arrives
+                    // (see onResolutionChange). A refused stream therefore
+                    // goes straight from the spinner to the error view,
+                    // never through a black capture view.
                     isCapturing = true
-                    deviceManager.state = .capturing
                 }
             } catch {
                 await MainActor.run {
