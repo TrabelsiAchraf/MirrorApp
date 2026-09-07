@@ -183,6 +183,14 @@ final class DeviceManager {
         state = .connected(device)
     }
 
+    /// Re-enters `.connected` for the current selection so the view restarts
+    /// capture after an error. Not a user pick: the stored preference and
+    /// `userPickedThisSession` are left untouched. No-op when nothing is selected.
+    func retrySelectedDevice() {
+        guard let device = selectedDevice else { return }
+        activate(device)
+    }
+
     // MARK: - Internal handling
 
     /// Scans devices that are already connected at launch
@@ -232,7 +240,11 @@ final class DeviceManager {
         if selectedDevice?.id == deviceID {
             selectedDevice = nil
             if let next = devices.first {
-                activate(next)   // fallback, not a user choice
+                // Fallback, not a user choice: the newly active device wasn't
+                // picked this session, so the remembered device must still be
+                // able to take over if it reappears (rule 3).
+                userPickedThisSession = false
+                activate(next)
             } else {
                 state = .detecting
             }

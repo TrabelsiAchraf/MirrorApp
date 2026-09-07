@@ -618,11 +618,12 @@ struct MirrorContentView: View {
             }
 
             Button("Retry") {
-                // A capture failure keeps the selected device: re-selecting it
-                // goes back through .connected → startCapture. Discovery-level
-                // errors (no device / no permission) restart discovery instead.
-                if let device = deviceManager.selectedDevice {
-                    deviceManager.selectDevice(device)
+                // A capture failure keeps the selected device: re-activating it
+                // (without recording a pick) goes back through .connected →
+                // startCapture. Discovery-level errors (no device / no
+                // permission) restart discovery instead.
+                if deviceManager.selectedDevice != nil {
+                    deviceManager.retrySelectedDevice()
                 } else {
                     deviceManager.startDiscovery()
                 }

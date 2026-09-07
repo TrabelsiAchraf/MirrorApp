@@ -69,4 +69,20 @@ struct DeviceManagerTests {
         #expect(manager.selectedDevice == nil)
         #expect(manager.state == .detecting)
     }
+
+    @Test func retryReactivatesSelectionWithoutRecordingAPick() {
+        let defaults = makeDefaults()
+        let manager = DeviceManager(defaults: defaults)
+        manager.register(a)
+        manager.register(b)
+        manager.selectDevice(b)
+        manager.unregister(deviceID: "B")   // fallback to A, preference stays "B"
+        manager.state = .error("boom")
+        manager.retrySelectedDevice()
+        #expect(manager.state == .connected(a))
+        #expect(defaults.string(forKey: DeviceManager.lastSelectedDeviceKey) == "B")
+        // The remembered device coming back must still take over (no explicit pick this session for A).
+        manager.register(b)
+        #expect(manager.selectedDevice?.id == "B")
+    }
 }
