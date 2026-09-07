@@ -45,3 +45,8 @@ the changelog section at the bottom.
   several devices are connected.
 - French localization: String Catalogs for the UI and the camera permission
   prompt, selected from the macOS system language.
+- Device switching to a refusing iPhone shows the connecting spinner, then the
+  error with guidance; the toolbar stays reachable (capture actions greyed out)
+  so the user can switch back without quitting; no more black or stale frame.
+- Every AVError.unknown capture error (`'!dev'`, `-308`) maps to the refusal
+  guidance; a 45 s dead-stream timeout covers undelivered runtime errors.
