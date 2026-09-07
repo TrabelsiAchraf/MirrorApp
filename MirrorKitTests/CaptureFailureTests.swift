@@ -76,7 +76,7 @@ struct CaptureFailureTests {
         #expect(!hint.contains("\n"))
     }
 
-    @Test @MainActor func cameraAccessMessageIsAStableIdentity() {
+    @Test func cameraAccessMessageIsAStableIdentity() {
         // The error view shows "Open System Settings" only for this message;
         // it must be a single shared value, not a duplicated literal.
         #expect(DeviceManager.cameraAccessMessage.contains("Camera access"))

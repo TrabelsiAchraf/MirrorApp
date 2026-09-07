@@ -16,7 +16,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ a été détecté mais refuse de diffuser son écran.\n\n• Redémarrez l’iPhone puis rebranchez-le — cela résout la plupart des cas\n• Sur l’iPhone, vérifiez que Temps d’écran › Restrictions relatives au contenu et à la confidentialité › Enregistrement de l’écran est autorisé\n• Vérifiez qu’aucun profil de gestion (MDM) ne bloque l’enregistrement de l’écran"
+            "value": "%@ a été détecté, mais refuse de diffuser son écran.\n\n• Redémarrez l’iPhone, puis rebranchez-le — cela suffit dans la plupart des cas\n• Sur l’iPhone, vérifiez que Temps d’écran › Restrictions relatives au contenu et à la confidentialité › Enregistrement de l’écran est autorisé\n• Vérifiez qu’aucun profil de gestion (MDM) ne bloque l’enregistrement de l’écran"
           }
         }
       }
@@ -106,7 +106,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Style de bordure"
+            "value": "Style de la bordure"
           }
         }
       }
@@ -126,7 +126,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "L’accès à la caméra est nécessaire pour afficher votre iPhone. Autorisez-le dans Réglages Système > Confidentialité et sécurité > Caméra."
+            "value": "L’accès à la caméra est nécessaire pour afficher l’écran de votre iPhone. Autorisez-le dans Réglages Système › Confidentialité et sécurité › Caméra."
           }
         }
       }
@@ -196,7 +196,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Choisissez le dossier où MirrorKit enregistrera les captures et les enregistrements."
+            "value": "Choisissez le dossier dans lequel MirrorKit enregistrera vos captures et vos vidéos."
           }
         }
       }
@@ -206,7 +206,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Choisir l’appareil ou ouvrir les Réglages"
+            "value": "Choisir un appareil ou ouvrir les Réglages"
           }
         }
       }
@@ -296,7 +296,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Menu appareil et réglages"
+            "value": "Menu des appareils et des réglages"
           }
         }
       }
@@ -336,7 +336,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Affichez l’écran de votre iPhone directement sur votre Mac. Idéal pour les présentations, le développement, ou simplement pour garder un œil sur votre téléphone."
+            "value": "Affichez l’écran de votre iPhone directement sur votre Mac. Idéal pour les présentations, le développement ou simplement pour garder un œil sur votre téléphone."
           }
         }
       }
@@ -516,7 +516,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Aucune vidéo reçue de %@ après %lld secondes.\n\n• Déverrouillez l’iPhone et laissez son écran allumé\n• Débranchez puis rebranchez l’iPhone\n• Essayez un autre câble ou un autre port USB"
+            "value": "%@ n’a envoyé aucune vidéo après %lld secondes.\n\n• Déverrouillez l’iPhone et laissez son écran allumé\n• Débranchez puis rebranchez l’iPhone\n• Essayez un autre câble ou un autre port USB"
           }
         }
       }
@@ -556,7 +556,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ouvrir les Réglages Système"
+            "value": "Ouvrir Réglages Système"
           }
         }
       }
@@ -596,7 +596,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enregistrement sauvegardé — %@"
+            "value": "Vidéo enregistrée — %@"
           }
         }
       }
@@ -646,7 +646,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pivoter"
+            "value": "Faire pivoter"
           }
         }
       }
@@ -656,7 +656,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pivoter à gauche"
+            "value": "Pivoter vers la gauche"
           }
         }
       }
@@ -666,7 +666,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pivoter à droite"
+            "value": "Pivoter vers la droite"
           }
         }
       }
@@ -756,7 +756,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Démarrer la recopie"
+            "value": "Démarrer la recopie d’écran"
           }
         }
       }
@@ -826,7 +826,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mode annotation  (A)"
+            "value": "Basculer le mode annotation  (A)"
           }
         }
       }
@@ -886,7 +886,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "En attente de la vidéo de %@… Déverrouillez l’iPhone et laissez son écran allumé."
+            "value": "%@ : en attente de la vidéo… Déverrouillez l’iPhone et laissez son écran allumé."
           }
         }
       }
@@ -916,7 +916,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "macOS demandera l’autorisation d’accéder à la caméra. C’est normal : votre iPhone est vu comme un appareil de capture vidéo. Aucune donnée n’est enregistrée ni transmise."
+            "value": "macOS demandera l’autorisation d’accéder à la caméra. C’est normal : votre iPhone est considéré comme un appareil de capture vidéo. Aucune donnée n’est enregistrée ni transmise."
           }
         }
       }

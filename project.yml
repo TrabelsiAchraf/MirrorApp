@@ -65,6 +65,8 @@ schemes:
     test:
       targets:
         - MirrorKitTests
+      commandLineArguments:
+        "-AppleLanguages (en)": true
     run:
       config: Debug
     archive:

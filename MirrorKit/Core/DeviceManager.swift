@@ -20,7 +20,7 @@ final class DeviceManager {
 
     /// Shown when camera permission is missing. Kept as one shared value so the
     /// error view can recognise it and offer to open System Settings.
-    static let cameraAccessMessage = String(localized: "Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.")
+    nonisolated static let cameraAccessMessage = String(localized: "Camera access is required to mirror your iPhone. Grant it in System Settings > Privacy & Security > Camera.")
 
     @ObservationIgnored
     private let defaults: UserDefaults
