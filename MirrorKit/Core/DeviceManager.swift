@@ -140,6 +140,7 @@ final class DeviceManager {
     // MARK: - Polling retry
 
     private func startRescanTimer() {
+        rescanTimer?.invalidate()   // idempotent: restart the cycle
         rescanCount = 0
         rescanTimer = Timer.scheduledTimer(withTimeInterval: Self.rescanInterval, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
@@ -210,6 +211,7 @@ final class DeviceManager {
                 activate(next)
             } else {
                 state = .detecting
+                startRescanTimer()
             }
             return
         }
@@ -282,6 +284,9 @@ final class DeviceManager {
                 activate(next)
             } else {
                 state = .detecting
+                // Connect notifications can be missed while CoreMediaIO
+                // restarts its assistant; poll so republished iPhones are found.
+                startRescanTimer()
             }
         }
 
@@ -302,9 +307,13 @@ final class DeviceManager {
     /// Adds a device (ignoring duplicates) and applies the auto-selection rules.
     /// Internal so tests can drive the manager without AVCaptureDevice.
     func register(_ device: ConnectedDevice) {
-        guard !devices.contains(where: { $0.id == device.id }) else { return }
-        devices.append(device)
-        print("[MirrorKit] Device detected: \(device.name) (\(device.modelID))")
+        if !devices.contains(where: { $0.id == device.id }) {
+            devices.append(device)
+            print("[MirrorKit] Device detected: \(device.name) (\(device.modelID))")
+        }
+        // Also for an already-known device: a rescan or a republish after a
+        // failed stream must be able to resolve a selection when the app is
+        // sitting in .detecting with nothing selected.
         autoSelectIfNeeded()
     }
 

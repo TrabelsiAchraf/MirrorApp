@@ -158,6 +158,20 @@ struct DeviceManagerTests {
         #expect(manager.state == .detecting)
     }
 
+    @Test func rescanOfKnownDevicesResolvesAMissingSelection() {
+        // .detecting with devices already in the list and nothing selected
+        // (e.g. Retry → startDiscovery after a failed stream): the next
+        // rescan must pick a device instead of searching forever.
+        let manager = DeviceManager(defaults: makeDefaults())
+        manager.register(a)
+        manager.register(b)
+        manager.selectedDevice = nil
+        manager.state = .detecting
+        manager.register(a)   // duplicate, as delivered by a rescan
+        #expect(manager.selectedDevice?.id == "A")
+        #expect(manager.state == .connected(a))
+    }
+
     @Test func registerIgnoresDuplicates() {
         let manager = DeviceManager(defaults: makeDefaults())
         manager.register(a)
