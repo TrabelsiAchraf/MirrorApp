@@ -16,7 +16,7 @@ struct DeviceFrameSpec {
     /// Notch / Dynamic Island style
     let notchStyle: NotchStyle
 
-    enum Kind {
+    enum Kind: Equatable {
         case iPhone
         case iPad
     }
@@ -35,7 +35,7 @@ struct DeviceFrameSpec {
         }
     }
 
-    enum NotchStyle {
+    enum NotchStyle: Equatable {
         /// Dynamic Island (iPhone 14 Pro+, 15, 16)
         case dynamicIsland
         /// Classic notch (iPhone X to 14)
@@ -94,7 +94,24 @@ enum DeviceFrameProvider {
     /// ratio of iPads is the most reliable signal.
     static func frameSpec(for modelID: String, resolution: CGSize? = nil) -> DeviceFrameSpec {
         let iPad = modelID.hasPrefix("iPad") || isIPadResolution(resolution)
-        return iPad ? iPadSpec(for: modelID) : iPhoneSpec(for: modelID)
+        if iPad { return iPadSpec(for: modelID) }
+
+        // A real identifier ("iPhone15,2") is authoritative. USB screen devices
+        // report the generic "iOS Device", so fall back to the resolution table.
+        if extractMajorVersion(from: modelID, prefix: "iPhone") > 0 {
+            return iPhoneSpec(for: modelID)
+        }
+        if let resolution, let entry = IPhoneResolutionCatalog.match(resolution) {
+            return DeviceFrameSpec(
+                displayName: entry.displayName,
+                kind: .iPhone,
+                cornerRadius: entry.cornerRadius,
+                bezelWidth: entry.bezelWidth,
+                frameColor: .black,
+                notchStyle: entry.notchStyle
+            )
+        }
+        return iPhoneSpec(for: modelID)
     }
 
     /// iPads are ~4:3 (1.33) or ~3:4 (0.75). iPhones are ~19.5:9 (2.17) or ~9:19.5 (0.46).
