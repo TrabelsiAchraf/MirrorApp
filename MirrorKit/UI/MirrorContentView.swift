@@ -26,6 +26,8 @@ struct MirrorContentView: View {
     @State private var rotationQuarterTurns: Int = 0  // 0 = portrait, 1 = landscape
     @State private var cachedPortraitSize: NSSize?
     @State private var detectedResolution: NSSize?
+    /// Non-blocking hint shown over the capture view while no frame has arrived.
+    @State private var waitingHint: String?
     @State private var toastMessage: String?
     @State private var toastTask: Task<Void, Never>?
     @State private var detectingSeconds: Int = 0
@@ -160,6 +162,7 @@ struct MirrorContentView: View {
             if case .capturing = newState { return }
             isCapturing = false
             detectedResolution = nil
+            waitingHint = nil
             cachedPortraitSize = nil
             Task { await captureEngine.stopCapture() }
 
@@ -184,6 +187,7 @@ struct MirrorContentView: View {
             // goes through a fresh startCapture → resolution detection → window resize.
             isCapturing = false
             detectedResolution = nil
+            waitingHint = nil
             cachedPortraitSize = nil
             Task { await captureEngine.stopCapture() }
 
@@ -269,6 +273,19 @@ struct MirrorContentView: View {
                 captureView
                     .aspectRatio(captureViewAspect, contentMode: .fit)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .overlay(alignment: .bottom) {
+                        if let waitingHint {
+                            Label(waitingHint, systemImage: "hourglass")
+                                .font(.callout)
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 10)
+                                .background(Capsule().fill(.ultraThinMaterial).environment(\.colorScheme, .dark))
+                                .padding(.bottom, 40)
+                                .transition(.opacity)
+                        }
+                    }
+                    .animation(.easeInOut(duration: 0.2), value: waitingHint)
 
             case .error(let message):
                 errorView(message: message)
@@ -676,17 +693,21 @@ struct MirrorContentView: View {
                         // Delivered from the capture queue whenever the stream
                         // dimensions change (first frame + device rotations).
                         DispatchQueue.main.async {
+                            waitingHint = nil
                             let nsSize = NSSize(width: resolution.width, height: resolution.height)
                             detectedResolution = nsSize
                             onResolutionDetected?(nsSize)
                         }
                     },
                     onFailure: { [deviceManager] failure in
-                        // The session started but died (or never produced a
-                        // frame). Switching to .error tears the engine down via
-                        // the onChange(of: deviceManager.state) handler.
                         Task { @MainActor in
-                            deviceManager.state = .error(failure.message(deviceName: deviceName))
+                            if failure.isFatal {
+                                // Switching to .error tears the engine down via
+                                // the onChange(of: deviceManager.state) handler.
+                                deviceManager.state = .error(failure.message(deviceName: deviceName))
+                            } else {
+                                waitingHint = failure.hint(deviceName: deviceName)
+                            }
                         }
                     }
                 )

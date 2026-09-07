@@ -25,6 +25,20 @@ enum CaptureFailure: Equatable, Sendable {
     /// capture assistant when the Valeria handshake with the iPhone fails.
     static let badDeviceOSStatus = 560_227_702
 
+    /// Whether the failure must tear the session down. `.noFrames` is only a
+    /// hint: a locked iPhone or a slow USB re-enumeration legitimately delays
+    /// the first frame, and the session recovers on its own.
+    var isFatal: Bool {
+        if case .noFrames = self { return false }
+        return true
+    }
+
+    /// One-line text for the non-blocking overlay shown while no frame has
+    /// arrived yet.
+    func hint(deviceName: String) -> String {
+        "Waiting for video from \(deviceName)… Unlock the iPhone and keep its screen on."
+    }
+
     /// Maps an error delivered by `AVCaptureSessionRuntimeError` to a failure.
     static func classify(_ error: Error) -> CaptureFailure {
         if Self.containsOSStatus(badDeviceOSStatus, in: error as NSError) {

@@ -61,4 +61,18 @@ struct CaptureFailureTests {
 
         #expect(CaptureFailure.other("boom").message(deviceName: "Virus").contains("boom"))
     }
+
+    @Test func onlyNoFramesIsNonFatal() {
+        #expect(CaptureFailure.noFrames(timeout: 10).isFatal == false)
+        #expect(CaptureFailure.deviceRefused.isFatal)
+        #expect(CaptureFailure.deviceDisconnected.isFatal)
+        #expect(CaptureFailure.deviceInUse.isFatal)
+        #expect(CaptureFailure.other("boom").isFatal)
+    }
+
+    @Test func noFramesHintIsShortAndNamesTheDevice() {
+        let hint = CaptureFailure.noFrames(timeout: 10).hint(deviceName: "Virus")
+        #expect(hint.contains("Virus"))
+        #expect(!hint.contains("\n"))
+    }
 }
