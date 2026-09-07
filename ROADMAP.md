@@ -13,6 +13,19 @@ the changelog section at the bottom.
 - **Snapshot export with bezel and background** (App Store-ready visuals), if
   not already fully covered by `AnnotationCompositor`.
 - **Keyboard shortcuts sheet** (Cmd+/) listing R, S, T, 0, arrows, A.
+- **Accessibility, to earn the App Store labels.** 1.2.0 declares only
+  "Dark Interface" and "Differentiate Without Color Alone". To add VoiceOver
+  and Voice Control:
+  - show the floating toolbar permanently when VoiceOver is running
+    (`NSWorkspace.shared.isVoiceOverEnabled`) or the window has keyboard
+    focus, instead of on mouse hover only;
+  - add a "Device" menu in the menu bar listing the connected iPhones
+    (with shortcuts) so switching does not depend on the toolbar popup;
+  - label the annotation panel buttons (undo, clear) in `AnnotationToolbar`.
+  Then Reduced Motion (respect `accessibilityReduceMotion` for the toolbar
+  fade and transitions) and Larger Text (dynamic text styles instead of fixed
+  point sizes). Sufficient Contrast needs a measurement of the grey secondary
+  text on the translucent toolbar before it can be declared.
 
 ## Backlog
 
